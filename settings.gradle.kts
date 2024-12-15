@@ -6,6 +6,7 @@ include("engine:core")
 include("engine:ktor")
 include("engine:okhttp")
 include("service:asr")
+include("sample")
 
 dependencyResolutionManagement {
     @Suppress("UnstableApiUsage")
