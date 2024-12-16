@@ -7,6 +7,7 @@ include("engine:ktor")
 include("engine:okhttp")
 include("service:asr-core")
 include("service:asr")
+include("service:nict-asr")
 include("sample")
 
 dependencyResolutionManagement {

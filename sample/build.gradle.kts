@@ -8,6 +8,7 @@ dependencies {
     implementation(project(":engine:okhttp"))
     implementation(project(":engine:ktor"))
     implementation(project(":service:asr"))
+    implementation(project(":service:nict-asr"))
     implementation(libs.okhttp)
     implementation(libs.okhttp.logging.interceptor)
     implementation(libs.kotlinx.coroutines.core)
