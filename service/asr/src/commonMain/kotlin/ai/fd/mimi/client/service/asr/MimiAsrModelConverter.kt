@@ -21,7 +21,7 @@ internal class MimiAsrModelConverter(json: Json = Json.Default) : MimiModelConve
     private fun MimiAsrResultEntity.convert(): MimiAsrResult = MimiAsrResult(
         type = type,
         sessionId = sessionId,
-        status = status.convert(),
+        status = status.toStatus(),
         response = response.map { it.convert() }
     )
 
@@ -35,11 +35,5 @@ internal class MimiAsrModelConverter(json: Json = Json.Default) : MimiModelConve
             startTime = startTime,
             endTime = endTime
         )
-    }
-
-    @Throws(MimiJsonException::class)
-    private fun MimiAsrResultEntity.Status.convert(): MimiAsrResult.Status = when (this) {
-        MimiAsrResultEntity.Status.RECOG_IN_PROGRESS -> MimiAsrResult.Status.RECOG_IN_PROGRESS
-        MimiAsrResultEntity.Status.RECOG_FINISHED -> MimiAsrResult.Status.RECOG_FINISHED
     }
 }

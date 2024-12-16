@@ -1,13 +1,13 @@
-package ai.fd.mimi.client.service.asr
+package ai.fd.mimi.client.service.asr.core
 
 import ai.fd.mimi.client.engine.MimiWebSocketSession
 import ai.fd.mimi.client.engine.MimiWebSocketSessionInternal
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
-class MimiAsrWebSocketSession(
-    private val webSocketSession: MimiWebSocketSessionInternal<MimiAsrResult>
-) : MimiWebSocketSession<MimiAsrResult> by webSocketSession {
+class MimiAsrWebSocketSession<T>(
+    private val webSocketSession: MimiWebSocketSessionInternal<T>
+) : MimiWebSocketSession<T> by webSocketSession {
 
     suspend fun stopRecognition() =
         webSocketSession.sendJsonText(ControlCommand.RECOG_BREAK, ControlCommand.serializer())

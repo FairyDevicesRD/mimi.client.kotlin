@@ -1,9 +1,11 @@
 package ai.fd.mimi.client.service.asr
 
+import ai.fd.mimi.client.service.asr.core.MimiAsrResultStatus
+
 data class MimiAsrResult(
     val type: String,
     val sessionId: String,
-    val status: Status,
+    val status: MimiAsrResultStatus,
     val response: List<Response>
 ) {
 
@@ -13,9 +15,4 @@ data class MimiAsrResult(
         val startTime: Long,
         val endTime: Long
     )
-
-    enum class Status {
-        RECOG_IN_PROGRESS,
-        RECOG_FINISHED
-    }
 }

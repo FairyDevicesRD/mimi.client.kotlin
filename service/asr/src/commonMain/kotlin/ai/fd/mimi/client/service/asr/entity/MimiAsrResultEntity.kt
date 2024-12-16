@@ -1,5 +1,6 @@
 package ai.fd.mimi.client.service.asr.entity
 
+import ai.fd.mimi.client.service.asr.core.entity.MimiAsrResultStatusEntity
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -10,7 +11,7 @@ internal data class MimiAsrResultEntity(
     @SerialName("session_id")
     val sessionId: String,
     @SerialName("status")
-    val status: Status,
+    val status: MimiAsrResultStatusEntity,
     @SerialName("response")
     val response: List<Response>
 ) {
@@ -24,13 +25,4 @@ internal data class MimiAsrResultEntity(
         @SerialName("time")
         val time: List<Long>
     )
-
-    @Serializable
-    enum class Status {
-        @SerialName("recog-in-progress")
-        RECOG_IN_PROGRESS,
-
-        @SerialName("recog-finished")
-        RECOG_FINISHED
-    }
 }

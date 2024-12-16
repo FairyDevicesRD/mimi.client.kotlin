@@ -3,6 +3,8 @@ package ai.fd.mimi.client.service.asr
 import ai.fd.mimi.client.MimiClient
 import ai.fd.mimi.client.MimiIOException
 import ai.fd.mimi.client.engine.MimiModelConverter
+import ai.fd.mimi.client.service.asr.core.MimiAsrOptions
+import ai.fd.mimi.client.service.asr.core.MimiAsrWebSocketSession
 import kotlin.coroutines.cancellation.CancellationException
 
 class MimiAsrService internal constructor(
@@ -36,7 +38,7 @@ class MimiAsrService internal constructor(
     @Throws(MimiIOException::class, CancellationException::class)
     suspend fun openAsrSession(
         options: MimiAsrOptions = MimiAsrOptions.DEFAULT
-    ): MimiAsrWebSocketSession {
+    ): MimiAsrWebSocketSession<MimiAsrResult> {
         val session = mimiClient.openWebSocketSession(
             accessToken = accessToken,
             headers = mapOf(

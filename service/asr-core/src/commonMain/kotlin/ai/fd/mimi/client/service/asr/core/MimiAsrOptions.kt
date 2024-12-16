@@ -1,4 +1,4 @@
-package ai.fd.mimi.client.service.asr
+package ai.fd.mimi.client.service.asr.core
 
 data class MimiAsrOptions(
     val audioFormat: MimiAsrAudioFormat,
@@ -12,7 +12,7 @@ data class MimiAsrOptions(
         FLAC
     }
 
-    internal fun toContentType(): String {
+    fun toContentType(): String {
         val audioFormatText = when (audioFormat) {
             MimiAsrAudioFormat.PCM -> "x-pcm"
             MimiAsrAudioFormat.FLAC -> "x-flac"

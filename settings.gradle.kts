@@ -5,6 +5,7 @@ include("client")
 include("engine:core")
 include("engine:ktor")
 include("engine:okhttp")
+include("service:asr-core")
 include("service:asr")
 include("sample")
 
