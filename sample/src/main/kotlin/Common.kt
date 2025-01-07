@@ -17,13 +17,13 @@ private fun loadLocalProperties(): Properties = Properties()
     }
 
 private fun loadToken(): String {
-    val token = System.getenv("MIMI_TOKEN") ?: loadLocalProperties().getProperty("MIMI_TOKEN")
+    val token = System.getenv("MIMI_TOKEN") ?: loadLocalProperties().getProperty("MIMI_TOKEN") ?: throw IllegalArgumentException("MIMI_TOKEN is required in environment variables or local.properties")
     return token
 }
 
 private fun loadAsrType(): AsrType {
     val asrType = System.getenv("ASR_TYPE") ?: loadLocalProperties().getProperty("ASR_TYPE")
-    return when (asrType.toLowerCasePreservingASCIIRules()) {
+    return when (asrType?.toLowerCasePreservingASCIIRules()) {
         "asr" -> AsrType.ASR
         "nict-v1" -> AsrType.NICT_V1
         "nict-v2" -> AsrType.NICT_V2
