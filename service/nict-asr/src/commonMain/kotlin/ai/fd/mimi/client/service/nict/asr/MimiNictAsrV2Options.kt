@@ -14,7 +14,6 @@ data class MimiNictAsrV2Options internal constructor(
         audioFormat: MimiAsrAudioFormat = DEFAULT.coreOption.audioFormat,
         audioBitrate: Int = DEFAULT.coreOption.audioBitrate,
         audioSamplingRate: Int = DEFAULT.coreOption.audioSamplingRate,
-        audioChannelCount: Int = DEFAULT.coreOption.audioChannelCount,
         inputLanguage: String = DEFAULT.coreOption.inputLanguage,
         progressive: Boolean = DEFAULT.progressive,
         temporary: Boolean = DEFAULT.temporary,
@@ -24,7 +23,6 @@ data class MimiNictAsrV2Options internal constructor(
             audioFormat = audioFormat,
             audioBitrate = audioBitrate,
             audioSamplingRate = audioSamplingRate,
-            audioChannelCount = audioChannelCount,
             inputLanguage = inputLanguage
         ),
         progressive = progressive,
