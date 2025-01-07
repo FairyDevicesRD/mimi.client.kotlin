@@ -3,7 +3,6 @@ package ai.fd.mimi.client.service.asr
 import ai.fd.mimi.client.MimiIOException
 import ai.fd.mimi.client.engine.MimiModelConverter
 import ai.fd.mimi.client.engine.MimiNetworkEngine
-import ai.fd.mimi.client.service.asr.core.MimiAsrOptions
 import ai.fd.mimi.client.service.asr.core.MimiAsrWebSocketSession
 import kotlin.coroutines.cancellation.CancellationException
 
@@ -32,7 +31,7 @@ class MimiAsrService internal constructor(
         byteArray = audioData,
         headers = mapOf(
             HEADER_X_MIMI_PROCESS_KEY to HEADER_X_MIMI_PROCESS_VALUE,
-            HEADER_X_MIMI_INPUT_LANGUAGE to options.inputLanguage
+            HEADER_X_MIMI_INPUT_LANGUAGE to options.inputLanguage.value
         ),
         contentType = options.toContentType(),
         converter = converter
@@ -46,7 +45,7 @@ class MimiAsrService internal constructor(
             accessToken = accessToken,
             headers = mapOf(
                 HEADER_X_MIMI_PROCESS_KEY to HEADER_X_MIMI_PROCESS_VALUE,
-                HEADER_X_MIMI_INPUT_LANGUAGE to options.inputLanguage
+                HEADER_X_MIMI_INPUT_LANGUAGE to options.inputLanguage.value
             ),
             contentType = options.toContentType(),
             converter = converter

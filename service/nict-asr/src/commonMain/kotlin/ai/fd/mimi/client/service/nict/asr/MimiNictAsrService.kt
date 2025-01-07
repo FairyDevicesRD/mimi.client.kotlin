@@ -3,7 +3,6 @@ package ai.fd.mimi.client.service.nict.asr
 import ai.fd.mimi.client.MimiIOException
 import ai.fd.mimi.client.engine.MimiModelConverter
 import ai.fd.mimi.client.engine.MimiNetworkEngine
-import ai.fd.mimi.client.service.asr.core.MimiAsrOptions
 import ai.fd.mimi.client.service.asr.core.MimiAsrWebSocketSession
 import kotlin.coroutines.cancellation.CancellationException
 
@@ -28,13 +27,13 @@ class MimiNictAsrService internal constructor(
 
     suspend fun requestNictAsrV1(
         audioData: ByteArray,
-        options: MimiAsrOptions = MimiAsrOptions.DEFAULT
+        options: MimiNictAsrV1Options = MimiNictAsrV1Options.DEFAULT
     ): Result<MimiNictAsrV1Result> = engine.request(
         accessToken = accessToken,
         byteArray = audioData,
         headers = mapOf(
             HEADER_X_MIMI_PROCESS_KEY to HEADER_X_MIMI_PROCESS_VALUE,
-            HEADER_X_MIMI_INPUT_LANGUAGE to options.inputLanguage
+            HEADER_X_MIMI_INPUT_LANGUAGE to options.inputLanguage.value
         ),
         contentType = options.toContentType(),
         converter = converterV1
@@ -42,13 +41,13 @@ class MimiNictAsrService internal constructor(
 
     @Throws(MimiIOException::class, CancellationException::class)
     suspend fun openNictAsrV1Session(
-        options: MimiAsrOptions = MimiAsrOptions.DEFAULT
+        options: MimiNictAsrV1Options = MimiNictAsrV1Options.DEFAULT
     ): MimiAsrWebSocketSession<MimiNictAsrV1Result> {
         val session = engine.openWebSocketSession(
             accessToken = accessToken,
             headers = mapOf(
                 HEADER_X_MIMI_PROCESS_KEY to HEADER_X_MIMI_PROCESS_VALUE,
-                HEADER_X_MIMI_INPUT_LANGUAGE to options.inputLanguage
+                HEADER_X_MIMI_INPUT_LANGUAGE to options.inputLanguage.value
             ),
             contentType = options.toContentType(),
             converter = converterV1
@@ -66,10 +65,10 @@ class MimiNictAsrService internal constructor(
             byteArray = audioData,
             headers = mapOf(
                 HEADER_X_MIMI_PROCESS_KEY to HEADER_X_MIMI_PROCESS_VALUE,
-                HEADER_X_MIMI_INPUT_LANGUAGE to options.coreOption.inputLanguage,
+                HEADER_X_MIMI_INPUT_LANGUAGE to options.inputLanguage.value,
                 HEADER_X_MIMI_NICT_ASR_OPTIONS to options.toNictAsrOptions()
             ),
-            contentType = options.coreOption.toContentType(),
+            contentType = options.toContentType(),
             converter = converterV2
         )
     }
@@ -82,10 +81,10 @@ class MimiNictAsrService internal constructor(
             accessToken = accessToken,
             headers = mapOf(
                 HEADER_X_MIMI_PROCESS_KEY to HEADER_X_MIMI_PROCESS_VALUE,
-                HEADER_X_MIMI_INPUT_LANGUAGE to options.coreOption.inputLanguage,
+                HEADER_X_MIMI_INPUT_LANGUAGE to options.inputLanguage.value,
                 HEADER_X_MIMI_NICT_ASR_OPTIONS to options.toNictAsrOptions()
             ),
-            contentType = options.coreOption.toContentType(),
+            contentType = options.toContentType(),
             converter = converterV2
         )
         return MimiAsrWebSocketSession(session)

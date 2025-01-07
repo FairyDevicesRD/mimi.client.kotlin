@@ -1,17 +1,14 @@
-package ai.fd.mimi.client.service.nict.asr
+package ai.fd.mimi.client.service.asr
 
 import ai.fd.mimi.client.service.asr.core.MimiAsrAudioFormat
 import ai.fd.mimi.client.service.asr.core.internal.MimiAsrContentTypeFormatter
 import ai.fd.mimi.client.service.asr.core.internal.MimiAsrOptionDefaults
 
-data class MimiNictAsrV2Options(
+data class MimiAsrOptions internal constructor(
     val audioFormat: MimiAsrAudioFormat,
     val audioBitrate: Int,
     val audioSamplingRate: Int,
-    val inputLanguage: MimiNictAsrInputLanguage,
-    val progressive: Boolean,
-    val temporary: Boolean,
-    val temporaryInterval: Int
+    val inputLanguage: MimiAsrInputLanguage
 ) {
 
     internal fun toContentType(): String = MimiAsrContentTypeFormatter.toContentTypeString(
@@ -20,18 +17,12 @@ data class MimiNictAsrV2Options(
         audioSamplingRate = audioSamplingRate
     )
 
-    internal fun toNictAsrOptions(): String =
-        "response_format=v2;progressive=$progressive;temporary=$temporary;temporary_interval=$temporaryInterval"
-
     companion object {
-        val DEFAULT = MimiNictAsrV2Options(
+        val DEFAULT = MimiAsrOptions(
             audioFormat = MimiAsrOptionDefaults.DEFAULT_AUDIO_FORMAT,
             audioBitrate = MimiAsrOptionDefaults.DEFAULT_AUDIO_BITRATE,
             audioSamplingRate = MimiAsrOptionDefaults.DEFAULT_AUDIO_SAMPLING_RATE,
-            inputLanguage = MimiNictAsrInputLanguage.JA,
-            progressive = false,
-            temporary = true,
-            temporaryInterval = 1500
+            inputLanguage = MimiAsrInputLanguage.JA
         )
     }
 }
