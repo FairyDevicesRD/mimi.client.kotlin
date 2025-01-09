@@ -7,6 +7,7 @@ import ai.fd.mimi.client.engine.MimiWebSocketSessionInternal
 import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.CompletableJob
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.trySendBlocking
@@ -24,6 +25,10 @@ internal class MimiOkHttpWebSocketSession<R>(
     private val okHttpClient: OkHttpClient,
     converter: MimiModelConverter<R>
 ) : MimiWebSocketSessionInternal<R>(converter) {
+
+    @OptIn(DelicateCoroutinesApi::class)
+    override val isActive: Boolean
+        get() = rxChannel.isClosedForSend
 
     private val rxChannel: Channel<R> = Channel()
     override val rxFlow: Flow<R> = rxChannel.consumeAsFlow()

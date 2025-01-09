@@ -15,6 +15,13 @@ import okio.ByteString
  */
 interface MimiWebSocketSession<T> {
 
+    /**
+     * Whether the WebSocket connection has been successfully created and can communicate to the server.
+     * This becomes `false` when the connection is disconnected or graceful shutdown is initiated as defined by each
+     * service.
+     */
+    val isActive: Boolean
+
     val rxFlow: Flow<T>
 
     /**
