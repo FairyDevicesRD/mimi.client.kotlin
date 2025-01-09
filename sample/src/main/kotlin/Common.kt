@@ -1,7 +1,8 @@
 import ai.fd.mimi.client.engine.MimiNetworkEngine
 import ai.fd.mimi.client.service.asr.MimiAsrService
 import ai.fd.mimi.client.service.asr.core.MimiAsrWebSocketSession
-import ai.fd.mimi.client.service.nict.asr.MimiNictAsrService
+import ai.fd.mimi.client.service.nict.asr.MimiNictAsrV1Service
+import ai.fd.mimi.client.service.nict.asr.MimiNictAsrV2Service
 import io.ktor.util.toLowerCasePreservingASCIIRules
 import java.io.File
 import java.util.Properties
@@ -66,44 +67,44 @@ suspend fun runWebSocketNormalAsr(engineFactory: MimiNetworkEngine.Factory) {
 }
 
 suspend fun runNictV1Asr(engineFactory: MimiNetworkEngine.Factory) {
-    val asrService = MimiNictAsrService(
+    val asrService = MimiNictAsrV1Service(
         engineFactory = engineFactory,
         accessToken = loadToken()
     )
     val data = ClassLoader.getSystemResource("audio.raw").readBytes()
 
-    val result = asrService.requestNictAsrV1(data)
+    val result = asrService.requestAsr(data)
     println(result)
 }
 
 suspend fun runWebSocketNictV1Asr(engineFactory: MimiNetworkEngine.Factory) {
-    val asrService = MimiNictAsrService(
+    val asrService = MimiNictAsrV1Service(
         engineFactory = engineFactory,
         accessToken = loadToken()
     )
     println("Start connecting")
-    val session = asrService.openNictAsrV1Session()
+    val session = asrService.openAsrSession()
     testAsrWebSocket(session)
 }
 
 suspend fun runNictV2Asr(engineFactory: MimiNetworkEngine.Factory) {
-    val asrService = MimiNictAsrService(
+    val asrService = MimiNictAsrV2Service(
         engineFactory = engineFactory,
         accessToken = loadToken()
     )
     val data = ClassLoader.getSystemResource("audio.raw").readBytes()
 
-    val result = asrService.requestNictAsrV2(data)
+    val result = asrService.requestAsr(data)
     println(result)
 }
 
 suspend fun runWebSocketNictV2Asr(engineFactory: MimiNetworkEngine.Factory) {
-    val asrService = MimiNictAsrService(
+    val asrService = MimiNictAsrV2Service(
         engineFactory = engineFactory,
         accessToken = loadToken()
     )
     println("Start connecting")
-    val session = asrService.openNictAsrV2Session()
+    val session = asrService.openAsrSession()
     testAsrWebSocket(session)
 }
 
