@@ -38,7 +38,7 @@ data class MimiNictAsrV2Options internal constructor(
     companion object {
         val DEFAULT = MimiNictAsrV2Options(
             coreOption = MimiAsrOptions.DEFAULT,
-            progressive = true,
+            progressive = false,
             temporary = true,
             temporaryInterval = 1500
         )
