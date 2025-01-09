@@ -1,4 +1,3 @@
-import ai.fd.mimi.client.MimiClient
 import ai.fd.mimi.client.engine.MimiNetworkEngine
 import ai.fd.mimi.client.engine.okhttp.OkHttp
 import okhttp3.OkHttpClient
@@ -10,8 +9,5 @@ suspend fun main() {
     val client: OkHttpClient = OkHttpClient.Builder()
         .addInterceptor(logging)
         .build()
-    val mimiClient = MimiClient(
-        engineFactory = MimiNetworkEngine.OkHttp(client)
-    )
-    runAsr(mimiClient)
+    runAsr(MimiNetworkEngine.OkHttp(client))
 }

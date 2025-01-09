@@ -4,7 +4,6 @@ plugins {
 }
 
 dependencies {
-    implementation(project(":client"))
     implementation(project(":engine:okhttp"))
     implementation(project(":engine:ktor"))
     implementation(project(":service:asr"))

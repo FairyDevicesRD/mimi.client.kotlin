@@ -1,22 +1,25 @@
 package ai.fd.mimi.client.service.asr
 
-import ai.fd.mimi.client.MimiClient
 import ai.fd.mimi.client.MimiIOException
 import ai.fd.mimi.client.engine.MimiModelConverter
+import ai.fd.mimi.client.engine.MimiNetworkEngine
 import ai.fd.mimi.client.service.asr.core.MimiAsrOptions
 import ai.fd.mimi.client.service.asr.core.MimiAsrWebSocketSession
 import kotlin.coroutines.cancellation.CancellationException
 
 class MimiAsrService internal constructor(
-    private val mimiClient: MimiClient,
+    private val engine: MimiNetworkEngine,
     private val accessToken: String,
     private val converter: MimiModelConverter<MimiAsrResult>
 ) {
     constructor(
-        mimiClient: MimiClient,
-        accessToken: String
+        engineFactory: MimiNetworkEngine.Factory,
+        accessToken: String,
+        useSsl: Boolean = true,
+        host: String = "service.mimi.fd.ai",
+        port: Int = if (useSsl) 443 else 80
     ) : this(
-        mimiClient = mimiClient,
+        engine = engineFactory.create(useSsl = useSsl, host = host, port = port),
         accessToken = accessToken,
         converter = MimiAsrModelConverter()
     )
@@ -24,7 +27,7 @@ class MimiAsrService internal constructor(
     suspend fun requestAsr(
         audioData: ByteArray,
         options: MimiAsrOptions = MimiAsrOptions.DEFAULT
-    ): Result<MimiAsrResult> = mimiClient.request(
+    ): Result<MimiAsrResult> = engine.request(
         accessToken = accessToken,
         byteArray = audioData,
         headers = mapOf(
@@ -39,7 +42,7 @@ class MimiAsrService internal constructor(
     suspend fun openAsrSession(
         options: MimiAsrOptions = MimiAsrOptions.DEFAULT
     ): MimiAsrWebSocketSession<MimiAsrResult> {
-        val session = mimiClient.openWebSocketSession(
+        val session = engine.openWebSocketSession(
             accessToken = accessToken,
             headers = mapOf(
                 HEADER_X_MIMI_PROCESS_KEY to HEADER_X_MIMI_PROCESS_VALUE,

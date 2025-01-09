@@ -1,4 +1,3 @@
-import ai.fd.mimi.client.MimiClient
 import ai.fd.mimi.client.engine.MimiNetworkEngine
 import ai.fd.mimi.client.engine.okhttp.OkHttp
 import kotlin.system.exitProcess
@@ -11,10 +10,7 @@ suspend fun main() {
     val client: OkHttpClient = OkHttpClient.Builder()
         .addInterceptor(logging)
         .build()
-    val mimiClient = MimiClient(
-        engineFactory = MimiNetworkEngine.OkHttp(client)
-    )
-    runWebSocketAsr(mimiClient)
+    runWebSocketAsr(engineFactory = MimiNetworkEngine.OkHttp(client))
     // OKHttp will not release all threads immediately after disconnection.
     // https://github.com/square/okhttp/issues/3708
     exitProcess(0)

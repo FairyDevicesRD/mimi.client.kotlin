@@ -1,4 +1,3 @@
-import ai.fd.mimi.client.MimiClient
 import ai.fd.mimi.client.engine.MimiNetworkEngine
 import ai.fd.mimi.client.engine.ktor.Ktor
 import io.ktor.client.HttpClient
@@ -17,8 +16,5 @@ suspend fun main() {
             level = LogLevel.HEADERS
         }
     }
-    val mimiClient = MimiClient(
-        engineFactory = MimiNetworkEngine.Ktor(httpClient)
-    )
-    runWebSocketAsr(mimiClient)
+    runWebSocketAsr(MimiNetworkEngine.Ktor(httpClient))
 }

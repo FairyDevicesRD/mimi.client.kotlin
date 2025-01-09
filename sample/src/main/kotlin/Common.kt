@@ -1,4 +1,4 @@
-import ai.fd.mimi.client.MimiClient
+import ai.fd.mimi.client.engine.MimiNetworkEngine
 import ai.fd.mimi.client.service.asr.MimiAsrService
 import ai.fd.mimi.client.service.asr.core.MimiAsrWebSocketSession
 import ai.fd.mimi.client.service.nict.asr.MimiNictAsrService
@@ -17,7 +17,8 @@ private fun loadLocalProperties(): Properties = Properties()
     }
 
 private fun loadToken(): String {
-    val token = System.getenv("MIMI_TOKEN") ?: loadLocalProperties().getProperty("MIMI_TOKEN") ?: throw IllegalArgumentException("MIMI_TOKEN is required in environment variables or local.properties")
+    val token = System.getenv("MIMI_TOKEN") ?: loadLocalProperties().getProperty("MIMI_TOKEN")
+    ?: throw IllegalArgumentException("MIMI_TOKEN is required in environment variables or local.properties")
     return token
 }
 
@@ -31,21 +32,21 @@ private fun loadAsrType(): AsrType {
     }
 }
 
-suspend fun runAsr(mimiClient: MimiClient) = when (loadAsrType()) {
-    AsrType.ASR -> runNormalAsr(mimiClient)
-    AsrType.NICT_V1 -> runNictV1Asr(mimiClient)
-    AsrType.NICT_V2 -> runNictV2Asr(mimiClient)
+suspend fun runAsr(engineFactory: MimiNetworkEngine.Factory) = when (loadAsrType()) {
+    AsrType.ASR -> runNormalAsr(engineFactory)
+    AsrType.NICT_V1 -> runNictV1Asr(engineFactory)
+    AsrType.NICT_V2 -> runNictV2Asr(engineFactory)
 }
 
-suspend fun runWebSocketAsr(mimiClient: MimiClient) = when (loadAsrType()) {
-    AsrType.ASR -> runWebSocketNormalAsr(mimiClient)
-    AsrType.NICT_V1 -> runWebSocketNictV1Asr(mimiClient)
-    AsrType.NICT_V2 -> runWebSocketNictV2Asr(mimiClient)
+suspend fun runWebSocketAsr(engineFactory: MimiNetworkEngine.Factory) = when (loadAsrType()) {
+    AsrType.ASR -> runWebSocketNormalAsr(engineFactory)
+    AsrType.NICT_V1 -> runWebSocketNictV1Asr(engineFactory)
+    AsrType.NICT_V2 -> runWebSocketNictV2Asr(engineFactory)
 }
 
-suspend fun runNormalAsr(mimiClient: MimiClient) {
+suspend fun runNormalAsr(engineFactory: MimiNetworkEngine.Factory) {
     val asrService = MimiAsrService(
-        mimiClient = mimiClient,
+        engineFactory = engineFactory,
         accessToken = loadToken()
     )
     val data = ClassLoader.getSystemResource("audio.raw").readBytes()
@@ -54,9 +55,9 @@ suspend fun runNormalAsr(mimiClient: MimiClient) {
     println(result)
 }
 
-suspend fun runWebSocketNormalAsr(mimiClient: MimiClient) {
+suspend fun runWebSocketNormalAsr(engineFactory: MimiNetworkEngine.Factory) {
     val asrService = MimiAsrService(
-        mimiClient = mimiClient,
+        engineFactory = engineFactory,
         accessToken = loadToken()
     )
     println("Start connecting")
@@ -64,9 +65,9 @@ suspend fun runWebSocketNormalAsr(mimiClient: MimiClient) {
     testAsrWebSocket(session)
 }
 
-suspend fun runNictV1Asr(mimiClient: MimiClient) {
+suspend fun runNictV1Asr(engineFactory: MimiNetworkEngine.Factory) {
     val asrService = MimiNictAsrService(
-        mimiClient = mimiClient,
+        engineFactory = engineFactory,
         accessToken = loadToken()
     )
     val data = ClassLoader.getSystemResource("audio.raw").readBytes()
@@ -75,9 +76,9 @@ suspend fun runNictV1Asr(mimiClient: MimiClient) {
     println(result)
 }
 
-suspend fun runWebSocketNictV1Asr(mimiClient: MimiClient) {
+suspend fun runWebSocketNictV1Asr(engineFactory: MimiNetworkEngine.Factory) {
     val asrService = MimiNictAsrService(
-        mimiClient = mimiClient,
+        engineFactory = engineFactory,
         accessToken = loadToken()
     )
     println("Start connecting")
@@ -85,9 +86,9 @@ suspend fun runWebSocketNictV1Asr(mimiClient: MimiClient) {
     testAsrWebSocket(session)
 }
 
-suspend fun runNictV2Asr(mimiClient: MimiClient) {
+suspend fun runNictV2Asr(engineFactory: MimiNetworkEngine.Factory) {
     val asrService = MimiNictAsrService(
-        mimiClient = mimiClient,
+        engineFactory = engineFactory,
         accessToken = loadToken()
     )
     val data = ClassLoader.getSystemResource("audio.raw").readBytes()
@@ -96,9 +97,9 @@ suspend fun runNictV2Asr(mimiClient: MimiClient) {
     println(result)
 }
 
-suspend fun runWebSocketNictV2Asr(mimiClient: MimiClient) {
+suspend fun runWebSocketNictV2Asr(engineFactory: MimiNetworkEngine.Factory) {
     val asrService = MimiNictAsrService(
-        mimiClient = mimiClient,
+        engineFactory = engineFactory,
         accessToken = loadToken()
     )
     println("Start connecting")

@@ -7,7 +7,7 @@ plugins {
 kotlin {
     sourceSets {
         commonMain.dependencies {
-            api(project(":client"))
+            api(project(":engine:core"))
             api(project(":service:asr-core"))
             implementation(libs.kotlinx.serialization.json)
         }

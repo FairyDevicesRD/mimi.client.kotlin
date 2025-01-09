@@ -1,23 +1,26 @@
 package ai.fd.mimi.client.service.nict.asr
 
-import ai.fd.mimi.client.MimiClient
 import ai.fd.mimi.client.MimiIOException
 import ai.fd.mimi.client.engine.MimiModelConverter
+import ai.fd.mimi.client.engine.MimiNetworkEngine
 import ai.fd.mimi.client.service.asr.core.MimiAsrOptions
 import ai.fd.mimi.client.service.asr.core.MimiAsrWebSocketSession
 import kotlin.coroutines.cancellation.CancellationException
 
 class MimiNictAsrService internal constructor(
-    private val mimiClient: MimiClient,
+    private val engine: MimiNetworkEngine,
     private val accessToken: String,
     private val converterV1: MimiModelConverter<MimiNictAsrV1Result>,
     private val converterV2: MimiModelConverter<MimiNictAsrV2Result>
 ) {
     constructor(
-        mimiClient: MimiClient,
-        accessToken: String
+        engineFactory: MimiNetworkEngine.Factory,
+        accessToken: String,
+        useSsl: Boolean = true,
+        host: String = "service.mimi.fd.ai",
+        port: Int = if (useSsl) 443 else 80
     ) : this(
-        mimiClient = mimiClient,
+        engine = engineFactory.create(useSsl = useSsl, host = host, port = port),
         accessToken = accessToken,
         converterV1 = MimiNictAsrV1ModelConverter(),
         converterV2 = MimiNictAsrV2ModelConverter()
@@ -26,7 +29,7 @@ class MimiNictAsrService internal constructor(
     suspend fun requestNictAsrV1(
         audioData: ByteArray,
         options: MimiAsrOptions = MimiAsrOptions.DEFAULT
-    ): Result<MimiNictAsrV1Result> = mimiClient.request(
+    ): Result<MimiNictAsrV1Result> = engine.request(
         accessToken = accessToken,
         byteArray = audioData,
         headers = mapOf(
@@ -41,7 +44,7 @@ class MimiNictAsrService internal constructor(
     suspend fun openNictAsrV1Session(
         options: MimiAsrOptions = MimiAsrOptions.DEFAULT
     ): MimiAsrWebSocketSession<MimiNictAsrV1Result> {
-        val session = mimiClient.openWebSocketSession(
+        val session = engine.openWebSocketSession(
             accessToken = accessToken,
             headers = mapOf(
                 HEADER_X_MIMI_PROCESS_KEY to HEADER_X_MIMI_PROCESS_VALUE,
@@ -58,7 +61,7 @@ class MimiNictAsrService internal constructor(
         options: MimiNictAsrV2Options = MimiNictAsrV2Options.DEFAULT
     ): Result<MimiNictAsrV2Result> {
         check(!options.progressive) { "Progressive mode is not supported for HTTP request" }
-        return mimiClient.request(
+        return engine.request(
             accessToken = accessToken,
             byteArray = audioData,
             headers = mapOf(
@@ -75,7 +78,7 @@ class MimiNictAsrService internal constructor(
     suspend fun openNictAsrV2Session(
         options: MimiNictAsrV2Options = MimiNictAsrV2Options.DEFAULT
     ): MimiAsrWebSocketSession<MimiNictAsrV2Result> {
-        val session = mimiClient.openWebSocketSession(
+        val session = engine.openWebSocketSession(
             accessToken = accessToken,
             headers = mapOf(
                 HEADER_X_MIMI_PROCESS_KEY to HEADER_X_MIMI_PROCESS_VALUE,
