@@ -27,7 +27,13 @@ class MimiKtorNetworkEngine(
     port: Int
 ) : MimiNetworkEngine() {
 
-    private val targetUrl: Url = buildUrl {
+    private val httpTargetUrl: Url = buildUrl {
+        this.protocol = if (useSsl) URLProtocol.HTTPS else URLProtocol.HTTP
+        this.host = host
+        this.port = port
+    }
+
+    private val webSocketTargetUrl: Url = buildUrl {
         this.protocol = if (useSsl) URLProtocol.WSS else URLProtocol.WS
         this.host = host
         this.port = port
@@ -39,7 +45,7 @@ class MimiKtorNetworkEngine(
         contentType: String,
         headers: Map<String, String>
     ): Result<String> {
-        val response = httpClient.post(targetUrl) {
+        val response = httpClient.post(httpTargetUrl) {
             headers {
                 append("Authorization", "Bearer $accessToken")
                 headers.forEach { (key, value) -> append(key, value) }
@@ -64,7 +70,7 @@ class MimiKtorNetworkEngine(
     ): MimiWebSocketSessionInternal<T> {
         val session = try {
             httpClient.webSocketSession {
-                url.takeFrom(targetUrl)
+                url.takeFrom(webSocketTargetUrl)
                 headers {
                     append("Authorization", "Bearer $accessToken")
                     headers.forEach { (key, value) -> append(key, value) }
