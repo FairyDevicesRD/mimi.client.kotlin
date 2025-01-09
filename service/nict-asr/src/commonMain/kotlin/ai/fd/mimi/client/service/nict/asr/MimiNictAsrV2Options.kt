@@ -3,6 +3,7 @@ package ai.fd.mimi.client.service.nict.asr
 import ai.fd.mimi.client.service.asr.core.MimiAsrOptions
 import ai.fd.mimi.client.service.asr.core.MimiAsrOptions.MimiAsrAudioFormat
 
+@ExposedCopyVisibility
 data class MimiNictAsrV2Options internal constructor(
     val coreOption: MimiAsrOptions,
     val progressive: Boolean,
