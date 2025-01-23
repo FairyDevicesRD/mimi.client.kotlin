@@ -10,4 +10,5 @@ suspend fun main() {
         .addInterceptor(logging)
         .build()
     runAsr(MimiNetworkEngine.OkHttp(client))
+    exitProcess(0)
 }
