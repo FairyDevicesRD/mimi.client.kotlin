@@ -1,5 +1,6 @@
 import ai.fd.mimi.client.engine.MimiNetworkEngine
 import ai.fd.mimi.client.engine.okhttp.OkHttp
+import kotlin.system.exitProcess
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 
