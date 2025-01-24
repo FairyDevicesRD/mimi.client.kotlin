@@ -14,7 +14,7 @@ import okio.ByteString
 
 class MimiKtorWebSocketSession<T>(
     private val ktorWebSocketSession: DefaultClientWebSocketSession,
-    converter: MimiModelConverter<T>
+    converter: MimiModelConverter.JsonString<T>
 ) : MimiWebSocketSessionInternal<T>(converter) {
 
     // note: `MutableStateFlow` is used for convenient thread safe value holder. Replace with any atomic value holder

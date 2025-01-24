@@ -9,7 +9,7 @@ import kotlin.coroutines.cancellation.CancellationException
 class MimiAsrService internal constructor(
     private val engine: MimiNetworkEngine,
     private val accessToken: String,
-    private val converter: MimiModelConverter<MimiAsrResult>
+    private val converter: MimiModelConverter.JsonString<MimiAsrResult>
 ) {
     constructor(
         engineFactory: MimiNetworkEngine.Factory,

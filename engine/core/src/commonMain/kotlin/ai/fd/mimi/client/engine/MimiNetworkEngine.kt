@@ -11,8 +11,17 @@ abstract class MimiNetworkEngine {
         requestBody: RequestBody,
         headers: Map<String, String> = emptyMap(),
         converter: MimiModelConverter<T>
+    ): Result<T> = when (converter) {
+        is MimiModelConverter.JsonString<T> -> requestJsonString(accessToken, requestBody, headers, converter)
+    }
+
+    private suspend fun <T> requestJsonString(
+        accessToken: String,
+        requestBody: RequestBody,
+        headers: Map<String, String> = emptyMap(),
+        converter: MimiModelConverter.JsonString<T>
     ): Result<T> {
-        val networkResult = requestInternal(accessToken, requestBody, headers)
+        val networkResult = requestAsStringInternal(accessToken, requestBody, headers)
         val networkException = networkResult.exceptionOrNull()
         if (networkException != null) {
             return Result.failure(networkException)
@@ -25,7 +34,7 @@ abstract class MimiNetworkEngine {
         }
     }
 
-    protected abstract suspend fun requestInternal(
+    protected abstract suspend fun requestAsStringInternal(
         accessToken: String,
         requestBody: RequestBody,
         headers: Map<String, String> = emptyMap()
@@ -36,7 +45,7 @@ abstract class MimiNetworkEngine {
         accessToken: String,
         contentType: String,
         headers: Map<String, String> = emptyMap(),
-        converter: MimiModelConverter<T>
+        converter: MimiModelConverter.JsonString<T>
     ): MimiWebSocketSessionInternal<T>
 
     sealed interface RequestBody {

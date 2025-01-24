@@ -10,6 +10,7 @@ import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.headers
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
+import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
 import io.ktor.http.URLProtocol
@@ -40,11 +41,18 @@ class MimiKtorNetworkEngine(
         this.port = port
     }
 
-    override suspend fun requestInternal(
+    override suspend fun requestAsStringInternal(
         accessToken: String,
         requestBody: RequestBody,
         headers: Map<String, String>
-    ): Result<String> {
+    ): Result<String> = requestInternal(accessToken, requestBody, headers) { it.bodyAsText() }
+
+    private suspend fun <T> requestInternal(
+        accessToken: String,
+        requestBody: RequestBody,
+        headers: Map<String, String>,
+        extractResponseBodyAction: suspend (HttpResponse) -> T
+    ): Result<T> {
         val response = httpClient.post(httpTargetUrl) {
             headers {
                 append("Authorization", "Bearer $accessToken")
@@ -57,7 +65,7 @@ class MimiKtorNetworkEngine(
                 MimiIOException("Request failed with status: ${response.status}. Body: ${response.bodyAsText()}")
             )
         }
-        return Result.success(response.bodyAsText())
+        return Result.success(extractResponseBodyAction(response))
     }
 
     @Throws(MimiIOException::class, CancellationException::class)
@@ -65,7 +73,7 @@ class MimiKtorNetworkEngine(
         accessToken: String,
         contentType: String,
         headers: Map<String, String>,
-        converter: MimiModelConverter<T>
+        converter: MimiModelConverter.JsonString<T>
     ): MimiWebSocketSessionInternal<T> {
         val session = try {
             httpClient.webSocketSession {
@@ -84,9 +92,9 @@ class MimiKtorNetworkEngine(
         return MimiKtorWebSocketSession(session, converter)
     }
 
-    private fun HttpRequestBuilder.setBodyAndContentType(requestBody: MimiNetworkEngine.RequestBody) {
+    private fun HttpRequestBuilder.setBodyAndContentType(requestBody: RequestBody) {
         when (requestBody) {
-            is MimiNetworkEngine.RequestBody.Binary -> {
+            is RequestBody.Binary -> {
                 contentType(ContentType.parse(requestBody.contentType))
                 setBody(ByteReadChannel(requestBody.byteArray))
             }

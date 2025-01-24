@@ -32,11 +32,18 @@ internal class MimiOkHttpNetworkEngine(
         .port(port)
         .build()
 
-    override suspend fun requestInternal(
+    override suspend fun requestAsStringInternal(
         accessToken: String,
         requestBody: RequestBody,
         headers: Map<String, String>
-    ): Result<String> {
+    ): Result<String> = requestInternal(accessToken, requestBody, headers) { it.body?.string() }
+
+    private suspend fun <T> requestInternal(
+        accessToken: String,
+        requestBody: RequestBody,
+        headers: Map<String, String>,
+        extractResponseBodyAction: suspend (Response) -> T?
+    ): Result<T> {
         val request = Request.Builder()
             .url(httpUrl)
             .addHeader("Authorization", "Bearer $accessToken")
@@ -50,8 +57,9 @@ internal class MimiOkHttpNetworkEngine(
                 MimiIOException("Request failed with status: ${response.code}. Body: ${response.body?.string()}")
             )
         }
-        val text = response.body?.string() ?: return Result.failure(MimiIOException("Response body is null"))
-        return Result.success(text)
+        val data =
+            extractResponseBodyAction(response) ?: return Result.failure(MimiIOException("Response body is null"))
+        return Result.success(data)
     }
 
     @Throws(MimiIOException::class, CancellationException::class)
@@ -59,7 +67,7 @@ internal class MimiOkHttpNetworkEngine(
         accessToken: String,
         contentType: String,
         headers: Map<String, String>,
-        converter: MimiModelConverter<R>
+        converter: MimiModelConverter.JsonString<R>
     ): MimiWebSocketSessionInternal<R> {
         val request = Request.Builder()
             .url(httpUrl) // Will be upgraded to ws scheme after connection established.

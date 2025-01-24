@@ -4,9 +4,11 @@ import ai.fd.mimi.client.MimiJsonException
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.json.Json
 
-abstract class MimiModelConverter<T>(protected val json: Json) {
-    @Throws(MimiJsonException::class)
-    abstract fun decode(jsonText: String): T
+sealed interface MimiModelConverter<T> {
+    abstract class JsonString<T>(protected val json: Json) : MimiModelConverter<T> {
+        @Throws(MimiJsonException::class)
+        abstract fun decode(jsonText: String): T
 
-    fun <R> encode(model: R, serializer: KSerializer<R>): String = json.encodeToString(serializer, model)
+        fun <R> encode(model: R, serializer: KSerializer<R>): String = json.encodeToString(serializer, model)
+    }
 }

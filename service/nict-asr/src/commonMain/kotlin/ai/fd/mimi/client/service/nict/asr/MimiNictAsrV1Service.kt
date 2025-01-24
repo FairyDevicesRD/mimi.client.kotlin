@@ -10,7 +10,7 @@ import ai.fd.mimi.client.service.nict.asr.MimiNictAsrServiceConst as Const
 class MimiNictAsrV1Service internal constructor(
     private val engine: MimiNetworkEngine,
     private val accessToken: String,
-    private val converter: MimiModelConverter<MimiNictAsrV1Result>
+    private val converter: MimiModelConverter.JsonString<MimiNictAsrV1Result>
 ) {
     constructor(
         engineFactory: MimiNetworkEngine.Factory,

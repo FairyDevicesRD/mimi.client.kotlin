@@ -23,7 +23,7 @@ import okio.ByteString
 internal class MimiOkHttpWebSocketSession<R>(
     private val request: Request,
     private val okHttpClient: OkHttpClient,
-    converter: MimiModelConverter<R>
+    converter: MimiModelConverter.JsonString<R>
 ) : MimiWebSocketSessionInternal<R>(converter) {
 
     @OptIn(DelicateCoroutinesApi::class)
