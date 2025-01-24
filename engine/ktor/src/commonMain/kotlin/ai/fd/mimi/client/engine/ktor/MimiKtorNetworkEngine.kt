@@ -6,6 +6,7 @@ import ai.fd.mimi.client.engine.MimiNetworkEngine
 import ai.fd.mimi.client.engine.MimiWebSocketSessionInternal
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.websocket.webSocketSession
+import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.headers
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
@@ -41,8 +42,7 @@ class MimiKtorNetworkEngine(
 
     override suspend fun requestInternal(
         accessToken: String,
-        byteArray: ByteArray,
-        contentType: String,
+        requestBody: RequestBody,
         headers: Map<String, String>
     ): Result<String> {
         val response = httpClient.post(httpTargetUrl) {
@@ -50,8 +50,7 @@ class MimiKtorNetworkEngine(
                 append("Authorization", "Bearer $accessToken")
                 headers.forEach { (key, value) -> append(key, value) }
             }
-            contentType(ContentType.parse(contentType))
-            setBody(ByteReadChannel(byteArray))
+            setBodyAndContentType(requestBody)
         }
         if (!response.status.isSuccess()) {
             return Result.failure(
@@ -83,6 +82,15 @@ class MimiKtorNetworkEngine(
             throw MimiIOException("Failed to open WebSocket session", e)
         }
         return MimiKtorWebSocketSession(session, converter)
+    }
+
+    private fun HttpRequestBuilder.setBodyAndContentType(requestBody: MimiNetworkEngine.RequestBody) {
+        when (requestBody) {
+            is MimiNetworkEngine.RequestBody.Binary -> {
+                contentType(ContentType.parse(requestBody.contentType))
+                setBody(ByteReadChannel(requestBody.byteArray))
+            }
+        }
     }
 
     internal class Factory(private val httpClient: HttpClient) : MimiNetworkEngine.Factory {

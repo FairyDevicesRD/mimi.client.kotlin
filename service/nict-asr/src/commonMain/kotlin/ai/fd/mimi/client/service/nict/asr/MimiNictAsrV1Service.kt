@@ -29,12 +29,14 @@ class MimiNictAsrV1Service internal constructor(
         options: MimiNictAsrV1Options = MimiNictAsrV1Options.DEFAULT
     ): Result<MimiNictAsrV1Result> = engine.request(
         accessToken = accessToken,
-        byteArray = audioData,
+        requestBody = MimiNetworkEngine.RequestBody.Binary(
+            byteArray = audioData,
+            contentType = options.toContentType()
+        ),
         headers = mapOf(
             Const.HEADER_X_MIMI_PROCESS_KEY to Const.HEADER_X_MIMI_PROCESS_VALUE,
             Const.HEADER_X_MIMI_INPUT_LANGUAGE to options.inputLanguage.value
         ),
-        contentType = options.toContentType(),
         converter = converter
     )
 

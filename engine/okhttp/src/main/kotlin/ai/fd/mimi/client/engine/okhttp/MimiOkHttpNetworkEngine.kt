@@ -17,6 +17,7 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
 import okhttp3.internal.closeQuietly
 import okio.IOException
+import okhttp3.RequestBody as OkHttpRequestBody
 
 internal class MimiOkHttpNetworkEngine(
     private val okHttpClient: OkHttpClient,
@@ -33,15 +34,14 @@ internal class MimiOkHttpNetworkEngine(
 
     override suspend fun requestInternal(
         accessToken: String,
-        byteArray: ByteArray,
-        contentType: String,
+        requestBody: RequestBody,
         headers: Map<String, String>
     ): Result<String> {
         val request = Request.Builder()
             .url(httpUrl)
             .addHeader("Authorization", "Bearer $accessToken")
             .addHeaders(headers)
-            .post(byteArray.toRequestBody(contentType = contentType.toMediaType()))
+            .post(requestBody.toOkHttpRequestBody())
             .build()
 
         val response = okHttpClient.newCall(request).executeAsync()
@@ -103,6 +103,10 @@ internal class MimiOkHttpNetworkEngine(
         headers.forEach { (key, value) ->
             addHeader(key, value)
         }
+    }
+
+    private fun RequestBody.toOkHttpRequestBody(): OkHttpRequestBody = when (this) {
+        is RequestBody.Binary -> byteArray.toRequestBody(contentType.toMediaType())
     }
 
     internal class Factory(private val okHttpClient: OkHttpClient) : MimiNetworkEngine.Factory {

@@ -8,12 +8,11 @@ abstract class MimiNetworkEngine {
 
     suspend fun <T> request(
         accessToken: String,
-        byteArray: ByteArray,
-        contentType: String,
+        requestBody: RequestBody,
         headers: Map<String, String> = emptyMap(),
         converter: MimiModelConverter<T>
     ): Result<T> {
-        val networkResult = requestInternal(accessToken, byteArray, contentType, headers)
+        val networkResult = requestInternal(accessToken, requestBody, headers)
         val networkException = networkResult.exceptionOrNull()
         if (networkException != null) {
             return Result.failure(networkException)
@@ -28,8 +27,7 @@ abstract class MimiNetworkEngine {
 
     protected abstract suspend fun requestInternal(
         accessToken: String,
-        byteArray: ByteArray,
-        contentType: String,
+        requestBody: RequestBody,
         headers: Map<String, String> = emptyMap()
     ): Result<String>
 
@@ -40,6 +38,10 @@ abstract class MimiNetworkEngine {
         headers: Map<String, String> = emptyMap(),
         converter: MimiModelConverter<T>
     ): MimiWebSocketSessionInternal<T>
+
+    sealed interface RequestBody {
+        class Binary(val byteArray: ByteArray, val contentType: String) : RequestBody
+    }
 
     interface Factory {
         fun create(useSsl: Boolean, host: String, port: Int): MimiNetworkEngine

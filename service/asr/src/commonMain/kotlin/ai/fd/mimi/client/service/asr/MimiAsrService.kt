@@ -28,12 +28,14 @@ class MimiAsrService internal constructor(
         options: MimiAsrOptions = MimiAsrOptions.DEFAULT
     ): Result<MimiAsrResult> = engine.request(
         accessToken = accessToken,
-        byteArray = audioData,
+        requestBody = MimiNetworkEngine.RequestBody.Binary(
+            byteArray = audioData,
+            contentType = options.toContentType()
+        ),
         headers = mapOf(
             HEADER_X_MIMI_PROCESS_KEY to HEADER_X_MIMI_PROCESS_VALUE,
             HEADER_X_MIMI_INPUT_LANGUAGE to options.inputLanguage.value
         ),
-        contentType = options.toContentType(),
         converter = converter
     )
 
