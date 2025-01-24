@@ -53,7 +53,7 @@ abstract class MimiNetworkEngine {
     }
 
     interface Factory {
-        fun create(useSsl: Boolean, host: String, port: Int): MimiNetworkEngine
+        fun create(useSsl: Boolean, host: String, port: Int, path: String = "/"): MimiNetworkEngine
     }
 
     companion object

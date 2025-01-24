@@ -18,6 +18,7 @@ import io.ktor.http.Url
 import io.ktor.http.buildUrl
 import io.ktor.http.contentType
 import io.ktor.http.isSuccess
+import io.ktor.http.path
 import io.ktor.http.takeFrom
 import io.ktor.utils.io.ByteReadChannel
 import kotlin.coroutines.cancellation.CancellationException
@@ -26,19 +27,22 @@ class MimiKtorNetworkEngine(
     private val httpClient: HttpClient,
     useSsl: Boolean,
     host: String,
-    port: Int
+    port: Int,
+    path: String
 ) : MimiNetworkEngine() {
 
     private val httpTargetUrl: Url = buildUrl {
         this.protocol = if (useSsl) URLProtocol.HTTPS else URLProtocol.HTTP
         this.host = host
         this.port = port
+        this.path(path)
     }
 
     private val webSocketTargetUrl: Url = buildUrl {
         this.protocol = if (useSsl) URLProtocol.WSS else URLProtocol.WS
         this.host = host
         this.port = port
+        this.path(path)
     }
 
     override suspend fun requestAsStringInternal(
@@ -102,7 +106,7 @@ class MimiKtorNetworkEngine(
     }
 
     internal class Factory(private val httpClient: HttpClient) : MimiNetworkEngine.Factory {
-        override fun create(useSsl: Boolean, host: String, port: Int): MimiNetworkEngine =
-            MimiKtorNetworkEngine(httpClient, useSsl, host, port)
+        override fun create(useSsl: Boolean, host: String, port: Int, path: String): MimiNetworkEngine =
+            MimiKtorNetworkEngine(httpClient, useSsl, host, port, path)
     }
 }

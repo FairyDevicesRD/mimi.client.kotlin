@@ -23,13 +23,15 @@ internal class MimiOkHttpNetworkEngine(
     private val okHttpClient: OkHttpClient,
     useSsl: Boolean,
     host: String,
-    port: Int
+    port: Int,
+    path: String
 ) : MimiNetworkEngine() {
 
     private val httpUrl: HttpUrl = HttpUrl.Builder()
         .scheme(if (useSsl) "https" else "http")
         .host(host)
         .port(port)
+        .addPathSegment(path)
         .build()
 
     override suspend fun requestAsStringInternal(
@@ -118,7 +120,7 @@ internal class MimiOkHttpNetworkEngine(
     }
 
     internal class Factory(private val okHttpClient: OkHttpClient) : MimiNetworkEngine.Factory {
-        override fun create(useSsl: Boolean, host: String, port: Int): MimiNetworkEngine =
-            MimiOkHttpNetworkEngine(okHttpClient, useSsl, host, port)
+        override fun create(useSsl: Boolean, host: String, port: Int, path: String): MimiNetworkEngine =
+            MimiOkHttpNetworkEngine(okHttpClient, useSsl, host, port, path)
     }
 }
