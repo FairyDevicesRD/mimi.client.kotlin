@@ -15,10 +15,22 @@ import okio.use
 
 private fun loadLocalProperties(): Properties = Properties()
     .apply {
-        File("local.properties").inputStream().use {
+        getLocalPropertyFile().inputStream().use {
             load(it)
         }
     }
+
+private fun getLocalPropertyFile(): File {
+    val file = File("local.properties")
+    if (file.exists()) {
+        return file
+    }
+    val fileInParent = File("../local.properties")
+    if (fileInParent.exists()) {
+        return fileInParent
+    }
+    throw IllegalArgumentException("local.properties not found")
+}
 
 private fun loadToken(): String {
     val token = System.getenv("MIMI_TOKEN") ?: loadLocalProperties().getProperty("MIMI_TOKEN")
