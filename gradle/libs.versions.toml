@@ -1,0 +1,57 @@
+[versions]
+projectVersion = "0.0.1"
+
+# https://github.com/jetbrains/kotlin/releases
+kotlin = "2.1.0"
+
+# https://github.com/Kotlin/kotlinx.coroutines/releases
+kotlinx-coroutines = "1.9.0"
+
+# https://github.com/Kotlin/kotlinx.serialization/releases
+kotlinx-serialization = "1.7.3"
+
+# https://github.com/square/okio/releases
+okio = "3.9.1"
+
+# https://github.com/ktorio/ktor/releases
+ktor = "3.0.2"
+
+# https://square.github.io/okhttp/changelogs/changelog/
+okhttp = "4.12.0"
+
+# https://github.com/junit-team/junit5/releases
+junit = "5.11.3"
+
+# https://github.com/mockk/mockk/releases
+mockk = "1.13.13"
+
+# https://github.com/cashapp/turbine/releases
+turbine = "1.2.0"
+
+# https://logback.qos.ch/download.html
+logback = "1.5.16"
+
+[libraries]
+kotlin-gradle = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
+kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
+kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
+kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-serialization" }
+okio = { group = "com.squareup.okio", name = "okio", version.ref = "okio" }
+ktor-client-core = { group = "io.ktor", name = "ktor-client-core", version.ref = "ktor" }
+ktor-client-cio = { group = "io.ktor", name = "ktor-client-cio", version.ref = "ktor" }
+ktor-client-logging = { group = "io.ktor", name = "ktor-client-logging", version.ref = "ktor" }
+okhttp = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okhttp" }
+okhttp-logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp" }
+junit-bom = { group = "org.junit", name = "junit-bom", version.ref = "junit" }
+junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter" }
+junit-platform-launcher = { group = "org.junit.platform", name = "junit-platform-launcher" }
+mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
+turbine = { group = "app.cash.turbine", name = "turbine", version.ref = "turbine" }
+logback-classic = { group = "ch.qos.logback", name = "logback-classic", version.ref = "logback" }
+
+[plugins]
+mimi-builder = { id = "ai.fd.mimi.client.builder" }
+kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlin-allopen = { id = "org.jetbrains.kotlin.plugin.allopen", version.ref = "kotlin" }
+kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
