@@ -11,4 +11,8 @@ sealed interface MimiModelConverter<T> {
 
         fun <R> encode(model: R, serializer: KSerializer<R>): String = json.encodeToString(serializer, model)
     }
+
+    abstract class Binary<T> : MimiModelConverter<T> {
+        abstract fun decode(byteArray: ByteArray): T
+    }
 }

@@ -7,10 +7,12 @@ import ai.fd.mimi.client.engine.MimiWebSocketSessionInternal
 import io.ktor.client.HttpClient
 import io.ktor.client.plugins.websocket.webSocketSession
 import io.ktor.client.request.HttpRequestBuilder
+import io.ktor.client.request.forms.FormDataContent
 import io.ktor.client.request.headers
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
 import io.ktor.client.statement.HttpResponse
+import io.ktor.client.statement.bodyAsBytes
 import io.ktor.client.statement.bodyAsText
 import io.ktor.http.ContentType
 import io.ktor.http.URLProtocol
@@ -18,6 +20,7 @@ import io.ktor.http.Url
 import io.ktor.http.buildUrl
 import io.ktor.http.contentType
 import io.ktor.http.isSuccess
+import io.ktor.http.parameters
 import io.ktor.http.path
 import io.ktor.http.takeFrom
 import io.ktor.utils.io.ByteReadChannel
@@ -50,6 +53,12 @@ class MimiKtorNetworkEngine(
         requestBody: RequestBody,
         headers: Map<String, String>
     ): Result<String> = requestInternal(accessToken, requestBody, headers) { it.bodyAsText() }
+
+    override suspend fun requestAsBinaryInternal(
+        accessToken: String,
+        requestBody: RequestBody,
+        headers: Map<String, String>
+    ): Result<ByteArray> = requestInternal(accessToken, requestBody, headers) { it.bodyAsBytes() }
 
     private suspend fun <T> requestInternal(
         accessToken: String,
@@ -96,12 +105,16 @@ class MimiKtorNetworkEngine(
         return MimiKtorWebSocketSession(session, converter)
     }
 
-    private fun HttpRequestBuilder.setBodyAndContentType(requestBody: RequestBody) {
-        when (requestBody) {
-            is RequestBody.Binary -> {
-                contentType(ContentType.parse(requestBody.contentType))
-                setBody(ByteReadChannel(requestBody.byteArray))
-            }
+    private fun HttpRequestBuilder.setBodyAndContentType(requestBody: RequestBody): Unit = when (requestBody) {
+        is RequestBody.Binary -> {
+            contentType(ContentType.parse(requestBody.contentType))
+            setBody(ByteReadChannel(requestBody.byteArray))
+        }
+
+        is RequestBody.FormData -> {
+            contentType(ContentType.Application.FormUrlEncoded)
+            val parameters = parameters { requestBody.fields.forEach { (key, value) -> append(key, value) } }
+            setBody(FormDataContent(parameters))
         }
     }
 

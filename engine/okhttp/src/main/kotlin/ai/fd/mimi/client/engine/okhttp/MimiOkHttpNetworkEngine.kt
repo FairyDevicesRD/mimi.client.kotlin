@@ -9,6 +9,7 @@ import kotlin.coroutines.resumeWithException
 import kotlinx.coroutines.suspendCancellableCoroutine
 import okhttp3.Call
 import okhttp3.Callback
+import okhttp3.FormBody
 import okhttp3.HttpUrl
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
@@ -39,6 +40,12 @@ internal class MimiOkHttpNetworkEngine(
         requestBody: RequestBody,
         headers: Map<String, String>
     ): Result<String> = requestInternal(accessToken, requestBody, headers) { it.body?.string() }
+
+    override suspend fun requestAsBinaryInternal(
+        accessToken: String,
+        requestBody: RequestBody,
+        headers: Map<String, String>
+    ): Result<ByteArray> = requestInternal(accessToken, requestBody, headers) { it.body?.bytes() }
 
     private suspend fun <T> requestInternal(
         accessToken: String,
@@ -117,6 +124,8 @@ internal class MimiOkHttpNetworkEngine(
 
     private fun RequestBody.toOkHttpRequestBody(): OkHttpRequestBody = when (this) {
         is RequestBody.Binary -> byteArray.toRequestBody(contentType.toMediaType())
+        is RequestBody.FormData ->
+            fields.entries.fold(FormBody.Builder()) { builder, (key, value) -> builder.add(key, value) }.build()
     }
 
     internal class Factory(private val okHttpClient: OkHttpClient) : MimiNetworkEngine.Factory {
