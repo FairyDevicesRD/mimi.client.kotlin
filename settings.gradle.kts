@@ -7,6 +7,7 @@ include("engine:okhttp")
 include("service:asr-core")
 include("service:asr")
 include("service:nict-asr")
+include("service:nict-tts")
 include("sample")
 
 dependencyResolutionManagement {
