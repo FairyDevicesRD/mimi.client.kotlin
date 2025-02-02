@@ -5,7 +5,9 @@ plugins {
 }
 
 application {
-    mainClass = "${property("target")}Kt"
+    if (hasProperty("target")) {
+        mainClass = "${property("target")}Kt"
+    }
 }
 
 dependencies {
