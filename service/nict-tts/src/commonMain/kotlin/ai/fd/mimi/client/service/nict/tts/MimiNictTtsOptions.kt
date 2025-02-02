@@ -1,5 +1,7 @@
 package ai.fd.mimi.client.service.nict.tts
 
+import ai.fd.mimi.client.annotation.ExperimentalMimiApi
+
 /**
  * Options for requesting the NICT TTS service.
  *
@@ -10,6 +12,11 @@ data class MimiNictTtsOptions(
     val audioFormat: AudioFormat,
     val audioEndian: AudioEndian,
     val gender: Gender,
+    // Note: Currently, annotations on data class properties do not raise warnings when they are used in constructors or
+    // copy.
+    // According to KEEP, there are no plans to apply RequiresOptIn to parameters, but we will use it for clarity.
+    // https://github.com/Kotlin/KEEP/blob/master/proposals/opt-in.md
+    @property:ExperimentalMimiApi
     val rate: Float
 ) {
     /**

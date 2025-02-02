@@ -1,5 +1,6 @@
 package ai.fd.mimi.client.service.nict.tts
 
+import ai.fd.mimi.client.annotation.ExperimentalMimiApi
 import ai.fd.mimi.client.engine.MimiModelConverter
 import ai.fd.mimi.client.engine.MimiNetworkEngine
 import ai.fd.mimi.client.service.nict.tts.MimiNictTtsServiceConst as Const
@@ -7,6 +8,7 @@ import ai.fd.mimi.client.service.nict.tts.MimiNictTtsServiceConst as Const
 /**
  * A service class to interact with [the NICT TTS service](https://mimi.readme.io/docs/tts-http-service).
  */
+@OptIn(ExperimentalMimiApi::class)
 class MimiNictTtsService internal constructor(
     private val engine: MimiNetworkEngine,
     private val accessToken: String,
