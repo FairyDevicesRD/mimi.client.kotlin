@@ -150,7 +150,7 @@ suspend fun runTts(engineFactory: MimiNetworkEngine.Factory) {
         accessToken = loadToken()
     )
     val result = ttsService.requestTts(
-        "吾輩は猫である。名前はまだ無い。どこで生れたかとんと見当けんとうがつかぬ。" +
+        "吾輩は猫である。名前はまだ無い。どこで生れたかとんと見当がつかぬ。" +
                 "何でも薄暗いじめじめした所でニャーニャー泣いていた事だけは記憶している。"
     )
     result.onSuccess {
