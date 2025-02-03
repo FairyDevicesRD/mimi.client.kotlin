@@ -16,6 +16,7 @@ kotlin {
         commonMain.dependencies {
             api(project(":engine:core"))
             api(project(":utils"))
+            implementation(libs.androidx.annotation)
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.okio)
         }

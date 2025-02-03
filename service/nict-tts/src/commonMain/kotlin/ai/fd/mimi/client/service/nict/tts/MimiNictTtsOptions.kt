@@ -1,6 +1,7 @@
 package ai.fd.mimi.client.service.nict.tts
 
 import ai.fd.mimi.client.annotation.ExperimentalMimiApi
+import androidx.annotation.FloatRange
 
 /**
  * Options for requesting the NICT TTS service.
@@ -17,6 +18,7 @@ data class MimiNictTtsOptions(
     // According to KEEP, there are no plans to apply RequiresOptIn to parameters, but we will use it for clarity.
     // https://github.com/Kotlin/KEEP/blob/master/proposals/opt-in.md
     @property:ExperimentalMimiApi
+    @FloatRange(from = 0.5, to = 2.0)
     val rate: Float
 ) {
     /**
