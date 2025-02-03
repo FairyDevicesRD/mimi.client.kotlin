@@ -38,7 +38,7 @@ interface MimiWebSocketSession<T> {
 }
 
 abstract class MimiWebSocketSessionInternal<T>(
-    protected val converter: MimiModelConverter<T>
+    protected val converter: MimiModelConverter.JsonString<T>
 ) : MimiWebSocketSession<T> {
 
     protected abstract suspend fun sendText(text: String)

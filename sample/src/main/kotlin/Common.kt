@@ -3,19 +3,34 @@ import ai.fd.mimi.client.service.asr.MimiAsrService
 import ai.fd.mimi.client.service.asr.core.MimiAsrWebSocketSession
 import ai.fd.mimi.client.service.nict.asr.MimiNictAsrV1Service
 import ai.fd.mimi.client.service.nict.asr.MimiNictAsrV2Service
+import ai.fd.mimi.client.service.nict.tts.MimiNictTtsService
 import io.ktor.util.toLowerCasePreservingASCIIRules
 import java.io.File
+import java.text.SimpleDateFormat
 import java.util.Properties
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import okio.ByteString.Companion.toByteString
+import okio.use
 
 private fun loadLocalProperties(): Properties = Properties()
     .apply {
-        File("local.properties").inputStream().use {
+        getLocalPropertyFile().inputStream().use {
             load(it)
         }
     }
+
+private fun getLocalPropertyFile(): File {
+    val file = File("local.properties")
+    if (file.exists()) {
+        return file
+    }
+    val fileInParent = File("../local.properties")
+    if (fileInParent.exists()) {
+        return fileInParent
+    }
+    throw IllegalArgumentException("local.properties not found")
+}
 
 private fun loadToken(): String {
     val token = System.getenv("MIMI_TOKEN") ?: loadLocalProperties().getProperty("MIMI_TOKEN")
@@ -126,6 +141,27 @@ suspend fun testAsrWebSocket(session: MimiAsrWebSocketSession<*>) {
         println("send recog finish")
         session.stopRecognition()
         job.join()
+    }
+}
+
+suspend fun runTts(engineFactory: MimiNetworkEngine.Factory) {
+    val ttsService = MimiNictTtsService(
+        engineFactory = engineFactory,
+        accessToken = loadToken()
+    )
+    val result = ttsService.requestTts(
+        "吾輩は猫である。名前はまだ無い。どこで生れたかとんと見当がつかぬ。" +
+                "何でも薄暗いじめじめした所でニャーニャー泣いていた事だけは記憶している。"
+    )
+    result.onSuccess {
+        println("Success to run TTS. bytes: ${it.audioBinary.size}")
+        val currentTimeStr = SimpleDateFormat("yyyy-MM-dd-HH-mm-ss").format(System.currentTimeMillis())
+        val file = File("${currentTimeStr}.wav")
+        file.writeBytes(it.audioBinary.toByteArray())
+        println("Saved to ${file.absolutePath}")
+    }.onFailure {
+        println("Failed to run TTS.")
+        it.printStackTrace()
     }
 }
 

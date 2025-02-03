@@ -9,6 +9,7 @@ import kotlin.coroutines.resumeWithException
 import kotlinx.coroutines.suspendCancellableCoroutine
 import okhttp3.Call
 import okhttp3.Callback
+import okhttp3.FormBody
 import okhttp3.HttpUrl
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
@@ -17,31 +18,46 @@ import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
 import okhttp3.internal.closeQuietly
 import okio.IOException
+import okhttp3.RequestBody as OkHttpRequestBody
 
 internal class MimiOkHttpNetworkEngine(
     private val okHttpClient: OkHttpClient,
     useSsl: Boolean,
     host: String,
-    port: Int
+    port: Int,
+    path: String
 ) : MimiNetworkEngine() {
 
     private val httpUrl: HttpUrl = HttpUrl.Builder()
         .scheme(if (useSsl) "https" else "http")
         .host(host)
         .port(port)
+        .addPathSegment(path)
         .build()
 
-    override suspend fun requestInternal(
+    override suspend fun requestAsStringInternal(
         accessToken: String,
-        byteArray: ByteArray,
-        contentType: String,
+        requestBody: RequestBody,
         headers: Map<String, String>
-    ): Result<String> {
+    ): Result<String> = requestInternal(accessToken, requestBody, headers) { it.body?.string() }
+
+    override suspend fun requestAsBinaryInternal(
+        accessToken: String,
+        requestBody: RequestBody,
+        headers: Map<String, String>
+    ): Result<ByteArray> = requestInternal(accessToken, requestBody, headers) { it.body?.bytes() }
+
+    private suspend fun <T> requestInternal(
+        accessToken: String,
+        requestBody: RequestBody,
+        headers: Map<String, String>,
+        extractResponseBodyAction: suspend (Response) -> T?
+    ): Result<T> {
         val request = Request.Builder()
             .url(httpUrl)
             .addHeader("Authorization", "Bearer $accessToken")
             .addHeaders(headers)
-            .post(byteArray.toRequestBody(contentType = contentType.toMediaType()))
+            .post(requestBody.toOkHttpRequestBody())
             .build()
 
         val response = okHttpClient.newCall(request).executeAsync()
@@ -50,8 +66,9 @@ internal class MimiOkHttpNetworkEngine(
                 MimiIOException("Request failed with status: ${response.code}. Body: ${response.body?.string()}")
             )
         }
-        val text = response.body?.string() ?: return Result.failure(MimiIOException("Response body is null"))
-        return Result.success(text)
+        val data =
+            extractResponseBodyAction(response) ?: return Result.failure(MimiIOException("Response body is null"))
+        return Result.success(data)
     }
 
     @Throws(MimiIOException::class, CancellationException::class)
@@ -59,7 +76,7 @@ internal class MimiOkHttpNetworkEngine(
         accessToken: String,
         contentType: String,
         headers: Map<String, String>,
-        converter: MimiModelConverter<R>
+        converter: MimiModelConverter.JsonString<R>
     ): MimiWebSocketSessionInternal<R> {
         val request = Request.Builder()
             .url(httpUrl) // Will be upgraded to ws scheme after connection established.
@@ -105,8 +122,14 @@ internal class MimiOkHttpNetworkEngine(
         }
     }
 
+    private fun RequestBody.toOkHttpRequestBody(): OkHttpRequestBody = when (this) {
+        is RequestBody.Binary -> byteArray.toRequestBody(contentType.toMediaType())
+        is RequestBody.FormData ->
+            fields.entries.fold(FormBody.Builder()) { builder, (key, value) -> builder.add(key, value) }.build()
+    }
+
     internal class Factory(private val okHttpClient: OkHttpClient) : MimiNetworkEngine.Factory {
-        override fun create(useSsl: Boolean, host: String, port: Int): MimiNetworkEngine =
-            MimiOkHttpNetworkEngine(okHttpClient, useSsl, host, port)
+        override fun create(useSsl: Boolean, host: String, port: Int, path: String): MimiNetworkEngine =
+            MimiOkHttpNetworkEngine(okHttpClient, useSsl, host, port, path)
     }
 }

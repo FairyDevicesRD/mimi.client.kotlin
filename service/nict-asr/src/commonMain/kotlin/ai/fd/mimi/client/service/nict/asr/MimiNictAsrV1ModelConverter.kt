@@ -6,7 +6,8 @@ import ai.fd.mimi.client.service.nict.asr.entity.MimiNictAsrV1ResultEntity
 import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
 
-internal class MimiNictAsrV1ModelConverter(json: Json = Json.Default) : MimiModelConverter<MimiNictAsrV1Result>(json) {
+internal class MimiNictAsrV1ModelConverter(json: Json = Json.Default) :
+    MimiModelConverter.JsonString<MimiNictAsrV1Result>(json) {
 
     @Throws(MimiJsonException::class)
     override fun decode(jsonText: String): MimiNictAsrV1Result = try {

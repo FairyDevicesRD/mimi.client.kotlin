@@ -1,6 +1,13 @@
 plugins {
+    application
     alias(libs.plugins.kotlin.jvm)
     alias(libs.plugins.mimi.builder)
+}
+
+application {
+    if (hasProperty("target")) {
+        mainClass = "${property("target")}Kt"
+    }
 }
 
 dependencies {
@@ -8,6 +15,7 @@ dependencies {
     implementation(project(":engine:ktor"))
     implementation(project(":service:asr"))
     implementation(project(":service:nict-asr"))
+    implementation(project(":service:nict-tts"))
     implementation(libs.okhttp)
     implementation(libs.okhttp.logging.interceptor)
     implementation(libs.kotlinx.coroutines.core)

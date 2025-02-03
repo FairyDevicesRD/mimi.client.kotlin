@@ -10,7 +10,7 @@ import ai.fd.mimi.client.service.nict.asr.MimiNictAsrServiceConst as Const
 class MimiNictAsrV1Service internal constructor(
     private val engine: MimiNetworkEngine,
     private val accessToken: String,
-    private val converter: MimiModelConverter<MimiNictAsrV1Result>
+    private val converter: MimiModelConverter.JsonString<MimiNictAsrV1Result>
 ) {
     constructor(
         engineFactory: MimiNetworkEngine.Factory,
@@ -29,12 +29,14 @@ class MimiNictAsrV1Service internal constructor(
         options: MimiNictAsrV1Options = MimiNictAsrV1Options.DEFAULT
     ): Result<MimiNictAsrV1Result> = engine.request(
         accessToken = accessToken,
-        byteArray = audioData,
+        requestBody = MimiNetworkEngine.RequestBody.Binary(
+            byteArray = audioData,
+            contentType = options.toContentType()
+        ),
         headers = mapOf(
             Const.HEADER_X_MIMI_PROCESS_KEY to Const.HEADER_X_MIMI_PROCESS_VALUE,
             Const.HEADER_X_MIMI_INPUT_LANGUAGE to options.inputLanguage.value
         ),
-        contentType = options.toContentType(),
         converter = converter
     )
 

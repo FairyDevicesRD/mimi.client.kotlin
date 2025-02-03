@@ -10,7 +10,7 @@ import ai.fd.mimi.client.service.nict.asr.MimiNictAsrServiceConst as Const
 class MimiNictAsrV2Service internal constructor(
     private val engine: MimiNetworkEngine,
     private val accessToken: String,
-    private val converter: MimiModelConverter<MimiNictAsrV2Result>
+    private val converter: MimiModelConverter.JsonString<MimiNictAsrV2Result>
 ) {
     constructor(
         engineFactory: MimiNetworkEngine.Factory,
@@ -31,13 +31,15 @@ class MimiNictAsrV2Service internal constructor(
         check(!options.progressive) { "Progressive mode is not supported for HTTP request" }
         return engine.request(
             accessToken = accessToken,
-            byteArray = audioData,
+            requestBody = MimiNetworkEngine.RequestBody.Binary(
+                byteArray = audioData,
+                contentType = options.toContentType()
+            ),
             headers = mapOf(
                 Const.HEADER_X_MIMI_PROCESS_KEY to Const.HEADER_X_MIMI_PROCESS_VALUE,
                 Const.HEADER_X_MIMI_INPUT_LANGUAGE to options.inputLanguage.value,
                 HEADER_X_MIMI_NICT_ASR_OPTIONS to options.toNictAsrOptions()
             ),
-            contentType = options.toContentType(),
             converter = converter
         )
     }
