@@ -2,6 +2,7 @@ package ai.fd.mimi.client.engine
 
 import ai.fd.mimi.client.MimiIOException
 import ai.fd.mimi.client.MimiJsonException
+import ai.fd.mimi.client.MimiSerializationException
 import kotlin.coroutines.cancellation.CancellationException
 import okio.ByteString
 
@@ -50,7 +51,7 @@ abstract class MimiNetworkEngine {
         val binary = networkResult.getOrThrow()
         return try {
             Result.success(converter.decode(binary))
-        } catch (e: MimiIOException) {
+        } catch (e: MimiSerializationException) {
             Result.failure(e)
         }
     }

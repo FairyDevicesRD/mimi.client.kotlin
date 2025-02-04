@@ -1,9 +1,9 @@
 package ai.fd.mimi.client
 
 /**
- * Exception thrown when a JSON serialization/deserialization error occurs.
+ * Exception thrown when serialization/deserialization error occurs.
  */
-class MimiJsonException : MimiSerializationException {
+open class MimiSerializationException : Exception {
     constructor(message: String) : super(message)
     constructor(message: String, cause: Throwable) : super(message, cause)
 }
