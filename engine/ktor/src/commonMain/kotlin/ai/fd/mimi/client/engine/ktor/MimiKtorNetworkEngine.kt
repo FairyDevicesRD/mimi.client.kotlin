@@ -4,7 +4,9 @@ import ai.fd.mimi.client.MimiIOException
 import ai.fd.mimi.client.engine.MimiModelConverter
 import ai.fd.mimi.client.engine.MimiNetworkEngine
 import ai.fd.mimi.client.engine.MimiWebSocketSessionInternal
+import androidx.annotation.VisibleForTesting
 import io.ktor.client.HttpClient
+import io.ktor.client.plugins.websocket.DefaultClientWebSocketSession
 import io.ktor.client.plugins.websocket.webSocketSession
 import io.ktor.client.request.HttpRequestBuilder
 import io.ktor.client.request.forms.FormDataContent
@@ -104,8 +106,14 @@ class MimiKtorNetworkEngine(
         } catch (e: Throwable) {
             throw MimiIOException("Failed to open WebSocket session", e)
         }
-        return MimiKtorWebSocketSession(session, converter)
+        return createWebSocketSession(session, converter)
     }
+
+    @VisibleForTesting
+    internal fun <T> createWebSocketSession(
+        session: DefaultClientWebSocketSession,
+        converter: MimiModelConverter.JsonString<T>
+    ): MimiWebSocketSessionInternal<T> = MimiKtorWebSocketSession(session, converter)
 
     private fun HttpRequestBuilder.setBodyAndContentType(requestBody: RequestBody): Unit = when (requestBody) {
         is RequestBody.Binary -> {
