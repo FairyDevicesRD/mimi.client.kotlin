@@ -3,6 +3,7 @@ package ai.fd.mimi.client.engine
 import ai.fd.mimi.client.MimiIOException
 import ai.fd.mimi.client.MimiJsonException
 import ai.fd.mimi.client.MimiSerializationException
+import androidx.annotation.VisibleForTesting
 import kotlin.coroutines.cancellation.CancellationException
 import okio.ByteString
 
@@ -56,13 +57,15 @@ abstract class MimiNetworkEngine {
         }
     }
 
-    protected abstract suspend fun requestAsStringInternal(
+    @VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
+    abstract suspend fun requestAsStringInternal(
         accessToken: String,
         requestBody: RequestBody,
         headers: Map<String, String> = emptyMap()
     ): Result<String>
 
-    protected abstract suspend fun requestAsBinaryInternal(
+    @VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
+    abstract suspend fun requestAsBinaryInternal(
         accessToken: String,
         requestBody: RequestBody,
         headers: Map<String, String> = emptyMap()
