@@ -5,6 +5,13 @@ plugins {
 }
 
 kotlin {
+    jvm {
+        testRuns.named("test") {
+            executionTask.configure {
+                useJUnitPlatform()
+            }
+        }
+    }
     sourceSets {
         commonMain.dependencies {
             api(project(":engine:core"))
@@ -15,6 +22,12 @@ kotlin {
             implementation(kotlin("test"))
             implementation(libs.kotlinx.coroutines.test)
             implementation(libs.turbine)
+        }
+        jvmTest.dependencies {
+            implementation(project.dependencies.platform(libs.junit.bom))
+            implementation(libs.junit.jupiter)
+            implementation(libs.junit.platform.launcher)
+            implementation(libs.mockk)
         }
     }
 }
