@@ -10,6 +10,7 @@ kotlin {
             api(project(":engine:core"))
             api(project(":service:asr-core"))
             implementation(libs.kotlinx.serialization.json)
+            implementation(libs.okio)
         }
         commonTest.dependencies {
             implementation(kotlin("test"))

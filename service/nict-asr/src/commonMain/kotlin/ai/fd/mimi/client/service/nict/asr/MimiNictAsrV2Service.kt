@@ -5,6 +5,7 @@ import ai.fd.mimi.client.engine.MimiModelConverter
 import ai.fd.mimi.client.engine.MimiNetworkEngine
 import ai.fd.mimi.client.service.asr.core.MimiAsrWebSocketSession
 import kotlin.coroutines.cancellation.CancellationException
+import okio.ByteString.Companion.toByteString
 import ai.fd.mimi.client.service.nict.asr.MimiNictAsrServiceConst as Const
 
 class MimiNictAsrV2Service internal constructor(
@@ -32,7 +33,7 @@ class MimiNictAsrV2Service internal constructor(
         return engine.request(
             accessToken = accessToken,
             requestBody = MimiNetworkEngine.RequestBody.Binary(
-                byteArray = audioData,
+                data = audioData.toByteString(),
                 contentType = options.toContentType()
             ),
             headers = mapOf(

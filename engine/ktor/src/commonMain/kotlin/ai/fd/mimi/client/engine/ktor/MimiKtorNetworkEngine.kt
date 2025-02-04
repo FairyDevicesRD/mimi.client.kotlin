@@ -25,6 +25,8 @@ import io.ktor.http.path
 import io.ktor.http.takeFrom
 import io.ktor.utils.io.ByteReadChannel
 import kotlin.coroutines.cancellation.CancellationException
+import okio.ByteString
+import okio.ByteString.Companion.toByteString
 
 class MimiKtorNetworkEngine(
     private val httpClient: HttpClient,
@@ -58,7 +60,7 @@ class MimiKtorNetworkEngine(
         accessToken: String,
         requestBody: RequestBody,
         headers: Map<String, String>
-    ): Result<ByteArray> = requestInternal(accessToken, requestBody, headers) { it.bodyAsBytes() }
+    ): Result<ByteString> = requestInternal(accessToken, requestBody, headers) { it.bodyAsBytes().toByteString() }
 
     private suspend fun <T> requestInternal(
         accessToken: String,
@@ -108,7 +110,7 @@ class MimiKtorNetworkEngine(
     private fun HttpRequestBuilder.setBodyAndContentType(requestBody: RequestBody): Unit = when (requestBody) {
         is RequestBody.Binary -> {
             contentType(ContentType.parse(requestBody.contentType))
-            setBody(ByteReadChannel(requestBody.byteArray))
+            setBody(ByteReadChannel(requestBody.data.toByteArray()))
         }
 
         is RequestBody.FormData -> {

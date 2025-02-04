@@ -5,6 +5,7 @@ import ai.fd.mimi.client.engine.MimiModelConverter
 import ai.fd.mimi.client.engine.MimiNetworkEngine
 import ai.fd.mimi.client.service.asr.core.MimiAsrWebSocketSession
 import kotlin.coroutines.cancellation.CancellationException
+import okio.ByteString.Companion.toByteString
 
 class MimiAsrService internal constructor(
     private val engine: MimiNetworkEngine,
@@ -29,7 +30,7 @@ class MimiAsrService internal constructor(
     ): Result<MimiAsrResult> = engine.request(
         accessToken = accessToken,
         requestBody = MimiNetworkEngine.RequestBody.Binary(
-            byteArray = audioData,
+            data = audioData.toByteString(),
             contentType = options.toContentType()
         ),
         headers = mapOf(

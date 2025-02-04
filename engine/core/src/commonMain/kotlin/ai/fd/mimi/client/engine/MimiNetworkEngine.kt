@@ -3,6 +3,7 @@ package ai.fd.mimi.client.engine
 import ai.fd.mimi.client.MimiIOException
 import ai.fd.mimi.client.MimiJsonException
 import kotlin.coroutines.cancellation.CancellationException
+import okio.ByteString
 
 abstract class MimiNetworkEngine {
 
@@ -64,7 +65,7 @@ abstract class MimiNetworkEngine {
         accessToken: String,
         requestBody: RequestBody,
         headers: Map<String, String> = emptyMap()
-    ): Result<ByteArray>
+    ): Result<ByteString>
 
     @Throws(MimiIOException::class, CancellationException::class)
     abstract suspend fun <T> openWebSocketSession(
@@ -75,8 +76,8 @@ abstract class MimiNetworkEngine {
     ): MimiWebSocketSessionInternal<T>
 
     sealed interface RequestBody {
-        class Binary(val byteArray: ByteArray, val contentType: String) : RequestBody
-        class FormData(val fields: Map<String, String>) : RequestBody
+        data class Binary(val data: ByteString, val contentType: String) : RequestBody
+        data class FormData(val fields: Map<String, String>) : RequestBody
     }
 
     interface Factory {
