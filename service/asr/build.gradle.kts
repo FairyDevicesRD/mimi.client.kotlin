@@ -5,17 +5,31 @@ plugins {
 }
 
 kotlin {
+    jvm {
+        testRuns.named("test") {
+            executionTask.configure {
+                useJUnitPlatform()
+            }
+        }
+    }
     sourceSets {
         commonMain.dependencies {
             api(project(":engine:core"))
             api(project(":service:asr-core"))
             implementation(libs.kotlinx.serialization.json)
+            implementation(libs.androidx.annotation)
             implementation(libs.okio)
         }
         commonTest.dependencies {
             implementation(kotlin("test"))
             implementation(libs.kotlinx.coroutines.test)
             implementation(libs.turbine)
+        }
+        jvmTest.dependencies {
+            implementation(project.dependencies.platform(libs.junit.bom))
+            implementation(libs.junit.jupiter)
+            implementation(libs.junit.platform.launcher)
+            implementation(libs.mockk)
         }
     }
 }

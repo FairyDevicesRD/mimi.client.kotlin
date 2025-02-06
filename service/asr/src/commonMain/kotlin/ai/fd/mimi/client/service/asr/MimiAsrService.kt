@@ -3,7 +3,9 @@ package ai.fd.mimi.client.service.asr
 import ai.fd.mimi.client.MimiIOException
 import ai.fd.mimi.client.engine.MimiModelConverter
 import ai.fd.mimi.client.engine.MimiNetworkEngine
+import ai.fd.mimi.client.engine.MimiWebSocketSessionInternal
 import ai.fd.mimi.client.service.asr.core.MimiAsrWebSocketSession
+import androidx.annotation.VisibleForTesting
 import kotlin.coroutines.cancellation.CancellationException
 import okio.ByteString.Companion.toByteString
 
@@ -53,8 +55,13 @@ class MimiAsrService internal constructor(
             contentType = options.toContentType(),
             converter = converter
         )
-        return MimiAsrWebSocketSession(session)
+        return createMimiAsrWebSocketSession(session)
     }
+
+    @VisibleForTesting
+    internal fun createMimiAsrWebSocketSession(
+        session: MimiWebSocketSessionInternal<MimiAsrResult>
+    ): MimiAsrWebSocketSession<MimiAsrResult> = MimiAsrWebSocketSession(session)
 
     private companion object {
         const val HEADER_X_MIMI_PROCESS_KEY = "x-mimi-process"
