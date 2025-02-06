@@ -82,7 +82,7 @@ internal class MimiOkHttpNetworkEngine(
         val request = Request.Builder()
             .url(httpUrl) // Will be upgraded to ws scheme after connection established.
             .addHeader("Authorization", "Bearer $accessToken")
-            .addHeader("ContentType", contentType)
+            .addHeader("Content-Type", contentType)
             .addHeaders(headers)
             .build()
 
