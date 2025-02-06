@@ -28,7 +28,7 @@ internal class MimiOkHttpWebSocketSession<R>(
 
     @OptIn(DelicateCoroutinesApi::class)
     override val isActive: Boolean
-        get() = rxChannel.isClosedForSend
+        get() = !rxChannel.isClosedForSend
 
     private val rxChannel: Channel<R> = Channel()
     override val rxFlow: Flow<R> = rxChannel.consumeAsFlow()
