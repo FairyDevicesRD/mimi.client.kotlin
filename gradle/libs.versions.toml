@@ -10,6 +10,9 @@ kotlinx-coroutines = "1.9.0"
 # https://github.com/Kotlin/kotlinx.serialization/releases
 kotlinx-serialization = "1.7.3"
 
+# https://github.com/Kotlin/kotlinx.kover/releases
+kotlinx-kover = "0.9.1"
+
 # https://developer.android.com/jetpack/androidx/releases/annotation
 androidx-annotation = "1.9.1"
 
@@ -62,3 +65,4 @@ kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref 
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 kotlin-allopen = { id = "org.jetbrains.kotlin.plugin.allopen", version.ref = "kotlin" }
 kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
+kotlinx-kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kotlinx-kover" }
