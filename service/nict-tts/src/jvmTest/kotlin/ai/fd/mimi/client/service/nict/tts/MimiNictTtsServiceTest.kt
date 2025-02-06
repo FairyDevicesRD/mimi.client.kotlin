@@ -1,5 +1,6 @@
 package ai.fd.mimi.client.service.nict.tts
 
+import ai.fd.mimi.client.annotation.ExperimentalMimiApi
 import ai.fd.mimi.client.engine.MimiModelConverter
 import ai.fd.mimi.client.engine.MimiNetworkEngine
 import io.mockk.coEvery
@@ -21,6 +22,7 @@ import org.junit.jupiter.api.extension.ExtendWith
 /**
  * Tests for [MimiNictTtsService].
  */
+@OptIn(ExperimentalMimiApi::class)
 @ExtendWith(MockKExtension::class)
 class MimiNictTtsServiceTest {
 
