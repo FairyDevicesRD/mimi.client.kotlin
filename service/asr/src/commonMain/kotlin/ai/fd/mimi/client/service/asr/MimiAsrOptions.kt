@@ -4,6 +4,7 @@ import ai.fd.mimi.client.service.asr.core.MimiAsrAudioFormat
 import ai.fd.mimi.client.service.asr.core.internal.MimiAsrContentTypeFormatter
 import ai.fd.mimi.client.service.asr.core.internal.MimiAsrOptionDefaults
 
+@ExposedCopyVisibility
 data class MimiAsrOptions internal constructor(
     val audioFormat: MimiAsrAudioFormat,
     val audioBitrate: Int,
