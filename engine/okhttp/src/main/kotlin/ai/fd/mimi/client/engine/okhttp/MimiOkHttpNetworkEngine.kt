@@ -19,6 +19,7 @@ import okhttp3.Response
 import okhttp3.internal.closeQuietly
 import okio.ByteString
 import okio.IOException
+import org.jetbrains.annotations.VisibleForTesting
 import okhttp3.RequestBody as OkHttpRequestBody
 
 internal class MimiOkHttpNetworkEngine(
@@ -86,10 +87,17 @@ internal class MimiOkHttpNetworkEngine(
             .addHeaders(headers)
             .build()
 
-        val session = MimiOkHttpWebSocketSession(request, okHttpClient, converter)
+        val session = createWebSocketSession(request, okHttpClient, converter)
         session.connect()
         return session
     }
+
+    @VisibleForTesting
+    internal fun <T> createWebSocketSession(
+        request: Request,
+        okHttpClient: OkHttpClient,
+        converter: MimiModelConverter.JsonString<T>
+    ): MimiOkHttpWebSocketSession<T> = MimiOkHttpWebSocketSession(request, okHttpClient, converter)
 
     private suspend fun Call.executeAsync(): Response =
         suspendCancellableCoroutine { continuation ->
