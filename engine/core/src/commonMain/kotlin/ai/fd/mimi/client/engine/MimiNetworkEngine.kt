@@ -2,7 +2,10 @@ package ai.fd.mimi.client.engine
 
 import ai.fd.mimi.client.MimiIOException
 import ai.fd.mimi.client.MimiJsonException
+import ai.fd.mimi.client.MimiSerializationException
+import androidx.annotation.VisibleForTesting
 import kotlin.coroutines.cancellation.CancellationException
+import okio.ByteString
 
 abstract class MimiNetworkEngine {
 
@@ -49,22 +52,24 @@ abstract class MimiNetworkEngine {
         val binary = networkResult.getOrThrow()
         return try {
             Result.success(converter.decode(binary))
-        } catch (e: MimiIOException) {
+        } catch (e: MimiSerializationException) {
             Result.failure(e)
         }
     }
 
-    protected abstract suspend fun requestAsStringInternal(
+    @VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
+    abstract suspend fun requestAsStringInternal(
         accessToken: String,
         requestBody: RequestBody,
         headers: Map<String, String> = emptyMap()
     ): Result<String>
 
-    protected abstract suspend fun requestAsBinaryInternal(
+    @VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
+    abstract suspend fun requestAsBinaryInternal(
         accessToken: String,
         requestBody: RequestBody,
         headers: Map<String, String> = emptyMap()
-    ): Result<ByteArray>
+    ): Result<ByteString>
 
     @Throws(MimiIOException::class, CancellationException::class)
     abstract suspend fun <T> openWebSocketSession(
@@ -75,8 +80,8 @@ abstract class MimiNetworkEngine {
     ): MimiWebSocketSessionInternal<T>
 
     sealed interface RequestBody {
-        class Binary(val byteArray: ByteArray, val contentType: String) : RequestBody
-        class FormData(val fields: Map<String, String>) : RequestBody
+        data class Binary(val data: ByteString, val contentType: String) : RequestBody
+        data class FormData(val fields: Map<String, String>) : RequestBody
     }
 
     interface Factory {

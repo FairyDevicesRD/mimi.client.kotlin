@@ -1,12 +1,12 @@
 package ai.fd.mimi.client.service.nict.tts
 
 import ai.fd.mimi.client.engine.MimiModelConverter
-import okio.ByteString.Companion.toByteString
+import okio.ByteString
 
 /**
  * An implementation of [MimiModelConverter.Binary] for the NICT TTS service.
  */
 internal class MimiNictTtsModelConverter : MimiModelConverter.Binary<MimiNictTtsResult>() {
-    override fun decode(byteArray: ByteArray): MimiNictTtsResult =
-        MimiNictTtsResult(audioBinary = byteArray.toByteString())
+    override fun decode(data: ByteString): MimiNictTtsResult =
+        MimiNictTtsResult(audioBinary = data)
 }

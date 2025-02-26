@@ -17,7 +17,9 @@ import okhttp3.Request
 import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
 import okhttp3.internal.closeQuietly
+import okio.ByteString
 import okio.IOException
+import org.jetbrains.annotations.VisibleForTesting
 import okhttp3.RequestBody as OkHttpRequestBody
 
 internal class MimiOkHttpNetworkEngine(
@@ -45,7 +47,7 @@ internal class MimiOkHttpNetworkEngine(
         accessToken: String,
         requestBody: RequestBody,
         headers: Map<String, String>
-    ): Result<ByteArray> = requestInternal(accessToken, requestBody, headers) { it.body?.bytes() }
+    ): Result<ByteString> = requestInternal(accessToken, requestBody, headers) { it.body?.byteString() }
 
     private suspend fun <T> requestInternal(
         accessToken: String,
@@ -81,14 +83,21 @@ internal class MimiOkHttpNetworkEngine(
         val request = Request.Builder()
             .url(httpUrl) // Will be upgraded to ws scheme after connection established.
             .addHeader("Authorization", "Bearer $accessToken")
-            .addHeader("ContentType", contentType)
+            .addHeader("Content-Type", contentType)
             .addHeaders(headers)
             .build()
 
-        val session = MimiOkHttpWebSocketSession(request, okHttpClient, converter)
+        val session = createWebSocketSession(request, okHttpClient, converter)
         session.connect()
         return session
     }
+
+    @VisibleForTesting
+    internal fun <T> createWebSocketSession(
+        request: Request,
+        okHttpClient: OkHttpClient,
+        converter: MimiModelConverter.JsonString<T>
+    ): MimiOkHttpWebSocketSession<T> = MimiOkHttpWebSocketSession(request, okHttpClient, converter)
 
     private suspend fun Call.executeAsync(): Response =
         suspendCancellableCoroutine { continuation ->
@@ -123,7 +132,7 @@ internal class MimiOkHttpNetworkEngine(
     }
 
     private fun RequestBody.toOkHttpRequestBody(): OkHttpRequestBody = when (this) {
-        is RequestBody.Binary -> byteArray.toRequestBody(contentType.toMediaType())
+        is RequestBody.Binary -> data.toRequestBody(contentType.toMediaType())
         is RequestBody.FormData ->
             fields.entries.fold(FormBody.Builder()) { builder, (key, value) -> builder.add(key, value) }.build()
     }

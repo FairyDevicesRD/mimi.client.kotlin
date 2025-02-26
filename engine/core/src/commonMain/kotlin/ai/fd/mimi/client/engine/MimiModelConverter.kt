@@ -1,8 +1,10 @@
 package ai.fd.mimi.client.engine
 
 import ai.fd.mimi.client.MimiJsonException
+import ai.fd.mimi.client.MimiSerializationException
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.json.Json
+import okio.ByteString
 
 sealed interface MimiModelConverter<T> {
     abstract class JsonString<T>(protected val json: Json) : MimiModelConverter<T> {
@@ -13,6 +15,7 @@ sealed interface MimiModelConverter<T> {
     }
 
     abstract class Binary<T> : MimiModelConverter<T> {
-        abstract fun decode(byteArray: ByteArray): T
+        @Throws(MimiSerializationException::class)
+        abstract fun decode(data: ByteString): T
     }
 }

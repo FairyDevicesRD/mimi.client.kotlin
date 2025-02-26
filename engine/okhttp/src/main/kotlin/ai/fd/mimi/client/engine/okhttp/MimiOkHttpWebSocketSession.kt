@@ -6,9 +6,7 @@ import ai.fd.mimi.client.engine.MimiModelConverter
 import ai.fd.mimi.client.engine.MimiWebSocketSessionInternal
 import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.coroutines.CompletableDeferred
-import kotlinx.coroutines.CompletableJob
 import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.Flow
@@ -28,19 +26,19 @@ internal class MimiOkHttpWebSocketSession<R>(
 
     @OptIn(DelicateCoroutinesApi::class)
     override val isActive: Boolean
-        get() = rxChannel.isClosedForSend
+        get() = !rxChannel.isClosedForSend
 
     private val rxChannel: Channel<R> = Channel()
     override val rxFlow: Flow<R> = rxChannel.consumeAsFlow()
 
-    private val onConnectedJob: CompletableJob = SupervisorJob()
+    private val onConnectedDeferred: CompletableDeferred<MimiIOException?> = CompletableDeferred()
     private val webSocketDeferred: CompletableDeferred<WebSocket> = CompletableDeferred()
 
     @Throws(MimiIOException::class, CancellationException::class)
     suspend fun connect() {
         val webSocketListener = object : WebSocketListener() {
             override fun onOpen(webSocket: WebSocket, response: Response) {
-                onConnectedJob.complete()
+                onConnectedDeferred.complete(null)
             }
 
             override fun onMessage(webSocket: WebSocket, text: String) {
@@ -63,8 +61,8 @@ internal class MimiOkHttpWebSocketSession<R>(
 
             override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
                 // If an error occurs before the WebSocket session handshake is complete.
-                if (!onConnectedJob.isCompleted) {
-                    onConnectedJob.completeExceptionally(MimiIOException("Failed to open WebSocket session", t))
+                if (!onConnectedDeferred.isCompleted) {
+                    onConnectedDeferred.complete(MimiIOException("Failed to open WebSocket session", t))
                     rxChannel.close()
                     return
                 }
@@ -76,7 +74,10 @@ internal class MimiOkHttpWebSocketSession<R>(
             webSocket.cancel()
         }
         webSocketDeferred.complete(webSocket)
-        onConnectedJob.join()
+        val exceptionDuringOpen = onConnectedDeferred.await()
+        if (exceptionDuringOpen != null) {
+            throw exceptionDuringOpen
+        }
     }
 
     override suspend fun sendBinary(binaryData: ByteString) {

@@ -1,5 +1,6 @@
 package ai.fd.mimi.client.engine
 
+import androidx.annotation.VisibleForTesting
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.KSerializer
@@ -41,7 +42,8 @@ abstract class MimiWebSocketSessionInternal<T>(
     protected val converter: MimiModelConverter.JsonString<T>
 ) : MimiWebSocketSession<T> {
 
-    protected abstract suspend fun sendText(text: String)
+    @VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
+    abstract suspend fun sendText(text: String)
     suspend fun <R> sendJsonText(data: R, serializer: KSerializer<R>) =
         sendText(converter.encode(data, serializer))
 }

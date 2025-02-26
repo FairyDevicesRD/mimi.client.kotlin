@@ -11,9 +11,7 @@ class MimiNictTtsModelConverterTest {
 
     @Test
     fun testDecode() {
-        val byteArray = byteArrayOf(1, 2, 3)
-
-        val actual = MimiNictTtsModelConverter().decode(byteArray)
+        val actual = MimiNictTtsModelConverter().decode(ByteString.of(1, 2, 3))
 
         assertEquals(ByteString.of(1, 2, 3), actual.audioBinary)
     }
