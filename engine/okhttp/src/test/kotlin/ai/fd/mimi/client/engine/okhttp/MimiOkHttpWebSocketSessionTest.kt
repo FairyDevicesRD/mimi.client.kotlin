@@ -19,10 +19,10 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.WebSocket
 import okhttp3.WebSocketListener
-import okio.ByteString
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import okio.ByteString as OkioByteString
 
 @ExtendWith(MockKExtension::class)
 class MimiOkHttpWebSocketSessionTest {
@@ -124,9 +124,9 @@ class MimiOkHttpWebSocketSessionTest {
         }
         target.connect()
 
-        target.sendBinary(ByteString.of(1, 2, 3))
+        target.sendBinary(byteArrayOf(1, 2, 3))
 
-        coVerify { webSocket.send(ByteString.of(1, 2, 3)) }
+        coVerify { webSocket.send(OkioByteString.of(1, 2, 3)) }
     }
 
     @Test

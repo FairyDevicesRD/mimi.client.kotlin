@@ -16,7 +16,7 @@ import okhttp3.Request
 import okhttp3.Response
 import okhttp3.WebSocket
 import okhttp3.WebSocketListener
-import okio.ByteString
+import okio.ByteString.Companion.toByteString
 
 internal class MimiOkHttpWebSocketSession<R>(
     private val request: Request,
@@ -80,8 +80,8 @@ internal class MimiOkHttpWebSocketSession<R>(
         }
     }
 
-    override suspend fun sendBinary(binaryData: ByteString) {
-        webSocketDeferred.await().send(binaryData)
+    override suspend fun sendBinary(binaryData: ByteArray) {
+        webSocketDeferred.await().send(binaryData.toByteString())
     }
 
     override suspend fun sendText(text: String) {

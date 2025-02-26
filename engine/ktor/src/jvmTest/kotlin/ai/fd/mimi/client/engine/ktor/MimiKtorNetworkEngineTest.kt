@@ -29,10 +29,10 @@ import kotlin.test.assertFailsWith
 import kotlin.test.assertIs
 import kotlin.test.assertTrue
 import kotlinx.coroutines.test.runTest
+import kotlinx.io.bytestring.ByteString
 import okhttp3.WebSocketListener
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
-import okio.ByteString
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
@@ -64,7 +64,7 @@ class MimiKtorNetworkEngineTest {
 
         val actual = target.requestAsStringInternal(
             "accessToken",
-            MimiNetworkEngine.RequestBody.Binary(ByteString.of(1, 2, 3), "application/octet-stream"),
+            MimiNetworkEngine.RequestBody.Binary(ByteString(1, 2, 3), "application/octet-stream"),
             mapOf("additional" to "header")
         )
 
@@ -130,12 +130,12 @@ class MimiKtorNetworkEngineTest {
 
         val actual = target.requestAsBinaryInternal(
             accessToken = "accessToken",
-            requestBody = MimiNetworkEngine.RequestBody.Binary(ByteString.of(1, 2, 3), "application/octet-stream"),
+            requestBody = MimiNetworkEngine.RequestBody.Binary(ByteString(1, 2, 3), "application/octet-stream"),
             headers = mapOf("additional" to "header")
         )
 
         assertTrue(actual.isSuccess)
-        assertEquals(ByteString.of(4, 5, 6), actual.getOrThrow())
+        assertEquals(ByteString(4, 5, 6), actual.getOrThrow())
     }
 
     @Test
@@ -162,7 +162,7 @@ class MimiKtorNetworkEngineTest {
 
         val actual = target.requestAsStringInternal(
             "accessToken",
-            MimiNetworkEngine.RequestBody.Binary(ByteString.of(1, 2, 3), "application/octet-stream"),
+            MimiNetworkEngine.RequestBody.Binary(ByteString(1, 2, 3), "application/octet-stream"),
             mapOf("additional" to "header")
         )
 

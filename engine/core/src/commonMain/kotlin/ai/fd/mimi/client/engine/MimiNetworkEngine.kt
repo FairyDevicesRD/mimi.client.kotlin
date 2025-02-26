@@ -5,7 +5,7 @@ import ai.fd.mimi.client.MimiJsonException
 import ai.fd.mimi.client.MimiSerializationException
 import androidx.annotation.VisibleForTesting
 import kotlin.coroutines.cancellation.CancellationException
-import okio.ByteString
+import kotlinx.io.bytestring.ByteString
 
 abstract class MimiNetworkEngine {
 

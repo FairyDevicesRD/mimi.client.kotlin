@@ -18,7 +18,7 @@ kotlin {
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.androidx.annotation)
-            implementation(libs.okio)
+            implementation(libs.kotlinx.io.bytestring)
         }
         commonTest.dependencies {
             implementation(kotlin("test"))

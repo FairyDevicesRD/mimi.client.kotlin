@@ -10,7 +10,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onCompletion
-import okio.ByteString
 
 class MimiKtorWebSocketSession<T>(
     private val ktorWebSocketSession: DefaultClientWebSocketSession,
@@ -30,8 +29,8 @@ class MimiKtorWebSocketSession<T>(
             isActiveMutableStateFlow.value = false
         }
 
-    override suspend fun sendBinary(binaryData: ByteString) =
-        ktorWebSocketSession.send(Frame.Binary(true, binaryData.toByteArray()))
+    override suspend fun sendBinary(binaryData: ByteArray) =
+        ktorWebSocketSession.send(Frame.Binary(true, binaryData.copyOf()))
 
     override suspend fun sendText(text: String) {
         ktorWebSocketSession.send(Frame.Text(true, text.encodeToByteArray()))

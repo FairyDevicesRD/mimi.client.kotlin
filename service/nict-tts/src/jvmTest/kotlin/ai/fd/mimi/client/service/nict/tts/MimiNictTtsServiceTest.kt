@@ -10,11 +10,11 @@ import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
 import io.mockk.verify
+import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
 import kotlin.test.assertTrue
 import kotlinx.coroutines.test.runTest
-import okio.ByteString
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
@@ -85,7 +85,7 @@ class MimiNictTtsServiceTest {
     fun testRequestTts() = runTest {
         coEvery {
             engine.request<MimiNictTtsResult>(any(), any(), any(), any())
-        } returns Result.success(MimiNictTtsResult(ByteString.of(1, 2, 3)))
+        } returns Result.success(MimiNictTtsResult(byteArrayOf(1, 2, 3)))
 
         val service = MimiNictTtsService(
             engine = engine,
@@ -103,7 +103,7 @@ class MimiNictTtsServiceTest {
         val actual = service.requestTts(text = "input", options = options)
 
         assertTrue(actual.isSuccess)
-        assertEquals(ByteString.of(1, 2, 3), actual.getOrThrow().audioBinary)
+        assertContentEquals(byteArrayOf(1, 2, 3), actual.getOrThrow().audioBinary)
         val expectedFormData = mapOf(
             "text" to "input",
             "engine" to "nict",
