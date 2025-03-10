@@ -13,6 +13,7 @@ dependencies {
     api(project(":engine:core"))
     implementation(libs.kotlinx.coroutines.core)
     implementation(libs.kotlinx.serialization.json)
+    implementation(libs.kotlinx.io.bytestring)
     implementation(libs.okhttp)
 
     testImplementation(kotlin("test"))

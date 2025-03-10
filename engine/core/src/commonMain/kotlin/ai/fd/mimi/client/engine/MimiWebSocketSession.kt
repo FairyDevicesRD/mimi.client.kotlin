@@ -4,7 +4,6 @@ import androidx.annotation.VisibleForTesting
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.runBlocking
 import kotlinx.serialization.KSerializer
-import okio.ByteString
 
 /**
  * An interface of a WebSocket session for mimi service.
@@ -30,10 +29,10 @@ interface MimiWebSocketSession<T> {
      * If there is room in the buffer, this function is executed immediately.
      * If there is no buffer space, the function suspends until one is available.
      */
-    suspend fun sendBinary(binaryData: ByteString)
+    suspend fun sendBinary(binaryData: ByteArray)
     fun cancel()
 
-    fun sendBinaryBlocking(binaryData: ByteString) = runBlocking {
+    fun sendBinaryBlocking(binaryData: ByteArray) = runBlocking {
         sendBinary(binaryData)
     }
 }

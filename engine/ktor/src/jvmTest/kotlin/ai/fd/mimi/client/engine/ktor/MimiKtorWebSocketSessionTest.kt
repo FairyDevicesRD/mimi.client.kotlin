@@ -21,7 +21,6 @@ import kotlin.test.assertTrue
 import kotlinx.coroutines.cancel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.test.runTest
-import okio.ByteString
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -70,7 +69,7 @@ class MimiKtorWebSocketSessionTest {
         val frameSlot = slot<Frame.Binary>()
         coEvery { ktorWebSocketSession.send(capture(frameSlot)) } just runs
 
-        target.sendBinary(ByteString.of(1, 2, 3))
+        target.sendBinary(byteArrayOf(1, 2, 3))
 
         coVerify { ktorWebSocketSession.send(any()) }
         with(frameSlot.captured) {

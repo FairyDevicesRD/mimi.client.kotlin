@@ -15,7 +15,7 @@ import io.mockk.verify
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlinx.coroutines.test.runTest
-import okio.ByteString
+import kotlinx.io.bytestring.ByteString
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
@@ -60,7 +60,7 @@ class MimiNictAsrV2ServiceTest {
         coEvery {
             engine.request(
                 accessToken = "accessToken",
-                requestBody = MimiNetworkEngine.RequestBody.Binary(ByteString.of(1, 2, 3), "contentType"),
+                requestBody = MimiNetworkEngine.RequestBody.Binary(ByteString(1, 2, 3), "contentType"),
                 headers = mapOf(
                     "x-mimi-process" to "nict-asr",
                     "x-mimi-input-language" to "lang",

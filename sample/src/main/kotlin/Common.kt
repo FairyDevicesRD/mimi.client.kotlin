@@ -132,8 +132,8 @@ suspend fun testAsrWebSocket(session: MimiAsrWebSocketSession<*>) {
             }
             println("collect finished")
         }
-        val first = data.sliceArray(0 until data.size / 2).toByteString()
-        val second = data.sliceArray(data.size / 2 until data.size).toByteString()
+        val first = data.sliceArray(0 until data.size / 2)
+        val second = data.sliceArray(data.size / 2 until data.size)
         println("Sent first $first")
         session.sendBinary(first)
         println("Sent second $second")
@@ -157,7 +157,7 @@ suspend fun runTts(engineFactory: MimiNetworkEngine.Factory) {
         println("Success to run TTS. bytes: ${it.audioBinary.size}")
         val currentTimeStr = SimpleDateFormat("yyyy-MM-dd-HH-mm-ss").format(System.currentTimeMillis())
         val file = File("${currentTimeStr}.wav")
-        file.writeBytes(it.audioBinary.toByteArray())
+        file.writeBytes(it.audioBinary)
         println("Saved to ${file.absolutePath}")
     }.onFailure {
         println("Failed to run TTS.")

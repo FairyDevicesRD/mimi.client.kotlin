@@ -19,7 +19,7 @@ kotlin {
             api(project(":utils"))
             implementation(libs.androidx.annotation)
             implementation(libs.kotlinx.serialization.json)
-            implementation(libs.okio)
+            implementation(libs.kotlinx.io.bytestring)
         }
         commonTest.dependencies {
             implementation(kotlin("test"))

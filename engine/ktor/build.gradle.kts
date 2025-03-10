@@ -18,9 +18,9 @@ kotlin {
             api(project(":engine:core"))
             implementation(libs.kotlinx.coroutines.core)
             implementation(libs.kotlinx.serialization.json)
+            implementation(libs.kotlinx.io.bytestring)
             implementation(libs.androidx.annotation)
             implementation(libs.ktor.client.core)
-            implementation(libs.okio)
         }
         commonTest.dependencies {
             implementation(kotlin("test"))
