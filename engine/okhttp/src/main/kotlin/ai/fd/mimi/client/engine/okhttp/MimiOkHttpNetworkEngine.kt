@@ -40,27 +40,23 @@ internal class MimiOkHttpNetworkEngine(
         .build()
 
     override suspend fun requestAsStringInternal(
-        accessToken: String,
         requestBody: RequestBody,
         headers: Map<String, String>
-    ): Result<String> = requestInternal(accessToken, requestBody, headers) { it.body?.string() }
+    ): Result<String> = requestInternal(requestBody, headers) { it.body?.string() }
 
     override suspend fun requestAsBinaryInternal(
-        accessToken: String,
         requestBody: RequestBody,
         headers: Map<String, String>
     ): Result<ByteString> =
-        requestInternal(accessToken, requestBody, headers) { ByteString(it.body?.bytes() ?: byteArrayOf()) }
+        requestInternal(requestBody, headers) { ByteString(it.body?.bytes() ?: byteArrayOf()) }
 
     private suspend fun <T> requestInternal(
-        accessToken: String,
         requestBody: RequestBody,
         headers: Map<String, String>,
         extractResponseBodyAction: suspend (Response) -> T?
     ): Result<T> {
         val request = Request.Builder()
             .url(httpUrl)
-            .addHeader("Authorization", "Bearer $accessToken")
             .addHeaders(headers)
             .post(requestBody.toOkHttpRequestBody())
             .build()
@@ -77,15 +73,13 @@ internal class MimiOkHttpNetworkEngine(
     }
 
     @Throws(MimiIOException::class, CancellationException::class)
-    override suspend fun <R> openWebSocketSession(
-        accessToken: String,
+    override suspend fun <R> openWebSocketSessionInternal(
         contentType: String,
         headers: Map<String, String>,
         converter: MimiModelConverter.JsonString<R>
     ): MimiWebSocketSessionInternal<R> {
         val request = Request.Builder()
             .url(httpUrl) // Will be upgraded to ws scheme after connection established.
-            .addHeader("Authorization", "Bearer $accessToken")
             .addHeader("Content-Type", contentType)
             .addHeaders(headers)
             .build()

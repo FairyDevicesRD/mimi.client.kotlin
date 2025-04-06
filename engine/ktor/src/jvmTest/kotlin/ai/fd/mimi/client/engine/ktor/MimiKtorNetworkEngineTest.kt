@@ -43,7 +43,6 @@ class MimiKtorNetworkEngineTest {
     fun testRequestAsStringInternal_Binary() = runTest {
         val mockEngine = MockEngine { request ->
             assertEquals("https://example.com:1234/path", request.url.toString())
-            assertEquals("Bearer accessToken", request.headers[HttpHeaders.Authorization])
             assertEquals("application/octet-stream", request.body.contentType.toString())
             assertEquals("header", request.headers["additional"])
             assertContentEquals(byteArrayOf(1, 2, 3), request.body.toByteArray())
@@ -63,7 +62,6 @@ class MimiKtorNetworkEngineTest {
         )
 
         val actual = target.requestAsStringInternal(
-            "accessToken",
             MimiNetworkEngine.RequestBody.Binary(ByteString(1, 2, 3), "application/octet-stream"),
             mapOf("additional" to "header")
         )
@@ -76,7 +74,6 @@ class MimiKtorNetworkEngineTest {
     fun testRequestAsStringInternal_Form() = runTest {
         val mockEngine = MockEngine { request ->
             assertEquals("http://example.com:1234/", request.url.toString())
-            assertEquals("Bearer accessToken", request.headers[HttpHeaders.Authorization])
             assertEquals("application/x-www-form-urlencoded; charset=UTF-8", request.body.contentType.toString())
             assertEquals("header", request.headers["additional"])
             assertContentEquals("key=value".toByteArray(Charsets.UTF_8), request.body.toByteArray())
@@ -96,7 +93,6 @@ class MimiKtorNetworkEngineTest {
         )
 
         val actual = target.requestAsStringInternal(
-            accessToken = "accessToken",
             requestBody = MimiNetworkEngine.RequestBody.FormData(mapOf("key" to "value")),
             headers = mapOf("additional" to "header")
         )
@@ -109,7 +105,6 @@ class MimiKtorNetworkEngineTest {
     fun testRequestAsBinaryInternal() = runTest {
         val mockEngine = MockEngine { request ->
             assertEquals("https://example.com:1234/path", request.url.toString())
-            assertEquals("Bearer accessToken", request.headers[HttpHeaders.Authorization])
             assertEquals("application/octet-stream", request.body.contentType.toString())
             assertEquals("header", request.headers["additional"])
             assertContentEquals(byteArrayOf(1, 2, 3), request.body.toByteArray())
@@ -129,7 +124,6 @@ class MimiKtorNetworkEngineTest {
         )
 
         val actual = target.requestAsBinaryInternal(
-            accessToken = "accessToken",
             requestBody = MimiNetworkEngine.RequestBody.Binary(ByteString(1, 2, 3), "application/octet-stream"),
             headers = mapOf("additional" to "header")
         )
@@ -142,7 +136,6 @@ class MimiKtorNetworkEngineTest {
     fun testRequest_Error() = runTest {
         val mockEngine = MockEngine { request ->
             assertEquals("https://example.com:1234/path", request.url.toString())
-            assertEquals("Bearer accessToken", request.headers[HttpHeaders.Authorization])
             assertEquals("application/octet-stream", request.body.contentType.toString())
             assertEquals("header", request.headers["additional"])
             assertContentEquals(byteArrayOf(1, 2, 3), request.body.toByteArray())
@@ -161,7 +154,6 @@ class MimiKtorNetworkEngineTest {
         )
 
         val actual = target.requestAsStringInternal(
-            "accessToken",
             MimiNetworkEngine.RequestBody.Binary(ByteString(1, 2, 3), "application/octet-stream"),
             mapOf("additional" to "header")
         )
@@ -194,8 +186,7 @@ class MimiKtorNetworkEngineTest {
         val session = mockk<MimiWebSocketSessionInternal<Any>>()
         every { target.createWebSocketSession(any(), eq(converter)) } returns session
 
-        val actual = target.openWebSocketSession(
-            accessToken = "accessToken",
+        val actual = target.openWebSocketSessionInternal(
             contentType = "application/json",
             headers = mapOf("additional" to "header"),
             converter = converter
@@ -220,8 +211,7 @@ class MimiKtorNetworkEngineTest {
         )
 
         assertFailsWith(MimiIOException::class, "Failed to open WebSocket session") {
-            target.openWebSocketSession(
-                accessToken = "accessToken",
+            target.openWebSocketSessionInternal(
                 contentType = "application/json",
                 headers = mapOf("additional" to "header"),
                 converter = mockk<MimiModelConverter.JsonString<Any>>()

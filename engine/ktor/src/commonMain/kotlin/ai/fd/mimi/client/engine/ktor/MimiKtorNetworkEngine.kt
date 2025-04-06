@@ -52,26 +52,22 @@ class MimiKtorNetworkEngine(
     }
 
     override suspend fun requestAsStringInternal(
-        accessToken: String,
         requestBody: RequestBody,
         headers: Map<String, String>
-    ): Result<String> = requestInternal(accessToken, requestBody, headers) { it.bodyAsText() }
+    ): Result<String> = requestInternal(requestBody, headers) { it.bodyAsText() }
 
     override suspend fun requestAsBinaryInternal(
-        accessToken: String,
         requestBody: RequestBody,
         headers: Map<String, String>
-    ): Result<ByteString> = requestInternal(accessToken, requestBody, headers) { ByteString(it.bodyAsBytes()) }
+    ): Result<ByteString> = requestInternal(requestBody, headers) { ByteString(it.bodyAsBytes()) }
 
     private suspend fun <T> requestInternal(
-        accessToken: String,
         requestBody: RequestBody,
         headers: Map<String, String>,
         extractResponseBodyAction: suspend (HttpResponse) -> T
     ): Result<T> {
         val response = httpClient.post(httpTargetUrl) {
             headers {
-                append("Authorization", "Bearer $accessToken")
                 headers.forEach { (key, value) -> append(key, value) }
             }
             setBodyAndContentType(requestBody)
@@ -85,8 +81,7 @@ class MimiKtorNetworkEngine(
     }
 
     @Throws(MimiIOException::class, CancellationException::class)
-    override suspend fun <T> openWebSocketSession(
-        accessToken: String,
+    override suspend fun <T> openWebSocketSessionInternal(
         contentType: String,
         headers: Map<String, String>,
         converter: MimiModelConverter.JsonString<T>
@@ -95,7 +90,6 @@ class MimiKtorNetworkEngine(
             httpClient.webSocketSession {
                 url.takeFrom(webSocketTargetUrl)
                 headers {
-                    append("Authorization", "Bearer $accessToken")
                     headers.forEach { (key, value) -> append(key, value) }
                 }
                 contentType(ContentType.parse(contentType))

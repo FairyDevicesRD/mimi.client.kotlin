@@ -28,10 +28,10 @@ class MimiNetworkEngineTest {
     @Test
     fun testRequest_JsonString() = runTest {
         val converter = mockk<MimiModelConverter.JsonString<Any>>()
-        val headers = mapOf("key" to "value")
+        val headers = mapOf("key" to "value", "Authorization" to "Bearer accessToken")
         val requestBody = MimiNetworkEngine.RequestBody.Binary(ByteString(1, 2, 3), "contentType")
         coEvery {
-            target.requestAsStringInternal("accessToken", requestBody, headers)
+            target.requestAsStringInternal(requestBody, headers)
         } returns Result.success("response")
         val decodedModel = mockk<Any>()
         every { converter.decode("response") } returns decodedModel
@@ -49,11 +49,11 @@ class MimiNetworkEngineTest {
 
     @Test
     fun testRequest_JsonString_NetworkError() = runTest {
-        val headers = mapOf("key" to "value")
+        val headers = mapOf("key" to "value", "Authorization" to "Bearer accessToken")
         val requestBody = MimiNetworkEngine.RequestBody.Binary(ByteString(1, 2, 3), "contentType")
         val exception = mockk<Exception>()
         coEvery {
-            target.requestAsStringInternal("accessToken", requestBody, headers)
+            target.requestAsStringInternal(requestBody, headers)
         } returns Result.failure(exception)
 
         val actual = target.request(
@@ -70,10 +70,10 @@ class MimiNetworkEngineTest {
     @Test
     fun testRequest_JsonString_DecodeError() = runTest {
         val converter = mockk<MimiModelConverter.JsonString<Any>>()
-        val headers = mapOf("key" to "value")
+        val headers = mapOf("key" to "value", "Authorization" to "Bearer accessToken")
         val requestBody = MimiNetworkEngine.RequestBody.Binary(ByteString(1, 2, 3), "contentType")
         coEvery {
-            target.requestAsStringInternal("accessToken", requestBody, headers)
+            target.requestAsStringInternal(requestBody, headers)
         } returns Result.success("response")
         val exception = mockk<MimiJsonException>()
         every { converter.decode("response") } throws exception
@@ -92,10 +92,10 @@ class MimiNetworkEngineTest {
     @Test
     fun testRequest_Binary() = runTest {
         val converter = mockk<MimiModelConverter.Binary<Any>>()
-        val headers = mapOf("key" to "value")
+        val headers = mapOf("key" to "value", "Authorization" to "Bearer accessToken")
         val requestBody = MimiNetworkEngine.RequestBody.FormData(mapOf("formKey" to "formValue"))
         coEvery {
-            target.requestAsBinaryInternal("accessToken", requestBody, headers)
+            target.requestAsBinaryInternal(requestBody, headers)
         } returns Result.success(ByteString(1, 2, 3))
         val decodedModel = mockk<Any>()
         every { converter.decode(ByteString(1, 2, 3)) } returns decodedModel
@@ -114,11 +114,11 @@ class MimiNetworkEngineTest {
     @Test
     fun testRequest_Binary_NetworkError() = runTest {
         val converter = mockk<MimiModelConverter.Binary<Any>>()
-        val headers = mapOf("key" to "value")
+        val headers = mapOf("key" to "value", "Authorization" to "Bearer accessToken")
         val requestBody = MimiNetworkEngine.RequestBody.FormData(mapOf("formKey" to "formValue"))
         val exception = mockk<Exception>()
         coEvery {
-            target.requestAsBinaryInternal("accessToken", requestBody, headers)
+            target.requestAsBinaryInternal(requestBody, headers)
         } returns Result.failure(exception)
 
         val actual = target.request(
@@ -135,10 +135,10 @@ class MimiNetworkEngineTest {
     @Test
     fun testRequest_Binary_DecodeError() = runTest {
         val converter = mockk<MimiModelConverter.Binary<Any>>()
-        val headers = mapOf("key" to "value")
+        val headers = mapOf("key" to "value", "Authorization" to "Bearer accessToken")
         val requestBody = MimiNetworkEngine.RequestBody.FormData(mapOf("formKey" to "formValue"))
         coEvery {
-            target.requestAsBinaryInternal("accessToken", requestBody, headers)
+            target.requestAsBinaryInternal(requestBody, headers)
         } returns Result.success(ByteString(1, 2, 3))
         val exception = mockk<MimiSerializationException>()
         every { converter.decode(ByteString(1, 2, 3)) } throws exception
@@ -152,5 +152,41 @@ class MimiNetworkEngineTest {
 
         assertTrue(actual.isFailure)
         assertEquals(exception, actual.exceptionOrNull())
+    }
+
+    @Test
+    fun testRequest_NoAccessToken() = runTest {
+        val converter = mockk<MimiModelConverter.JsonString<Any>>()
+        val headers = mapOf("key" to "value")
+        val requestBody = MimiNetworkEngine.RequestBody.Binary(ByteString(1, 2, 3), "contentType")
+        coEvery {
+            target.requestAsStringInternal(requestBody, headers)
+        } returns Result.success("response")
+        val decodedModel = mockk<Any>()
+        every { converter.decode("response") } returns decodedModel
+
+        val actual = target.request(
+            accessToken = null,
+            requestBody = requestBody,
+            headers = headers,
+            converter = converter
+        )
+
+        assertTrue(actual.isSuccess)
+        assertEquals(decodedModel, actual.getOrThrow())
+    }
+
+    @Test
+    fun testOpenWebSocketSession() = runTest {
+        val converter = mockk<MimiModelConverter.JsonString<Any>>()
+        val headers = mapOf("key" to "value", "Authorization" to "Bearer accessToken")
+        val session = mockk<MimiWebSocketSessionInternal<Any>>()
+        coEvery {
+            target.openWebSocketSessionInternal("contentType", headers, converter)
+        } returns session
+
+        val actual = target.openWebSocketSession("accessToken", "contentType", headers, converter)
+
+        assertEquals(session, actual)
     }
 }

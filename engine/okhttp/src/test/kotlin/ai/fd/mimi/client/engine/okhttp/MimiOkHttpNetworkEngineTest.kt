@@ -56,7 +56,6 @@ class MimiOkHttpNetworkEngineTest {
         )
 
         val actual = target.requestAsStringInternal(
-            accessToken = "accessToken",
             requestBody = MimiNetworkEngine.RequestBody.Binary(ByteString(1, 2, 3), "application/octet-stream"),
             headers = mapOf("additional" to "header")
         )
@@ -66,7 +65,6 @@ class MimiOkHttpNetworkEngineTest {
         assertEquals("response", actual.getOrThrow())
         assertEquals("POST", actualRequest.method)
         assertEquals("/path", actualRequest.path)
-        assertEquals("Bearer accessToken", actualRequest.getHeader("Authorization"))
         assertEquals("application/octet-stream", actualRequest.getHeader("Content-Type"))
         assertEquals("header", actualRequest.getHeader("additional"))
         assertContentEquals(byteArrayOf(1, 2, 3), actualRequest.body.readByteArray())
@@ -89,7 +87,6 @@ class MimiOkHttpNetworkEngineTest {
         )
 
         val actual = target.requestAsStringInternal(
-            accessToken = "accessToken",
             requestBody = MimiNetworkEngine.RequestBody.FormData(mapOf("key" to "value")),
             headers = mapOf("additional" to "header")
         )
@@ -99,7 +96,6 @@ class MimiOkHttpNetworkEngineTest {
         assertEquals("response", actual.getOrThrow())
         assertEquals("POST", actualRequest.method)
         assertEquals("/", actualRequest.path)
-        assertEquals("Bearer accessToken", actualRequest.getHeader("Authorization"))
         assertEquals("application/x-www-form-urlencoded", actualRequest.getHeader("Content-Type"))
         assertEquals("header", actualRequest.getHeader("additional"))
         assertContentEquals("key=value".toByteArray(Charsets.UTF_8), actualRequest.body.readByteArray())
@@ -122,7 +118,6 @@ class MimiOkHttpNetworkEngineTest {
         )
 
         val actual = target.requestAsBinaryInternal(
-            accessToken = "accessToken",
             requestBody = MimiNetworkEngine.RequestBody.Binary(ByteString(1, 2, 3), "application/octet-stream"),
             headers = mapOf("additional" to "header")
         )
@@ -132,7 +127,6 @@ class MimiOkHttpNetworkEngineTest {
         assertEquals(ByteString(4, 5, 6), actual.getOrThrow())
         assertEquals("POST", actualRequest.method)
         assertEquals("/", actualRequest.path)
-        assertEquals("Bearer accessToken", actualRequest.getHeader("Authorization"))
         assertEquals("application/octet-stream", actualRequest.getHeader("Content-Type"))
         assertEquals("header", actualRequest.getHeader("additional"))
         assertEquals(OkioByteString.of(1, 2, 3), actualRequest.body.readByteString())
@@ -154,7 +148,6 @@ class MimiOkHttpNetworkEngineTest {
         )
 
         val actual = target.requestAsBinaryInternal(
-            accessToken = "accessToken",
             requestBody = MimiNetworkEngine.RequestBody.Binary(ByteString(1, 2, 3), "application/octet-stream"),
             headers = mapOf("additional" to "header")
         )
@@ -166,7 +159,6 @@ class MimiOkHttpNetworkEngineTest {
         assertEquals("Request failed with status: 400. Body: error", exception.message)
         assertEquals("POST", actualRequest.method)
         assertEquals("/", actualRequest.path)
-        assertEquals("Bearer accessToken", actualRequest.getHeader("Authorization"))
         assertEquals("application/octet-stream", actualRequest.getHeader("Content-Type"))
         assertEquals("header", actualRequest.getHeader("additional"))
         assertEquals(OkioByteString.of(1, 2, 3), actualRequest.body.readByteString())
@@ -189,8 +181,7 @@ class MimiOkHttpNetworkEngineTest {
         val requestSlot = slot<Request>()
         every { target.createWebSocketSession(capture(requestSlot), eq(okHttpClient), eq(converter)) } returns session
 
-        val actual = target.openWebSocketSession(
-            accessToken = "accessToken",
+        val actual = target.openWebSocketSessionInternal(
             contentType = "application/json",
             headers = mapOf("additional" to "header"),
             converter = converter
@@ -199,7 +190,6 @@ class MimiOkHttpNetworkEngineTest {
         assertEquals(session, actual)
         with(requestSlot.captured) {
             assertEquals("https://example.com:1234/path", url.toString())
-            assertEquals("Bearer accessToken", header("Authorization"))
             assertEquals("application/json", header("Content-Type"))
             assertEquals("header", header("additional"))
         }
