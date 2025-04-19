@@ -39,10 +39,12 @@ suspend fun issueToken(
     grantType: MimiTokenGrantType,
     scopes: Set<MimiTokenScope>
 ) {
+    val applicationId = System.getenv("MIMI_APPLICATION_ID") ?: loadLocalProperties().getProperty("MIMI_APPLICATION_ID")
     val clientId = System.getenv("MIMI_CLIENT_ID") ?: loadLocalProperties().getProperty("MIMI_CLIENT_ID")
     val clientSecret = System.getenv("MIMI_CLIENT_SECRET") ?: loadLocalProperties().getProperty("MIMI_CLIENT_SECRET")
     val tokenService = MimiTokenService(engineFactory = engineFactory)
     val result = tokenService.issueToken(
+        applicationId = applicationId,
         clientId = clientId,
         clientSecret = clientSecret,
         grantType = grantType,

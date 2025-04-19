@@ -57,7 +57,7 @@ class MimiTokenServiceTest {
                 requestBody = eq(
                     MimiNetworkEngine.RequestBody.FormData(
                         fields = mapOf(
-                            "client_id" to "clientId",
+                            "client_id" to "applicationId:clientId",
                             "client_secret" to "clientSecret",
                             "grant_type" to "grantType",
                             "scope" to "scope1"
@@ -74,6 +74,7 @@ class MimiTokenServiceTest {
         }
         val service = MimiTokenService(engine, converter)
         val actual = service.issueToken(
+            applicationId = "applicationId",
             clientId = "clientId",
             clientSecret = "clientSecret",
             grantType = grantType,
@@ -92,7 +93,7 @@ class MimiTokenServiceTest {
                 requestBody = eq(
                     MimiNetworkEngine.RequestBody.FormData(
                         fields = mapOf(
-                            "client_id" to "clientId",
+                            "client_id" to "applicationId:clientId",
                             "client_secret" to "clientSecret",
                             "grant_type" to "grantType",
                             "scope" to "scope1;scope2"
@@ -109,6 +110,7 @@ class MimiTokenServiceTest {
         }
         val service = MimiTokenService(engine, converter)
         val actual = service.issueToken(
+            applicationId = "applicationId",
             clientId = "clientId",
             clientSecret = "clientSecret",
             grantType = grantType,
