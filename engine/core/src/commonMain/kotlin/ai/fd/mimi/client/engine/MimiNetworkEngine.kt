@@ -80,7 +80,7 @@ abstract class MimiNetworkEngine {
         accessToken: String?,
         contentType: String,
         headers: Map<String, String> = emptyMap(),
-        converter: MimiModelConverter.JsonString<T>
+        converter: MimiModelConverter.EncodableJsonString<T>
     ): MimiWebSocketSessionInternal<T> =
         openWebSocketSessionInternal(path, contentType, headers + createBearerHeader(accessToken), converter)
 
@@ -90,7 +90,7 @@ abstract class MimiNetworkEngine {
         path: String,
         contentType: String,
         headers: Map<String, String> = emptyMap(),
-        converter: MimiModelConverter.JsonString<T>
+        converter: MimiModelConverter.EncodableJsonString<T>
     ): MimiWebSocketSessionInternal<T>
 
     sealed interface RequestBody {

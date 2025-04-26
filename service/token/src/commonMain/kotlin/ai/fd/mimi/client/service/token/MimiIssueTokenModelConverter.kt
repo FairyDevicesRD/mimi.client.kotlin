@@ -10,10 +10,10 @@ import kotlinx.serialization.json.Json
  * An implementation of [MimiModelConverter.Binary] for issuing token of the Mimi services.
  */
 internal class MimiIssueTokenModelConverter(
-    json: Json = Json {
+    private val json: Json = Json {
         ignoreUnknownKeys = true
     }
-) : MimiModelConverter.JsonString<MimiIssueTokenResult>(json = json) {
+) : MimiModelConverter.JsonString<MimiIssueTokenResult>() {
     override fun decode(jsonText: String): MimiIssueTokenResult = try {
         json.decodeFromString<MimiIssueTokenResultEntity>(jsonText).convert()
     } catch (e: SerializationException) {

@@ -23,7 +23,7 @@ class MimiAsrServiceTest {
     private lateinit var engine: MimiNetworkEngine
 
     @MockK
-    private lateinit var converter: MimiModelConverter.JsonString<MimiAsrResult>
+    private lateinit var converter: MimiModelConverter.EncodableJsonString<MimiAsrResult>
 
     @Test
     fun testPublicConstructor_ssl() {

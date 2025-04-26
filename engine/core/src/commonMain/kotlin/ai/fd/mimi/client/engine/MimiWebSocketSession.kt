@@ -38,7 +38,7 @@ interface MimiWebSocketSession<T> {
 }
 
 abstract class MimiWebSocketSessionInternal<T>(
-    protected val converter: MimiModelConverter.JsonString<T>
+    protected val converter: MimiModelConverter.EncodableJsonString<T>
 ) : MimiWebSocketSession<T> {
 
     @VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)

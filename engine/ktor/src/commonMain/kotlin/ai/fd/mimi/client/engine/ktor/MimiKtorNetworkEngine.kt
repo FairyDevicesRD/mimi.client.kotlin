@@ -90,7 +90,7 @@ class MimiKtorNetworkEngine(
         path: String,
         contentType: String,
         headers: Map<String, String>,
-        converter: MimiModelConverter.JsonString<T>
+        converter: MimiModelConverter.EncodableJsonString<T>
     ): MimiWebSocketSessionInternal<T> {
         val url = buildUrl {
             takeFrom(webSocketTargetBaseUrl)
@@ -115,7 +115,7 @@ class MimiKtorNetworkEngine(
     @VisibleForTesting
     internal fun <T> createWebSocketSession(
         session: DefaultClientWebSocketSession,
-        converter: MimiModelConverter.JsonString<T>
+        converter: MimiModelConverter.EncodableJsonString<T>
     ): MimiWebSocketSessionInternal<T> = MimiKtorWebSocketSession(session, converter)
 
     private fun HttpRequestBuilder.setBodyAndContentType(requestBody: RequestBody): Unit = when (requestBody) {

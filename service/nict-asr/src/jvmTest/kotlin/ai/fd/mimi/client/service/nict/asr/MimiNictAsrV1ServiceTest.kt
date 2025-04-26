@@ -23,7 +23,7 @@ class MimiNictAsrV1ServiceTest {
     private lateinit var engine: MimiNetworkEngine
 
     @MockK
-    private lateinit var converter: MimiModelConverter.JsonString<MimiNictAsrV1Result>
+    private lateinit var converter: MimiModelConverter.EncodableJsonString<MimiNictAsrV1Result>
 
     @Test
     fun testPublicConstructor_ssl() {

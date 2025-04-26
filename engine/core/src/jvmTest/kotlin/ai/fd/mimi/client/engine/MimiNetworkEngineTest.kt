@@ -185,7 +185,7 @@ class MimiNetworkEngineTest {
 
     @Test
     fun testOpenWebSocketSession() = runTest {
-        val converter = mockk<MimiModelConverter.JsonString<Any>>()
+        val converter = mockk<MimiModelConverter.EncodableJsonString<Any>>()
         val headers = mapOf("key" to "value", "Authorization" to "Bearer accessToken")
         val session = mockk<MimiWebSocketSessionInternal<Any>>()
         coEvery {

@@ -79,7 +79,7 @@ internal class MimiOkHttpNetworkEngine(
         path: String,
         contentType: String,
         headers: Map<String, String>,
-        converter: MimiModelConverter.JsonString<R>
+        converter: MimiModelConverter.EncodableJsonString<R>
     ): MimiWebSocketSessionInternal<R> {
         val url = baseUrl.newBuilder().addPathSegment(path).build()
         val request = Request.Builder()
@@ -97,7 +97,7 @@ internal class MimiOkHttpNetworkEngine(
     internal fun <T> createWebSocketSession(
         request: Request,
         okHttpClient: OkHttpClient,
-        converter: MimiModelConverter.JsonString<T>
+        converter: MimiModelConverter.EncodableJsonString<T>
     ): MimiOkHttpWebSocketSession<T> = MimiOkHttpWebSocketSession(request, okHttpClient, converter)
 
     private suspend fun Call.executeAsync(): Response =

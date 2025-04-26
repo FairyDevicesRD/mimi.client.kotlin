@@ -181,7 +181,7 @@ class MimiKtorNetworkEngineTest {
                 port = mockWebServer.port
             )
         )
-        val converter = mockk<MimiModelConverter.JsonString<Any>>()
+        val converter = mockk<MimiModelConverter.EncodableJsonString<Any>>()
         val session = mockk<MimiWebSocketSessionInternal<Any>>()
         every { target.createWebSocketSession(any(), eq(converter)) } returns session
 
@@ -214,7 +214,7 @@ class MimiKtorNetworkEngineTest {
                 path = "path",
                 contentType = "application/json",
                 headers = mapOf("additional" to "header"),
-                converter = mockk<MimiModelConverter.JsonString<Any>>()
+                converter = mockk<MimiModelConverter.EncodableJsonString<Any>>()
             )
         }
     }

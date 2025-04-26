@@ -175,7 +175,7 @@ class MimiOkHttpNetworkEngineTest {
                 port = 1234
             )
         )
-        val converter = mockk<MimiModelConverter.JsonString<Any>>()
+        val converter = mockk<MimiModelConverter.EncodableJsonString<Any>>()
         val session = mockk<MimiOkHttpWebSocketSession<Any>>(relaxUnitFun = true)
         val requestSlot = slot<Request>()
         every { target.createWebSocketSession(capture(requestSlot), eq(okHttpClient), eq(converter)) } returns session
