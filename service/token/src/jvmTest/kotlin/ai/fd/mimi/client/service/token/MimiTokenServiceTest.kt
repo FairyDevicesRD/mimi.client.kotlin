@@ -4,7 +4,6 @@ import ai.fd.mimi.client.engine.MimiModelConverter
 import ai.fd.mimi.client.engine.MimiNetworkEngine
 import io.mockk.coEvery
 import io.mockk.confirmVerified
-import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
@@ -50,7 +49,7 @@ class MimiTokenServiceTest {
     }
 
     @Test
-    fun testIssueToken_Single() = runTest {
+    fun testIssueClientAccessToken_Single() = runTest {
         val result = mockk<MimiTokenResult>()
         coEvery {
             engine.request(
@@ -59,7 +58,7 @@ class MimiTokenServiceTest {
                         fields = mapOf(
                             "client_id" to "applicationId:clientId",
                             "client_secret" to "clientSecret",
-                            "grant_type" to "grantType",
+                            "grant_type" to "https://auth.mimi.fd.ai/grant_type/client_credentials",
                             "scope" to "scope1"
                         )
                     )
@@ -69,15 +68,11 @@ class MimiTokenServiceTest {
             )
         } returns Result.success(result)
 
-        val grantType = mockk<MimiTokenGrantType> {
-            every { value } returns "grantType"
-        }
         val service = MimiTokenService(engine, converter)
-        val actual = service.issueToken(
+        val actual = service.issueClientAccessToken(
             applicationId = "applicationId",
             clientId = "clientId",
             clientSecret = "clientSecret",
-            grantType = grantType,
             scope = scopeOf("scope1")
         )
 
@@ -86,7 +81,7 @@ class MimiTokenServiceTest {
     }
 
     @Test
-    fun testIssueToken_Multiple() = runTest {
+    fun testIssueClientAccessToken_Multiple() = runTest {
         val result = mockk<MimiTokenResult>()
         coEvery {
             engine.request(
@@ -95,7 +90,7 @@ class MimiTokenServiceTest {
                         fields = mapOf(
                             "client_id" to "applicationId:clientId",
                             "client_secret" to "clientSecret",
-                            "grant_type" to "grantType",
+                            "grant_type" to "https://auth.mimi.fd.ai/grant_type/client_credentials",
                             "scope" to "scope1;scope2"
                         )
                     )
@@ -105,15 +100,11 @@ class MimiTokenServiceTest {
             )
         } returns Result.success(result)
 
-        val grantType = mockk<MimiTokenGrantType> {
-            every { value } returns "grantType"
-        }
         val service = MimiTokenService(engine, converter)
-        val actual = service.issueToken(
+        val actual = service.issueClientAccessToken(
             applicationId = "applicationId",
             clientId = "clientId",
             clientSecret = "clientSecret",
-            grantType = grantType,
             scopes = setOf(scopeOf("scope1"), scopeOf("scope2"))
         )
 

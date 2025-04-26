@@ -4,7 +4,6 @@ import ai.fd.mimi.client.service.asr.core.MimiAsrWebSocketSession
 import ai.fd.mimi.client.service.nict.asr.MimiNictAsrV1Service
 import ai.fd.mimi.client.service.nict.asr.MimiNictAsrV2Service
 import ai.fd.mimi.client.service.nict.tts.MimiNictTtsService
-import ai.fd.mimi.client.service.token.MimiTokenGrantType
 import ai.fd.mimi.client.service.token.MimiTokenScope
 import ai.fd.mimi.client.service.token.MimiTokenService
 import io.ktor.util.toLowerCasePreservingASCIIRules
@@ -34,20 +33,15 @@ private fun getLocalPropertyFile(): File {
     throw IllegalArgumentException("local.properties not found")
 }
 
-suspend fun issueToken(
-    engineFactory: MimiNetworkEngine.Factory,
-    grantType: MimiTokenGrantType,
-    scopes: Set<MimiTokenScope>
-) {
+suspend fun issueClientAccessToken(engineFactory: MimiNetworkEngine.Factory, scopes: Set<MimiTokenScope>) {
     val applicationId = System.getenv("MIMI_APPLICATION_ID") ?: loadLocalProperties().getProperty("MIMI_APPLICATION_ID")
     val clientId = System.getenv("MIMI_CLIENT_ID") ?: loadLocalProperties().getProperty("MIMI_CLIENT_ID")
     val clientSecret = System.getenv("MIMI_CLIENT_SECRET") ?: loadLocalProperties().getProperty("MIMI_CLIENT_SECRET")
     val tokenService = MimiTokenService(engineFactory = engineFactory)
-    val result = tokenService.issueToken(
+    val result = tokenService.issueClientAccessToken(
         applicationId = applicationId,
         clientId = clientId,
         clientSecret = clientSecret,
-        grantType = grantType,
         scopes = scopes
     )
     println(result)

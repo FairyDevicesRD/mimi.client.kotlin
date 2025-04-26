@@ -22,22 +22,31 @@ class MimiTokenService internal constructor(
         converter = MimiTokenModelConverter()
     )
 
-    suspend fun issueToken(
+    suspend fun issueClientAccessToken(
         applicationId: String,
         clientId: String,
         clientSecret: String,
-        grantType: MimiTokenGrantType,
         scope: MimiTokenScope
-    ): Result<MimiTokenResult> = issueToken(
+    ): Result<MimiTokenResult> = issueClientAccessToken(
         applicationId = applicationId,
         clientId = clientId,
         clientSecret = clientSecret,
-        grantType = grantType,
         scopes = setOf(scope)
     )
 
-    suspend fun issueToken(
+    suspend fun issueClientAccessToken(
         applicationId: String,
+        clientId: String,
+        clientSecret: String,
+        scopes: Set<MimiTokenScope>
+    ): Result<MimiTokenResult> = issueAccessToken(
+        clientId = "${applicationId}:${clientId}",
+        clientSecret = clientSecret,
+        grantType = MimiTokenGrantType.CLIENT_CREDENTIALS,
+        scopes = scopes
+    )
+
+    private suspend fun issueAccessToken(
         clientId: String,
         clientSecret: String,
         grantType: MimiTokenGrantType,
@@ -45,7 +54,7 @@ class MimiTokenService internal constructor(
     ): Result<MimiTokenResult> = engine.request(
         requestBody = MimiNetworkEngine.RequestBody.FormData(
             fields = mapOf(
-                "client_id" to "${applicationId}:${clientId}",
+                "client_id" to clientId,
                 "client_secret" to clientSecret,
                 "grant_type" to grantType.value,
                 "scope" to scopes.getContainingScopes().joinToString(";") { it.value }

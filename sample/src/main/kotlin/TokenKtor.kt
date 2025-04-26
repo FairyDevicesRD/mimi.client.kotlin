@@ -1,6 +1,5 @@
 import ai.fd.mimi.client.engine.MimiNetworkEngine
 import ai.fd.mimi.client.engine.ktor.Ktor
-import ai.fd.mimi.client.service.token.MimiTokenGrantType
 import ai.fd.mimi.client.service.token.MimiTokenScopes
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.cio.CIO
@@ -17,9 +16,8 @@ suspend fun main() {
         }
     }
 
-    issueToken(
+    issueClientAccessToken(
         engineFactory = MimiNetworkEngine.Ktor(httpClient),
-        grantType = MimiTokenGrantType.CLIENT_CREDENTIALS,
         scopes = setOf(
             MimiTokenScopes.Asr,
             MimiTokenScopes.NictAsr.Api.Http,
