@@ -49,6 +49,70 @@ class MimiTokenServiceTest {
     }
 
     @Test
+    fun testIssueClientAccessTokenFromExternalAuthServer_Single() = runTest {
+        val result = mockk<MimiTokenResult>()
+        coEvery {
+            engine.request(
+                requestBody = eq(
+                    MimiNetworkEngine.RequestBody.FormData(
+                        fields = mapOf(
+                            "client_id" to "applicationId:clientId",
+                            "client_secret" to "applicationSecret",
+                            "grant_type" to "https://auth.mimi.fd.ai/grant_type/application_client_credentials",
+                            "scope" to "scope1"
+                        )
+                    )
+                ),
+                converter = converter,
+                accessToken = null
+            )
+        } returns Result.success(result)
+
+        val service = MimiTokenService(engine, converter)
+        val actual = service.issueClientAccessTokenFromExternalAuthServer(
+            applicationId = "applicationId",
+            clientId = "clientId",
+            applicationSecret = "applicationSecret",
+            scope = scopeOf("scope1")
+        )
+
+        assertTrue(actual.isSuccess)
+        assertEquals(result, actual.getOrNull())
+    }
+
+    @Test
+    fun testIssueClientAccessTokenFromExternalAuthServer_Multiple() = runTest {
+        val result = mockk<MimiTokenResult>()
+        coEvery {
+            engine.request(
+                requestBody = eq(
+                    MimiNetworkEngine.RequestBody.FormData(
+                        fields = mapOf(
+                            "client_id" to "applicationId:clientId",
+                            "client_secret" to "applicationSecret",
+                            "grant_type" to "https://auth.mimi.fd.ai/grant_type/application_client_credentials",
+                            "scope" to "scope1;scope2"
+                        )
+                    )
+                ),
+                converter = converter,
+                accessToken = null
+            )
+        } returns Result.success(result)
+
+        val service = MimiTokenService(engine, converter)
+        val actual = service.issueClientAccessTokenFromExternalAuthServer(
+            applicationId = "applicationId",
+            clientId = "clientId",
+            applicationSecret = "applicationSecret",
+            scopes = setOf(scopeOf("scope1"), scopeOf("scope2"))
+        )
+
+        assertTrue(actual.isSuccess)
+        assertEquals(result, actual.getOrNull())
+    }
+
+    @Test
     fun testIssueClientAccessToken_Single() = runTest {
         val result = mockk<MimiTokenResult>()
         coEvery {

@@ -23,6 +23,40 @@ class MimiTokenService internal constructor(
     )
 
     /**
+     * Issues an access token with client authority by transfer request from an external authentication server.
+     *
+     * See [API Documentation](https://mimi.readme.io/docs/auth-api#121-%E5%A4%96%E9%83%A8%E8%AA%8D%E8%A8%BC%E3%82%B5%E3%83%BC%E3%83%90%E3%83%BC%E3%81%8B%E3%82%89%E3%81%AE%E8%BB%A2%E9%80%81%E3%83%AA%E3%82%AF%E3%82%A8%E3%82%B9%E3%83%88) for more detail.
+     */
+    suspend fun issueClientAccessTokenFromExternalAuthServer(
+        applicationId: String,
+        clientId: String,
+        applicationSecret: String,
+        scope: MimiTokenScope
+    ): Result<MimiTokenResult> = issueClientAccessTokenFromExternalAuthServer(
+        applicationId = applicationId,
+        clientId = clientId,
+        applicationSecret = applicationSecret,
+        scopes = setOf(scope)
+    )
+
+    /**
+     * Issues an access token with client authority by transfer request from an external authentication server.
+     *
+     * See [API Documentation](https://mimi.readme.io/docs/auth-api#121-%E5%A4%96%E9%83%A8%E8%AA%8D%E8%A8%BC%E3%82%B5%E3%83%BC%E3%83%90%E3%83%BC%E3%81%8B%E3%82%89%E3%81%AE%E8%BB%A2%E9%80%81%E3%83%AA%E3%82%AF%E3%82%A8%E3%82%B9%E3%83%88) for more detail.
+     */
+    suspend fun issueClientAccessTokenFromExternalAuthServer(
+        applicationId: String,
+        clientId: String,
+        applicationSecret: String,
+        scopes: Set<MimiTokenScope>
+    ): Result<MimiTokenResult> = issueAccessToken(
+        clientId = "${applicationId}:${clientId}",
+        clientSecret = applicationSecret,
+        grantType = MimiTokenGrantType.APPLICATION_CLIENT_CREDENTIALS,
+        scopes = scopes
+    )
+
+    /**
      * Issues an access token with client authority by direct request from the client application.
      *
      * See [API Documentation](https://mimi.readme.io/docs/auth-api#122-%E3%82%AF%E3%83%A9%E3%82%A4%E3%82%A2%E3%83%B3%E3%83%88%E3%81%8B%E3%82%89%E3%81%AE%E7%9B%B4%E6%8E%A5%E3%83%AA%E3%82%AF%E3%82%A8%E3%82%B9%E3%83%88) for more detail.
