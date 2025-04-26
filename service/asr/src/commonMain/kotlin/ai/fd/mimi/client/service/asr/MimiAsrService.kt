@@ -11,8 +11,8 @@ import kotlinx.io.bytestring.ByteString
 
 class MimiAsrService internal constructor(
     @VisibleForTesting internal val path: String,
-    private val engine: MimiNetworkEngine,
-    private val accessToken: String,
+    @VisibleForTesting internal val engine: MimiNetworkEngine,
+    @VisibleForTesting internal val accessToken: String,
     private val converter: MimiModelConverter.JsonString<MimiAsrResult>
 ) {
     constructor(

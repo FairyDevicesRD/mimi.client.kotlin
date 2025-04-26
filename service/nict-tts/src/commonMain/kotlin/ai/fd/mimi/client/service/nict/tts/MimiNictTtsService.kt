@@ -12,8 +12,8 @@ import ai.fd.mimi.client.service.nict.tts.MimiNictTtsServiceConst as Const
 @OptIn(ExperimentalMimiApi::class)
 class MimiNictTtsService internal constructor(
     @VisibleForTesting internal val path: String,
-    private val engine: MimiNetworkEngine,
-    private val accessToken: String,
+    @VisibleForTesting internal val engine: MimiNetworkEngine,
+    @VisibleForTesting internal val accessToken: String,
     private val converter: MimiModelConverter<MimiNictTtsResult>
 ) {
     constructor(

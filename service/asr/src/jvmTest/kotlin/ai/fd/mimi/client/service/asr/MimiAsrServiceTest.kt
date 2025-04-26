@@ -5,13 +5,11 @@ import ai.fd.mimi.client.engine.MimiNetworkEngine
 import ai.fd.mimi.client.engine.MimiWebSocketSessionInternal
 import ai.fd.mimi.client.service.asr.core.MimiAsrWebSocketSession
 import io.mockk.coEvery
-import io.mockk.confirmVerified
 import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
 import io.mockk.spyk
-import io.mockk.verify
 import kotlin.test.assertEquals
 import kotlinx.coroutines.test.runTest
 import kotlinx.io.bytestring.ByteString
@@ -28,33 +26,68 @@ class MimiAsrServiceTest {
     private lateinit var converter: MimiModelConverter.JsonString<MimiAsrResult>
 
     @Test
-    fun testConstructor() {
-        val engineFactory = mockk<MimiNetworkEngine.Factory>(relaxed = true)
+    fun testPublicConstructor_ssl() {
+        val engine = mockk<MimiNetworkEngine>()
+        val engineFactory = mockk<MimiNetworkEngine.Factory> {
+            every { create(true, "service.mimi.fd.ai", 443) } returns engine
+        }
 
-        val sslService = MimiAsrService(engineFactory, "accessToken")
-        assertEquals("/", sslService.path)
-        verify { engineFactory.create(true, "service.mimi.fd.ai", 443) }
-        confirmVerified(engineFactory)
+        val service = MimiAsrService(engineFactory, "accessToken")
+        assertEquals("/", service.path)
+        assertEquals(engine, service.engine)
+        assertEquals("accessToken", service.accessToken)
+    }
 
-        val noSslService = MimiAsrService(engineFactory, "accessToken", false)
-        assertEquals("/", noSslService.path)
-        verify { engineFactory.create(false, "service.mimi.fd.ai", 80) }
-        confirmVerified(engineFactory)
+    @Test
+    fun testPublicConstructor_noSsl() {
+        val engine = mockk<MimiNetworkEngine>()
+        val engineFactory = mockk<MimiNetworkEngine.Factory> {
+            every { create(false, "service.mimi.fd.ai", 80) } returns engine
+        }
 
-        val sslCustomHostService = MimiAsrService(engineFactory, "accessToken", true, "example.com")
-        assertEquals("/", sslCustomHostService.path)
-        verify { engineFactory.create(true, "example.com", 443) }
-        confirmVerified(engineFactory)
+        val service = MimiAsrService(engineFactory, "accessToken", false)
+        assertEquals("/", service.path)
+        assertEquals(engine, service.engine)
+        assertEquals("accessToken", service.accessToken)
+    }
 
-        val noSslCustomHostService = MimiAsrService(engineFactory, "accessToken", false, "example.com", 1234)
-        assertEquals("/", noSslCustomHostService.path)
-        verify { engineFactory.create(false, "example.com", 1234) }
-        confirmVerified(engineFactory)
+    @Test
+    fun testPublicConstructor_ssl_customHost() {
+        val engine = mockk<MimiNetworkEngine>()
+        val engineFactory = mockk<MimiNetworkEngine.Factory> {
+            every { create(true, "example.com", 443) } returns engine
+        }
 
-        val customPathService = MimiAsrService(engineFactory, "accessToken", path = "path")
-        assertEquals(customPathService.path, "path")
-        verify { engineFactory.create(true, "service.mimi.fd.ai", 443) }
-        confirmVerified(engineFactory)
+        val service = MimiAsrService(engineFactory, "accessToken", true, "example.com")
+        assertEquals("/", service.path)
+        assertEquals(engine, service.engine)
+        assertEquals("accessToken", service.accessToken)
+    }
+
+    @Test
+    fun testPublicConstructor_noSsl_customHost() {
+        val engine = mockk<MimiNetworkEngine>()
+        val engineFactory = mockk<MimiNetworkEngine.Factory> {
+            every { create(false, "example.com", 1234) } returns engine
+        }
+
+        val service = MimiAsrService(engineFactory, "accessToken", false, "example.com", 1234)
+        assertEquals("/", service.path)
+        assertEquals(engine, service.engine)
+        assertEquals("accessToken", service.accessToken)
+    }
+
+    @Test
+    fun testPublicConstructor_customPath() {
+        val engine = mockk<MimiNetworkEngine>()
+        val engineFactory = mockk<MimiNetworkEngine.Factory> {
+            every { create(true, "service.mimi.fd.ai", 443) } returns engine
+        }
+
+        val service = MimiAsrService(engineFactory, "accessToken", path = "path")
+        assertEquals(service.path, "path")
+        assertEquals(engine, service.engine)
+        assertEquals("accessToken", service.accessToken)
     }
 
     @Test

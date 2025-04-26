@@ -9,7 +9,6 @@ import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
-import io.mockk.verify
 import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -37,7 +36,7 @@ class MimiNictTtsServiceTest {
 
     @Test
     fun testPublicConstructor_ssl() {
-        every { engineFactory.create(any(), any(), any()) } returns engine
+        every { engineFactory.create(useSsl = true, host = "host", port = 443) } returns engine
 
         val service = MimiNictTtsService(
             engineFactory = engineFactory,
@@ -47,12 +46,13 @@ class MimiNictTtsServiceTest {
         )
 
         assertEquals("speech_synthesis", service.path)
-        verify { engineFactory.create(useSsl = true, host = "host", port = 443) }
+        assertEquals(engine, service.engine)
+        assertEquals("accessToken", service.accessToken)
     }
 
     @Test
     fun testPublicConstructor_noSsl() {
-        every { engineFactory.create(any(), any(), any()) } returns engine
+        every { engineFactory.create(useSsl = false, host = "host", port = 80) } returns engine
 
         val service = MimiNictTtsService(
             engineFactory = engineFactory,
@@ -62,12 +62,13 @@ class MimiNictTtsServiceTest {
         )
 
         assertEquals("speech_synthesis", service.path)
-        verify { engineFactory.create(useSsl = false, host = "host", port = 80) }
+        assertEquals(engine, service.engine)
+        assertEquals("accessToken", service.accessToken)
     }
 
     @Test
     fun testPublicConstructor_customPort() {
-        every { engineFactory.create(any(), any(), any()) } returns engine
+        every { engineFactory.create(useSsl = true, host = "host", port = 1000) } returns engine
 
         val service = MimiNictTtsService(
             engineFactory = engineFactory,
@@ -78,12 +79,13 @@ class MimiNictTtsServiceTest {
         )
 
         assertEquals("speech_synthesis", service.path)
-        verify { engineFactory.create(useSsl = true, host = "host", port = 1000) }
+        assertEquals(engine, service.engine)
+        assertEquals("accessToken", service.accessToken)
     }
 
     @Test
     fun testPublicConstructor_customPath() {
-        every { engineFactory.create(any(), any(), any()) } returns engine
+        every { engineFactory.create(useSsl = true, host = "host", port = 443) } returns engine
 
         val service = MimiNictTtsService(
             engineFactory = engineFactory,
@@ -94,7 +96,8 @@ class MimiNictTtsServiceTest {
         )
 
         assertEquals("path", service.path)
-        verify { engineFactory.create(useSsl = true, host = "host", port = 443) }
+        assertEquals(engine, service.engine)
+        assertEquals("accessToken", service.accessToken)
     }
 
     @Test
