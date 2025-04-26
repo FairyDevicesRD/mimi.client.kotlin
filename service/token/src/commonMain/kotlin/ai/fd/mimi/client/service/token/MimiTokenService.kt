@@ -22,6 +22,11 @@ class MimiTokenService internal constructor(
         converter = MimiTokenModelConverter()
     )
 
+    /**
+     * Issues an access token with client authority by direct request from the client application.
+     *
+     * See [API Documentation](https://mimi.readme.io/docs/auth-api#122-%E3%82%AF%E3%83%A9%E3%82%A4%E3%82%A2%E3%83%B3%E3%83%88%E3%81%8B%E3%82%89%E3%81%AE%E7%9B%B4%E6%8E%A5%E3%83%AA%E3%82%AF%E3%82%A8%E3%82%B9%E3%83%88) for more detail.
+     */
     suspend fun issueClientAccessToken(
         applicationId: String,
         clientId: String,
@@ -34,6 +39,11 @@ class MimiTokenService internal constructor(
         scopes = setOf(scope)
     )
 
+    /**
+     * Issues an access token with client authority by direct request from the client application.
+     *
+     * See [API Documentation](https://mimi.readme.io/docs/auth-api#122-%E3%82%AF%E3%83%A9%E3%82%A4%E3%82%A2%E3%83%B3%E3%83%88%E3%81%8B%E3%82%89%E3%81%AE%E7%9B%B4%E6%8E%A5%E3%83%AA%E3%82%AF%E3%82%A8%E3%82%B9%E3%83%88) for more detail.
+     */
     suspend fun issueClientAccessToken(
         applicationId: String,
         clientId: String,
