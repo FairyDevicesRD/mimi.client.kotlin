@@ -8,8 +8,10 @@ import ai.fd.mimi.client.engine.MimiNetworkEngine
  */
 class MimiTokenService internal constructor(
     private val issueAccessTokenPath: String,
+    private val revokeAccessTokenPath: String,
     private val engine: MimiNetworkEngine,
-    private val issueTokenResultConverter: MimiModelConverter.JsonString<MimiIssueTokenResult>
+    private val issueTokenResultConverter: MimiModelConverter.JsonString<MimiIssueTokenResult>,
+    private val revokeTokenResultConverter: MimiModelConverter<Unit>,
 ) {
 
     constructor(
@@ -17,11 +19,14 @@ class MimiTokenService internal constructor(
         useSsl: Boolean = true,
         host: String = "auth.mimi.fd.ai",
         issueAccessTokenPath: String = "v2/token",
+        revokeAccessTokenPath: String = "v2/revoke",
         port: Int = if (useSsl) 443 else 80
     ) : this(
         issueAccessTokenPath = issueAccessTokenPath,
+        revokeAccessTokenPath = revokeAccessTokenPath,
         engine = engineFactory.create(useSsl = useSsl, host = host, port = port),
-        issueTokenResultConverter = MimiIssueTokenModelConverter()
+        issueTokenResultConverter = MimiIssueTokenModelConverter(),
+        revokeTokenResultConverter = MimiModelConverter.JsonString.IgnoreResult,
     )
 
 
@@ -140,6 +145,54 @@ class MimiTokenService internal constructor(
             )
         ),
         converter = issueTokenResultConverter,
+        accessToken = null
+    )
+
+    /**
+     * Revokes the access token with application authority.
+     *
+     * See [API Documentation](https://mimi.readme.io/docs/auth-api#21-%E3%82%A2%E3%83%97%E3%83%AA%E3%82%B1%E3%83%BC%E3%82%B7%E3%83%A7%E3%83%B3%E6%A8%A9%E9%99%90%E3%81%A7%E3%81%AE-revoke) for more detail.
+     */
+    suspend fun revokeApplicationAccessToken(
+        applicationId: String,
+        applicationSecret: String,
+        token: String
+    ): Result<Unit> = revokeAccessToken(
+        clientId = applicationId,
+        clientSecret = applicationSecret,
+        token = token
+    )
+
+    /**
+     * Revokes the access token with client authority.
+     *
+     * See [API Documentation](https://mimi.readme.io/docs/auth-api#22-%E3%82%AF%E3%83%A9%E3%82%A4%E3%82%A2%E3%83%B3%E3%83%88%E6%A8%A9%E9%99%90%E3%81%A7%E3%81%AE-revoke) for more detail.
+     */
+    suspend fun revokeClientAccessToken(
+        applicationId: String,
+        clientId: String,
+        clientSecret: String,
+        token: String
+    ): Result<Unit> = revokeAccessToken(
+        clientId = "${applicationId}:${clientId}",
+        clientSecret = clientSecret,
+        token = token
+    )
+
+    private suspend fun revokeAccessToken(
+        clientId: String,
+        clientSecret: String,
+        token: String
+    ): Result<Unit> = engine.request(
+        path = revokeAccessTokenPath,
+        requestBody = MimiNetworkEngine.RequestBody.FormData(
+            fields = mapOf(
+                "client_id" to clientId,
+                "client_secret" to clientSecret,
+                "token" to token
+            )
+        ),
+        converter = revokeTokenResultConverter,
         accessToken = null
     )
 }
