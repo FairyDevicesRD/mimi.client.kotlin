@@ -7,5 +7,7 @@ internal fun Project.configureKmp() {
         jvm()
         linuxX64()
         macosArm64()
+
+        configureKotlinCommon()
     }
 }
