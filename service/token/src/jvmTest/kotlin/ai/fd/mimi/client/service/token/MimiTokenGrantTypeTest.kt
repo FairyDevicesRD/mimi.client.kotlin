@@ -9,15 +9,7 @@ class MimiTokenGrantTypeTest {
     fun testEntries() {
         val grantTypes = MimiTokenGrantType.entries
 
-        assertEquals(5, grantTypes.size)
-        assertEquals(
-            "https://auth.mimi.fd.ai/grant_type/developer_credentials",
-            MimiTokenGrantType.DEVELOPER_CREDENTIALS.value
-        )
-        assertEquals(
-            "https://auth.mimi.fd.ai/grant_type/refresh_token",
-            MimiTokenGrantType.REFRESH_TOKEN.value
-        )
+        assertEquals(3, grantTypes.size)
         assertEquals(
             "https://auth.mimi.fd.ai/grant_type/application_credentials",
             MimiTokenGrantType.APPLICATION_CREDENTIALS.value
