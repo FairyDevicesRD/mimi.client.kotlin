@@ -9,9 +9,11 @@ import ai.fd.mimi.client.engine.MimiNetworkEngine
 class MimiTokenService internal constructor(
     private val issueAccessTokenPath: String,
     private val revokeAccessTokenPath: String,
+    private val validateAccessTokenPath: String,
     private val engine: MimiNetworkEngine,
     private val issueTokenResultConverter: MimiModelConverter.JsonString<MimiIssueTokenResult>,
     private val revokeTokenResultConverter: MimiModelConverter<Unit>,
+    private val validateTokenResultConverter: MimiModelConverter.JsonString<MimiValidateTokenResult>,
 ) {
 
     constructor(
@@ -20,13 +22,16 @@ class MimiTokenService internal constructor(
         host: String = "auth.mimi.fd.ai",
         issueAccessTokenPath: String = "v2/token",
         revokeAccessTokenPath: String = "v2/revoke",
+        validateAccessTokenPath: String = "v2/validate",
         port: Int = if (useSsl) 443 else 80
     ) : this(
         issueAccessTokenPath = issueAccessTokenPath,
         revokeAccessTokenPath = revokeAccessTokenPath,
+        validateAccessTokenPath = validateAccessTokenPath,
         engine = engineFactory.create(useSsl = useSsl, host = host, port = port),
         issueTokenResultConverter = MimiIssueTokenModelConverter(),
         revokeTokenResultConverter = MimiModelConverter.JsonString.IgnoreResult,
+        validateTokenResultConverter = MimiValidateTokenModelConverter()
     )
 
 
@@ -193,6 +198,22 @@ class MimiTokenService internal constructor(
             )
         ),
         converter = revokeTokenResultConverter,
+        accessToken = null
+    )
+
+    /**
+     * Revokes the access token with client authority.
+     *
+     * See [API Documentation](https://mimi.readme.io/docs/auth-api#3-%E5%8F%96%E5%BE%97%E6%B8%88%E3%81%BF%E3%81%AEmimi-api%E3%82%A2%E3%82%AF%E3%82%BB%E3%82%B9%E3%83%88%E3%83%BC%E3%82%AF%E3%83%B3%E3%81%AE%E6%9C%89%E5%8A%B9%E6%80%A7%E3%81%AE%E7%A2%BA%E8%AA%8D%EF%BC%88validate%EF%BC%89) for more detail.
+     */
+    suspend fun validateAccessToken(token: String): Result<MimiValidateTokenResult> = engine.request(
+        path = validateAccessTokenPath,
+        requestBody = MimiNetworkEngine.RequestBody.FormData(
+            fields = mapOf(
+                "token" to token
+            )
+        ),
+        converter = validateTokenResultConverter,
         accessToken = null
     )
 }

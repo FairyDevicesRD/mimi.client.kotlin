@@ -26,6 +26,9 @@ class MimiTokenServiceTest {
     @MockK
     private lateinit var revokeTokenConverter: MimiModelConverter<Unit>
 
+    @MockK
+    private lateinit var validateTokenConverter: MimiModelConverter.JsonString<MimiValidateTokenResult>
+
     @Test
     fun testConstructor() {
         val engineFactory = mockk<MimiNetworkEngine.Factory>(relaxed = true)
@@ -71,9 +74,11 @@ class MimiTokenServiceTest {
         val service = MimiTokenService(
             issueAccessTokenPath = "path",
             revokeAccessTokenPath = "",
+            validateAccessTokenPath = "",
             engine = engine,
             issueTokenResultConverter = issueTokenConverter,
-            revokeTokenResultConverter = revokeTokenConverter
+            revokeTokenResultConverter = revokeTokenConverter,
+            validateTokenResultConverter = validateTokenConverter
         )
         val actual = service.issueApplicationAccessToken(
             applicationId = "applicationId",
@@ -109,9 +114,11 @@ class MimiTokenServiceTest {
         val service = MimiTokenService(
             issueAccessTokenPath = "path",
             revokeAccessTokenPath = "",
+            validateAccessTokenPath = "",
             engine = engine,
             issueTokenResultConverter = issueTokenConverter,
-            revokeTokenResultConverter = revokeTokenConverter
+            revokeTokenResultConverter = revokeTokenConverter,
+            validateTokenResultConverter = validateTokenConverter,
         )
         val actual = service.issueApplicationAccessToken(
             applicationId = "applicationId",
@@ -147,9 +154,11 @@ class MimiTokenServiceTest {
         val service = MimiTokenService(
             issueAccessTokenPath = "path",
             revokeAccessTokenPath = "",
+            validateAccessTokenPath = "",
             engine = engine,
             issueTokenResultConverter = issueTokenConverter,
-            revokeTokenResultConverter = revokeTokenConverter
+            revokeTokenResultConverter = revokeTokenConverter,
+            validateTokenResultConverter = validateTokenConverter
         )
         val actual = service.issueClientAccessTokenFromExternalAuthServer(
             applicationId = "applicationId",
@@ -186,9 +195,11 @@ class MimiTokenServiceTest {
         val service = MimiTokenService(
             issueAccessTokenPath = "path",
             revokeAccessTokenPath = "",
+            validateAccessTokenPath = "",
             engine = engine,
             issueTokenResultConverter = issueTokenConverter,
-            revokeTokenResultConverter = revokeTokenConverter
+            revokeTokenResultConverter = revokeTokenConverter,
+            validateTokenResultConverter = validateTokenConverter
         )
         val actual = service.issueClientAccessTokenFromExternalAuthServer(
             applicationId = "applicationId",
@@ -225,9 +236,11 @@ class MimiTokenServiceTest {
         val service = MimiTokenService(
             issueAccessTokenPath = "path",
             revokeAccessTokenPath = "",
+            validateAccessTokenPath = "",
             engine = engine,
             issueTokenResultConverter = issueTokenConverter,
-            revokeTokenResultConverter = revokeTokenConverter
+            revokeTokenResultConverter = revokeTokenConverter,
+            validateTokenResultConverter = validateTokenConverter
         )
         val actual = service.issueClientAccessToken(
             applicationId = "applicationId",
@@ -264,9 +277,11 @@ class MimiTokenServiceTest {
         val service = MimiTokenService(
             issueAccessTokenPath = "path",
             revokeAccessTokenPath = "",
+            validateAccessTokenPath = "",
             engine = engine,
             issueTokenResultConverter = issueTokenConverter,
-            revokeTokenResultConverter = revokeTokenConverter
+            revokeTokenResultConverter = revokeTokenConverter,
+            validateTokenResultConverter = validateTokenConverter
         )
         val actual = service.issueClientAccessToken(
             applicationId = "applicationId",
@@ -301,9 +316,11 @@ class MimiTokenServiceTest {
         val service = MimiTokenService(
             issueAccessTokenPath = "",
             revokeAccessTokenPath = "path",
+            validateAccessTokenPath = "",
             engine = engine,
             issueTokenResultConverter = issueTokenConverter,
-            revokeTokenResultConverter = revokeTokenConverter
+            revokeTokenResultConverter = revokeTokenConverter,
+            validateTokenResultConverter = validateTokenConverter
         )
         val actual = service.revokeApplicationAccessToken(
             applicationId = "applicationId",
@@ -338,9 +355,11 @@ class MimiTokenServiceTest {
         val service = MimiTokenService(
             issueAccessTokenPath = "",
             revokeAccessTokenPath = "path",
+            validateAccessTokenPath = "",
             engine = engine,
             issueTokenResultConverter = issueTokenConverter,
-            revokeTokenResultConverter = revokeTokenConverter
+            revokeTokenResultConverter = revokeTokenConverter,
+            validateTokenResultConverter = validateTokenConverter
         )
         val actual = service.revokeApplicationAccessToken(
             applicationId = "applicationId",
@@ -374,9 +393,11 @@ class MimiTokenServiceTest {
         val service = MimiTokenService(
             issueAccessTokenPath = "",
             revokeAccessTokenPath = "path",
+            validateAccessTokenPath = "",
             engine = engine,
             issueTokenResultConverter = issueTokenConverter,
-            revokeTokenResultConverter = revokeTokenConverter
+            revokeTokenResultConverter = revokeTokenConverter,
+            validateTokenResultConverter = validateTokenConverter
         )
         val actual = service.revokeClientAccessToken(
             applicationId = "applicationId",
@@ -412,9 +433,11 @@ class MimiTokenServiceTest {
         val service = MimiTokenService(
             issueAccessTokenPath = "",
             revokeAccessTokenPath = "path",
+            validateAccessTokenPath = "",
             engine = engine,
             issueTokenResultConverter = issueTokenConverter,
-            revokeTokenResultConverter = revokeTokenConverter
+            revokeTokenResultConverter = revokeTokenConverter,
+            validateTokenResultConverter = validateTokenConverter
         )
         val actual = service.revokeClientAccessToken(
             applicationId = "applicationId",
@@ -422,6 +445,72 @@ class MimiTokenServiceTest {
             clientSecret = "clientSecret",
             token = "token"
         )
+
+        assertTrue(actual.isFailure)
+        assertEquals(exception, actual.exceptionOrNull())
+    }
+
+    @Test
+    fun testValidateClientAccessToken() = runTest {
+        val result = mockk<MimiValidateTokenResult>()
+        coEvery {
+            engine.request(
+                path = "path",
+                requestBody = eq(
+                    MimiNetworkEngine.RequestBody.FormData(
+                        fields = mapOf(
+                            "token" to "token"
+                        )
+                    )
+                ),
+                converter = validateTokenConverter,
+                accessToken = null
+            )
+        } returns Result.success(result)
+
+        val service = MimiTokenService(
+            issueAccessTokenPath = "",
+            revokeAccessTokenPath = "",
+            validateAccessTokenPath = "path",
+            engine = engine,
+            issueTokenResultConverter = issueTokenConverter,
+            revokeTokenResultConverter = revokeTokenConverter,
+            validateTokenResultConverter = validateTokenConverter
+        )
+        val actual = service.validateAccessToken(token = "token")
+
+        assertTrue(actual.isSuccess)
+        assertEquals(result, actual.getOrNull())
+    }
+
+    @Test
+    fun testValidateClientAccessToken_error() = runTest {
+        val exception = mockk<Exception>()
+        coEvery {
+            engine.request(
+                path = "path",
+                requestBody = eq(
+                    MimiNetworkEngine.RequestBody.FormData(
+                        fields = mapOf(
+                            "token" to "token"
+                        )
+                    )
+                ),
+                converter = validateTokenConverter,
+                accessToken = null
+            )
+        } returns Result.failure(exception)
+
+        val service = MimiTokenService(
+            issueAccessTokenPath = "",
+            revokeAccessTokenPath = "",
+            validateAccessTokenPath = "path",
+            engine = engine,
+            issueTokenResultConverter = issueTokenConverter,
+            revokeTokenResultConverter = revokeTokenConverter,
+            validateTokenResultConverter = validateTokenConverter
+        )
+        val actual = service.validateAccessToken(token = "token")
 
         assertTrue(actual.isFailure)
         assertEquals(exception, actual.exceptionOrNull())
