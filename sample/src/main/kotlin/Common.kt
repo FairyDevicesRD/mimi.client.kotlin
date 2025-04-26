@@ -44,7 +44,30 @@ suspend fun issueClientAccessToken(engineFactory: MimiNetworkEngine.Factory, sco
         clientSecret = clientSecret,
         scopes = scopes
     )
-    println(result)
+
+    if (result.isFailure) {
+        println("Failed to issue token.")
+        result.exceptionOrNull()?.printStackTrace()
+        return
+    }
+    val token = result.getOrThrow().accessToken
+    println("Token issued: $token")
+
+    val validateResult = tokenService.validateAccessToken(token)
+    println("Validate result: $validateResult")
+
+    if (validateResult.isFailure) {
+        println("Failed to validate token.")
+        validateResult.exceptionOrNull()?.printStackTrace()
+        return
+    }
+
+    tokenService.revokeClientAccessToken(
+        applicationId = applicationId,
+        clientId = clientId,
+        clientSecret = clientSecret,
+        token = token
+    )
 }
 
 
