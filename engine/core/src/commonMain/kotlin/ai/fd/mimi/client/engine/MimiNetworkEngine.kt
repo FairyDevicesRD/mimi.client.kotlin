@@ -10,22 +10,24 @@ import kotlinx.io.bytestring.ByteString
 abstract class MimiNetworkEngine {
 
     suspend fun <T> request(
+        path: String,
         accessToken: String?,
         requestBody: RequestBody,
         headers: Map<String, String> = emptyMap(),
         converter: MimiModelConverter<T>
     ): Result<T> = when (converter) {
-        is MimiModelConverter.JsonString<T> -> requestJsonString(accessToken, requestBody, headers, converter)
-        is MimiModelConverter.Binary<T> -> requestBinary(accessToken, requestBody, headers, converter)
+        is MimiModelConverter.JsonString<T> -> requestJsonString(path, accessToken, requestBody, headers, converter)
+        is MimiModelConverter.Binary<T> -> requestBinary(path, accessToken, requestBody, headers, converter)
     }
 
     private suspend fun <T> requestJsonString(
+        path: String,
         accessToken: String?,
         requestBody: RequestBody,
         headers: Map<String, String> = emptyMap(),
         converter: MimiModelConverter.JsonString<T>
     ): Result<T> {
-        val networkResult = requestAsStringInternal(requestBody, headers + createBearerHeader(accessToken))
+        val networkResult = requestAsStringInternal(path, requestBody, headers + createBearerHeader(accessToken))
         val networkException = networkResult.exceptionOrNull()
         if (networkException != null) {
             return Result.failure(networkException)
@@ -39,12 +41,13 @@ abstract class MimiNetworkEngine {
     }
 
     private suspend fun <T> requestBinary(
+        path: String,
         accessToken: String?,
         requestBody: RequestBody,
         headers: Map<String, String> = emptyMap(),
         converter: MimiModelConverter.Binary<T>
     ): Result<T> {
-        val networkResult = requestAsBinaryInternal(requestBody, headers + createBearerHeader(accessToken))
+        val networkResult = requestAsBinaryInternal(path, requestBody, headers + createBearerHeader(accessToken))
         val networkException = networkResult.exceptionOrNull()
         if (networkException != null) {
             return Result.failure(networkException)
@@ -59,28 +62,32 @@ abstract class MimiNetworkEngine {
 
     @VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
     abstract suspend fun requestAsStringInternal(
+        path: String,
         requestBody: RequestBody,
         headers: Map<String, String> = emptyMap()
     ): Result<String>
 
     @VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
     abstract suspend fun requestAsBinaryInternal(
+        path: String,
         requestBody: RequestBody,
         headers: Map<String, String> = emptyMap()
     ): Result<ByteString>
 
     @Throws(MimiIOException::class, CancellationException::class)
     suspend fun <T> openWebSocketSession(
+        path: String,
         accessToken: String?,
         contentType: String,
         headers: Map<String, String> = emptyMap(),
         converter: MimiModelConverter.JsonString<T>
     ): MimiWebSocketSessionInternal<T> =
-        openWebSocketSessionInternal(contentType, headers + createBearerHeader(accessToken), converter)
+        openWebSocketSessionInternal(path, contentType, headers + createBearerHeader(accessToken), converter)
 
     @VisibleForTesting(otherwise = VisibleForTesting.PROTECTED)
     @Throws(MimiIOException::class, CancellationException::class)
     abstract suspend fun <T> openWebSocketSessionInternal(
+        path: String,
         contentType: String,
         headers: Map<String, String> = emptyMap(),
         converter: MimiModelConverter.JsonString<T>
@@ -92,7 +99,7 @@ abstract class MimiNetworkEngine {
     }
 
     interface Factory {
-        fun create(useSsl: Boolean, host: String, port: Int, path: String = "/"): MimiNetworkEngine
+        fun create(useSsl: Boolean, host: String, port: Int): MimiNetworkEngine
     }
 
     companion object {

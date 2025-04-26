@@ -28,23 +28,19 @@ class MimiTokenServiceTest {
         val engineFactory = mockk<MimiNetworkEngine.Factory>(relaxed = true)
 
         MimiTokenService(engineFactory)
-        verify { engineFactory.create(true, "auth.mimi.fd.ai", 443, "v2/token") }
+        verify { engineFactory.create(true, "auth.mimi.fd.ai", 443) }
         confirmVerified(engineFactory)
 
         MimiTokenService(engineFactory, false)
-        verify { engineFactory.create(false, "auth.mimi.fd.ai", 80, "v2/token") }
+        verify { engineFactory.create(false, "auth.mimi.fd.ai", 80) }
         confirmVerified(engineFactory)
 
         MimiTokenService(engineFactory, true, "example.com")
-        verify { engineFactory.create(true, "example.com", 443, "v2/token") }
-        confirmVerified(engineFactory)
-
-        MimiTokenService(engineFactory, false, "example.com", "path")
-        verify { engineFactory.create(false, "example.com", 80, "path") }
+        verify { engineFactory.create(true, "example.com", 443) }
         confirmVerified(engineFactory)
 
         MimiTokenService(engineFactory, false, "example.com", port = 1234)
-        verify { engineFactory.create(false, "example.com", 1234, "v2/token") }
+        verify { engineFactory.create(false, "example.com", 1234) }
         confirmVerified(engineFactory)
     }
 
@@ -53,6 +49,7 @@ class MimiTokenServiceTest {
         val result = mockk<MimiTokenResult>()
         coEvery {
             engine.request(
+                path = "path",
                 requestBody = eq(
                     MimiNetworkEngine.RequestBody.FormData(
                         fields = mapOf(
@@ -68,7 +65,7 @@ class MimiTokenServiceTest {
             )
         } returns Result.success(result)
 
-        val service = MimiTokenService(engine, converter)
+        val service = MimiTokenService("path", engine, converter)
         val actual = service.issueApplicationAccessToken(
             applicationId = "applicationId",
             applicationSecret = "applicationSecret",
@@ -84,6 +81,7 @@ class MimiTokenServiceTest {
         val result = mockk<MimiTokenResult>()
         coEvery {
             engine.request(
+                path = "path",
                 requestBody = eq(
                     MimiNetworkEngine.RequestBody.FormData(
                         fields = mapOf(
@@ -99,7 +97,7 @@ class MimiTokenServiceTest {
             )
         } returns Result.success(result)
 
-        val service = MimiTokenService(engine, converter)
+        val service = MimiTokenService("path", engine, converter)
         val actual = service.issueApplicationAccessToken(
             applicationId = "applicationId",
             applicationSecret = "applicationSecret",
@@ -115,6 +113,7 @@ class MimiTokenServiceTest {
         val result = mockk<MimiTokenResult>()
         coEvery {
             engine.request(
+                path = "path",
                 requestBody = eq(
                     MimiNetworkEngine.RequestBody.FormData(
                         fields = mapOf(
@@ -130,7 +129,7 @@ class MimiTokenServiceTest {
             )
         } returns Result.success(result)
 
-        val service = MimiTokenService(engine, converter)
+        val service = MimiTokenService("path", engine, converter)
         val actual = service.issueClientAccessTokenFromExternalAuthServer(
             applicationId = "applicationId",
             clientId = "clientId",
@@ -147,6 +146,7 @@ class MimiTokenServiceTest {
         val result = mockk<MimiTokenResult>()
         coEvery {
             engine.request(
+                path = "path",
                 requestBody = eq(
                     MimiNetworkEngine.RequestBody.FormData(
                         fields = mapOf(
@@ -162,7 +162,7 @@ class MimiTokenServiceTest {
             )
         } returns Result.success(result)
 
-        val service = MimiTokenService(engine, converter)
+        val service = MimiTokenService("path", engine, converter)
         val actual = service.issueClientAccessTokenFromExternalAuthServer(
             applicationId = "applicationId",
             clientId = "clientId",
@@ -179,6 +179,7 @@ class MimiTokenServiceTest {
         val result = mockk<MimiTokenResult>()
         coEvery {
             engine.request(
+                path = "path",
                 requestBody = eq(
                     MimiNetworkEngine.RequestBody.FormData(
                         fields = mapOf(
@@ -194,7 +195,7 @@ class MimiTokenServiceTest {
             )
         } returns Result.success(result)
 
-        val service = MimiTokenService(engine, converter)
+        val service = MimiTokenService("path", engine, converter)
         val actual = service.issueClientAccessToken(
             applicationId = "applicationId",
             clientId = "clientId",
@@ -211,6 +212,7 @@ class MimiTokenServiceTest {
         val result = mockk<MimiTokenResult>()
         coEvery {
             engine.request(
+                path = "path",
                 requestBody = eq(
                     MimiNetworkEngine.RequestBody.FormData(
                         fields = mapOf(
@@ -226,7 +228,7 @@ class MimiTokenServiceTest {
             )
         } returns Result.success(result)
 
-        val service = MimiTokenService(engine, converter)
+        val service = MimiTokenService("path", engine, converter)
         val actual = service.issueClientAccessToken(
             applicationId = "applicationId",
             clientId = "clientId",

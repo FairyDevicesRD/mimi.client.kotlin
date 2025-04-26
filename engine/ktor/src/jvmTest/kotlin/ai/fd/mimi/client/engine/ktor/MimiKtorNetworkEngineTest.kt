@@ -57,13 +57,13 @@ class MimiKtorNetworkEngineTest {
             httpClient = HttpClient(mockEngine),
             useSsl = true,
             host = "example.com",
-            port = 1234,
-            path = "path"
+            port = 1234
         )
 
         val actual = target.requestAsStringInternal(
-            MimiNetworkEngine.RequestBody.Binary(ByteString(1, 2, 3), "application/octet-stream"),
-            mapOf("additional" to "header")
+            path = "path",
+            requestBody = MimiNetworkEngine.RequestBody.Binary(ByteString(1, 2, 3), "application/octet-stream"),
+            headers = mapOf("additional" to "header")
         )
 
         assertTrue(actual.isSuccess)
@@ -88,11 +88,11 @@ class MimiKtorNetworkEngineTest {
             httpClient = HttpClient(mockEngine),
             useSsl = false,
             host = "example.com",
-            port = 1234,
-            path = ""
+            port = 1234
         )
 
         val actual = target.requestAsStringInternal(
+            path = "",
             requestBody = MimiNetworkEngine.RequestBody.FormData(mapOf("key" to "value")),
             headers = mapOf("additional" to "header")
         )
@@ -119,11 +119,11 @@ class MimiKtorNetworkEngineTest {
             httpClient = HttpClient(mockEngine),
             useSsl = true,
             host = "example.com",
-            port = 1234,
-            path = "path"
+            port = 1234
         )
 
         val actual = target.requestAsBinaryInternal(
+            path = "path",
             requestBody = MimiNetworkEngine.RequestBody.Binary(ByteString(1, 2, 3), "application/octet-stream"),
             headers = mapOf("additional" to "header")
         )
@@ -149,13 +149,13 @@ class MimiKtorNetworkEngineTest {
             httpClient = HttpClient(mockEngine),
             useSsl = true,
             host = "example.com",
-            port = 1234,
-            path = "path"
+            port = 1234
         )
 
         val actual = target.requestAsStringInternal(
-            MimiNetworkEngine.RequestBody.Binary(ByteString(1, 2, 3), "application/octet-stream"),
-            mapOf("additional" to "header")
+            path = "path",
+            requestBody = MimiNetworkEngine.RequestBody.Binary(ByteString(1, 2, 3), "application/octet-stream"),
+            headers = mapOf("additional" to "header")
         )
 
         assertTrue(actual.isFailure)
@@ -178,8 +178,7 @@ class MimiKtorNetworkEngineTest {
                 },
                 useSsl = false,
                 host = mockWebServer.hostName,
-                port = mockWebServer.port,
-                path = "path"
+                port = mockWebServer.port
             )
         )
         val converter = mockk<MimiModelConverter.JsonString<Any>>()
@@ -187,6 +186,7 @@ class MimiKtorNetworkEngineTest {
         every { target.createWebSocketSession(any(), eq(converter)) } returns session
 
         val actual = target.openWebSocketSessionInternal(
+            path = "path",
             contentType = "application/json",
             headers = mapOf("additional" to "header"),
             converter = converter
@@ -206,12 +206,12 @@ class MimiKtorNetworkEngineTest {
             httpClient = httpClient,
             useSsl = true,
             host = "example.com",
-            port = 1234,
-            path = "path"
+            port = 1234
         )
 
         assertFailsWith(MimiIOException::class, "Failed to open WebSocket session") {
             target.openWebSocketSessionInternal(
+                path = "path",
                 contentType = "application/json",
                 headers = mapOf("additional" to "header"),
                 converter = mockk<MimiModelConverter.JsonString<Any>>()

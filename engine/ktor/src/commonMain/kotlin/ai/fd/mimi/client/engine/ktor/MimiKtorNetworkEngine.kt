@@ -13,6 +13,7 @@ import io.ktor.client.request.forms.FormDataContent
 import io.ktor.client.request.headers
 import io.ktor.client.request.post
 import io.ktor.client.request.setBody
+import io.ktor.client.request.url
 import io.ktor.client.statement.HttpResponse
 import io.ktor.client.statement.bodyAsBytes
 import io.ktor.client.statement.bodyAsText
@@ -33,40 +34,44 @@ class MimiKtorNetworkEngine(
     private val httpClient: HttpClient,
     useSsl: Boolean,
     host: String,
-    port: Int,
-    path: String
+    port: Int
 ) : MimiNetworkEngine() {
 
-    private val httpTargetUrl: Url = buildUrl {
+    private val httpTargetBaseUrl: Url = buildUrl {
         this.protocol = if (useSsl) URLProtocol.HTTPS else URLProtocol.HTTP
         this.host = host
         this.port = port
-        this.path(path)
     }
 
-    private val webSocketTargetUrl: Url = buildUrl {
+    private val webSocketTargetBaseUrl: Url = buildUrl {
         this.protocol = if (useSsl) URLProtocol.WSS else URLProtocol.WS
         this.host = host
         this.port = port
-        this.path(path)
     }
 
     override suspend fun requestAsStringInternal(
+        path: String,
         requestBody: RequestBody,
         headers: Map<String, String>
-    ): Result<String> = requestInternal(requestBody, headers) { it.bodyAsText() }
+    ): Result<String> = requestInternal(path, requestBody, headers) { it.bodyAsText() }
 
     override suspend fun requestAsBinaryInternal(
+        path: String,
         requestBody: RequestBody,
         headers: Map<String, String>
-    ): Result<ByteString> = requestInternal(requestBody, headers) { ByteString(it.bodyAsBytes()) }
+    ): Result<ByteString> = requestInternal(path, requestBody, headers) { ByteString(it.bodyAsBytes()) }
 
     private suspend fun <T> requestInternal(
+        path: String,
         requestBody: RequestBody,
         headers: Map<String, String>,
         extractResponseBodyAction: suspend (HttpResponse) -> T
     ): Result<T> {
-        val response = httpClient.post(httpTargetUrl) {
+        val url = buildUrl {
+            takeFrom(httpTargetBaseUrl)
+            path(path)
+        }
+        val response = httpClient.post(url) {
             headers {
                 headers.forEach { (key, value) -> append(key, value) }
             }
@@ -82,13 +87,18 @@ class MimiKtorNetworkEngine(
 
     @Throws(MimiIOException::class, CancellationException::class)
     override suspend fun <T> openWebSocketSessionInternal(
+        path: String,
         contentType: String,
         headers: Map<String, String>,
         converter: MimiModelConverter.JsonString<T>
     ): MimiWebSocketSessionInternal<T> {
+        val url = buildUrl {
+            takeFrom(webSocketTargetBaseUrl)
+            path(path)
+        }
         val session = try {
             httpClient.webSocketSession {
-                url.takeFrom(webSocketTargetUrl)
+                url(url)
                 headers {
                     headers.forEach { (key, value) -> append(key, value) }
                 }
@@ -122,7 +132,7 @@ class MimiKtorNetworkEngine(
     }
 
     internal class Factory(private val httpClient: HttpClient) : MimiNetworkEngine.Factory {
-        override fun create(useSsl: Boolean, host: String, port: Int, path: String): MimiNetworkEngine =
-            MimiKtorNetworkEngine(httpClient, useSsl, host, port, path)
+        override fun create(useSsl: Boolean, host: String, port: Int): MimiNetworkEngine =
+            MimiKtorNetworkEngine(httpClient, useSsl, host, port)
     }
 }

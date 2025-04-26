@@ -7,6 +7,7 @@ import ai.fd.mimi.client.engine.MimiNetworkEngine
  * A service class to issue access tokens for Mimi services.
  */
 class MimiTokenService internal constructor(
+    private val issueAccessTokenPath: String,
     private val engine: MimiNetworkEngine,
     private val converter: MimiModelConverter.JsonString<MimiTokenResult>
 ) {
@@ -15,10 +16,11 @@ class MimiTokenService internal constructor(
         engineFactory: MimiNetworkEngine.Factory,
         useSsl: Boolean = true,
         host: String = "auth.mimi.fd.ai",
-        path: String = "v2/token",
+        issueAccessTokenPath: String = "v2/token",
         port: Int = if (useSsl) 443 else 80
     ) : this(
-        engine = engineFactory.create(useSsl = useSsl, host = host, port = port, path = path),
+        issueAccessTokenPath = issueAccessTokenPath,
+        engine = engineFactory.create(useSsl = useSsl, host = host, port = port),
         converter = MimiTokenModelConverter()
     )
 
@@ -128,6 +130,7 @@ class MimiTokenService internal constructor(
         grantType: MimiTokenGrantType,
         scopes: Set<MimiTokenScope>
     ): Result<MimiTokenResult> = engine.request(
+        path = issueAccessTokenPath,
         requestBody = MimiNetworkEngine.RequestBody.FormData(
             fields = mapOf(
                 "client_id" to clientId,

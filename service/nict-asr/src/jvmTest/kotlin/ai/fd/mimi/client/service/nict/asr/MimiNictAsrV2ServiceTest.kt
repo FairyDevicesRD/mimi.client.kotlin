@@ -32,20 +32,29 @@ class MimiNictAsrV2ServiceTest {
     fun testConstructor() {
         val engineFactory = mockk<MimiNetworkEngine.Factory>(relaxed = true)
 
-        MimiNictAsrV2Service(engineFactory, "accessToken")
+        val sslService = MimiNictAsrV2Service(engineFactory, "accessToken")
+        assertEquals("/", sslService.path)
         verify { engineFactory.create(true, "service.mimi.fd.ai", 443) }
         confirmVerified(engineFactory)
 
-        MimiNictAsrV2Service(engineFactory, "accessToken", false)
+        val noSslService = MimiNictAsrV2Service(engineFactory, "accessToken", false)
+        assertEquals("/", noSslService.path)
         verify { engineFactory.create(false, "service.mimi.fd.ai", 80) }
         confirmVerified(engineFactory)
 
-        MimiNictAsrV2Service(engineFactory, "accessToken", true, "example.com")
+        val sslCustomHostService = MimiNictAsrV2Service(engineFactory, "accessToken", true, "example.com")
+        assertEquals("/", sslCustomHostService.path)
         verify { engineFactory.create(true, "example.com", 443) }
         confirmVerified(engineFactory)
 
-        MimiNictAsrV2Service(engineFactory, "accessToken", false, "example.com", 1234)
+        val noSslCustomHostService = MimiNictAsrV2Service(engineFactory, "accessToken", false, "example.com", 1234)
+        assertEquals("/", noSslCustomHostService.path)
         verify { engineFactory.create(false, "example.com", 1234) }
+        confirmVerified(engineFactory)
+
+        val customPathService = MimiNictAsrV2Service(engineFactory, "accessToken", path = "path")
+        assertEquals("path", customPathService.path)
+        verify { engineFactory.create(true, "service.mimi.fd.ai", 443) }
         confirmVerified(engineFactory)
     }
 
@@ -59,6 +68,7 @@ class MimiNictAsrV2ServiceTest {
         val result = mockk<MimiNictAsrV2Result>()
         coEvery {
             engine.request(
+                path = "path",
                 accessToken = "accessToken",
                 requestBody = MimiNetworkEngine.RequestBody.Binary(ByteString(1, 2, 3), "contentType"),
                 headers = mapOf(
@@ -69,7 +79,7 @@ class MimiNictAsrV2ServiceTest {
                 converter = converter
             )
         } returns Result.success(result)
-        val target = MimiNictAsrV2Service(engine, "accessToken", converter)
+        val target = MimiNictAsrV2Service("path", engine, "accessToken", converter)
 
         val actual = target.requestAsr(byteArrayOf(1, 2, 3), options)
 
@@ -80,7 +90,7 @@ class MimiNictAsrV2ServiceTest {
     fun testRequestAsr_error_progressive() = runTest {
         val options = mockk<MimiNictAsrV2Options>()
         every { options.progressive } returns true
-        val target = MimiNictAsrV2Service(engine, "accessToken", converter)
+        val target = MimiNictAsrV2Service("path", engine, "accessToken", converter)
 
         assertFailsWith<IllegalStateException>("Progressive mode is not supported for HTTP request") {
             target.requestAsr(byteArrayOf(1, 2, 3), options)
@@ -96,6 +106,7 @@ class MimiNictAsrV2ServiceTest {
         val internalSession = mockk<MimiWebSocketSessionInternal<MimiNictAsrV2Result>>()
         coEvery {
             engine.openWebSocketSession(
+                path = "path",
                 accessToken = "accessToken",
                 headers = mapOf(
                     "x-mimi-process" to "nict-asr",
@@ -106,7 +117,7 @@ class MimiNictAsrV2ServiceTest {
                 converter = converter
             )
         } returns internalSession
-        val target = spyk(MimiNictAsrV2Service(engine, "accessToken", converter))
+        val target = spyk(MimiNictAsrV2Service("path", engine, "accessToken", converter))
         val session = mockk<MimiAsrWebSocketSession<MimiNictAsrV2Result>>()
         every { target.createMimiAsrWebSocketSession(internalSession) } returns session
 

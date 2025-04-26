@@ -51,11 +51,11 @@ class MimiOkHttpNetworkEngineTest {
             okHttpClient = OkHttpClient(),
             useSsl = false,
             host = mockWebServer.hostName,
-            port = mockWebServer.port,
-            path = "path"
+            port = mockWebServer.port
         )
 
         val actual = target.requestAsStringInternal(
+            path = "path",
             requestBody = MimiNetworkEngine.RequestBody.Binary(ByteString(1, 2, 3), "application/octet-stream"),
             headers = mapOf("additional" to "header")
         )
@@ -82,11 +82,11 @@ class MimiOkHttpNetworkEngineTest {
             okHttpClient = OkHttpClient(),
             useSsl = false,
             host = mockWebServer.hostName,
-            port = mockWebServer.port,
-            path = ""
+            port = mockWebServer.port
         )
 
         val actual = target.requestAsStringInternal(
+            path = "",
             requestBody = MimiNetworkEngine.RequestBody.FormData(mapOf("key" to "value")),
             headers = mapOf("additional" to "header")
         )
@@ -113,11 +113,11 @@ class MimiOkHttpNetworkEngineTest {
             okHttpClient = OkHttpClient(),
             useSsl = false,
             host = mockWebServer.hostName,
-            port = mockWebServer.port,
-            path = ""
+            port = mockWebServer.port
         )
 
         val actual = target.requestAsBinaryInternal(
+            path = "",
             requestBody = MimiNetworkEngine.RequestBody.Binary(ByteString(1, 2, 3), "application/octet-stream"),
             headers = mapOf("additional" to "header")
         )
@@ -143,11 +143,11 @@ class MimiOkHttpNetworkEngineTest {
             okHttpClient = OkHttpClient(),
             useSsl = false,
             host = mockWebServer.hostName,
-            port = mockWebServer.port,
-            path = ""
+            port = mockWebServer.port
         )
 
         val actual = target.requestAsBinaryInternal(
+            path = "",
             requestBody = MimiNetworkEngine.RequestBody.Binary(ByteString(1, 2, 3), "application/octet-stream"),
             headers = mapOf("additional" to "header")
         )
@@ -172,8 +172,7 @@ class MimiOkHttpNetworkEngineTest {
                 okHttpClient = okHttpClient,
                 useSsl = true,
                 host = "example.com",
-                port = 1234,
-                path = "path"
+                port = 1234
             )
         )
         val converter = mockk<MimiModelConverter.JsonString<Any>>()
@@ -182,6 +181,7 @@ class MimiOkHttpNetworkEngineTest {
         every { target.createWebSocketSession(capture(requestSlot), eq(okHttpClient), eq(converter)) } returns session
 
         val actual = target.openWebSocketSessionInternal(
+            path = "path",
             contentType = "application/json",
             headers = mapOf("additional" to "header"),
             converter = converter

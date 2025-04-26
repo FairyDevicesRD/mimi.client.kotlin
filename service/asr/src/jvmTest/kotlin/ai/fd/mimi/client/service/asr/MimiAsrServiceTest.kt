@@ -31,20 +31,29 @@ class MimiAsrServiceTest {
     fun testConstructor() {
         val engineFactory = mockk<MimiNetworkEngine.Factory>(relaxed = true)
 
-        MimiAsrService(engineFactory, "accessToken")
+        val sslService = MimiAsrService(engineFactory, "accessToken")
+        assertEquals("/", sslService.path)
         verify { engineFactory.create(true, "service.mimi.fd.ai", 443) }
         confirmVerified(engineFactory)
 
-        MimiAsrService(engineFactory, "accessToken", false)
+        val noSslService = MimiAsrService(engineFactory, "accessToken", false)
+        assertEquals("/", noSslService.path)
         verify { engineFactory.create(false, "service.mimi.fd.ai", 80) }
         confirmVerified(engineFactory)
 
-        MimiAsrService(engineFactory, "accessToken", true, "example.com")
+        val sslCustomHostService = MimiAsrService(engineFactory, "accessToken", true, "example.com")
+        assertEquals("/", sslCustomHostService.path)
         verify { engineFactory.create(true, "example.com", 443) }
         confirmVerified(engineFactory)
 
-        MimiAsrService(engineFactory, "accessToken", false, "example.com", 1234)
+        val noSslCustomHostService = MimiAsrService(engineFactory, "accessToken", false, "example.com", 1234)
+        assertEquals("/", noSslCustomHostService.path)
         verify { engineFactory.create(false, "example.com", 1234) }
+        confirmVerified(engineFactory)
+
+        val customPathService = MimiAsrService(engineFactory, "accessToken", path = "path")
+        assertEquals(customPathService.path, "path")
+        verify { engineFactory.create(true, "service.mimi.fd.ai", 443) }
         confirmVerified(engineFactory)
     }
 
@@ -56,6 +65,7 @@ class MimiAsrServiceTest {
         val result = mockk<MimiAsrResult>()
         coEvery {
             engine.request(
+                path = "path",
                 accessToken = "accessToken",
                 requestBody = MimiNetworkEngine.RequestBody.Binary(ByteString(1, 2, 3), "contentType"),
                 headers = mapOf(
@@ -65,7 +75,7 @@ class MimiAsrServiceTest {
                 converter = converter
             )
         } returns Result.success(result)
-        val target = MimiAsrService(engine, "accessToken", converter)
+        val target = MimiAsrService("path", engine, "accessToken", converter)
 
         val actual = target.requestAsr(byteArrayOf(1, 2, 3), options)
 
@@ -80,6 +90,7 @@ class MimiAsrServiceTest {
         val internalSession = mockk<MimiWebSocketSessionInternal<MimiAsrResult>>()
         coEvery {
             engine.openWebSocketSession(
+                path = "path",
                 accessToken = "accessToken",
                 headers = mapOf(
                     "x-mimi-process" to "asr",
@@ -89,7 +100,7 @@ class MimiAsrServiceTest {
                 converter = converter
             )
         } returns internalSession
-        val target = spyk(MimiAsrService(engine, "accessToken", converter))
+        val target = spyk(MimiAsrService("path", engine, "accessToken", converter))
         val session = mockk<MimiAsrWebSocketSession<MimiAsrResult>>()
         every { target.createMimiAsrWebSocketSession(internalSession) } returns session
 

@@ -11,6 +11,7 @@ import kotlinx.io.bytestring.ByteString
 import ai.fd.mimi.client.service.nict.asr.MimiNictAsrServiceConst as Const
 
 class MimiNictAsrV1Service internal constructor(
+    @VisibleForTesting internal val path: String,
     private val engine: MimiNetworkEngine,
     private val accessToken: String,
     private val converter: MimiModelConverter.JsonString<MimiNictAsrV1Result>
@@ -20,8 +21,10 @@ class MimiNictAsrV1Service internal constructor(
         accessToken: String,
         useSsl: Boolean = true,
         host: String = "service.mimi.fd.ai",
-        port: Int = if (useSsl) 443 else 80
+        port: Int = if (useSsl) 443 else 80,
+        path: String = "/"
     ) : this(
+        path = path,
         engine = engineFactory.create(useSsl = useSsl, host = host, port = port),
         accessToken = accessToken,
         converter = MimiNictAsrV1ModelConverter()
@@ -31,6 +34,7 @@ class MimiNictAsrV1Service internal constructor(
         audioData: ByteArray,
         options: MimiNictAsrV1Options = MimiNictAsrV1Options.DEFAULT
     ): Result<MimiNictAsrV1Result> = engine.request(
+        path = path,
         accessToken = accessToken,
         requestBody = MimiNetworkEngine.RequestBody.Binary(
             data = ByteString(audioData),
@@ -48,6 +52,7 @@ class MimiNictAsrV1Service internal constructor(
         options: MimiNictAsrV1Options = MimiNictAsrV1Options.DEFAULT
     ): MimiAsrWebSocketSession<MimiNictAsrV1Result> {
         val session = engine.openWebSocketSession(
+            path = path,
             accessToken = accessToken,
             headers = mapOf(
                 Const.HEADER_X_MIMI_PROCESS_KEY to Const.HEADER_X_MIMI_PROCESS_VALUE,
