@@ -9,7 +9,7 @@ import ai.fd.mimi.client.engine.MimiNetworkEngine
 class MimiTokenService internal constructor(
     private val issueAccessTokenPath: String,
     private val engine: MimiNetworkEngine,
-    private val converter: MimiModelConverter.JsonString<MimiTokenResult>
+    private val issueTokenResultConverter: MimiModelConverter.JsonString<MimiIssueTokenResult>
 ) {
 
     constructor(
@@ -21,7 +21,7 @@ class MimiTokenService internal constructor(
     ) : this(
         issueAccessTokenPath = issueAccessTokenPath,
         engine = engineFactory.create(useSsl = useSsl, host = host, port = port),
-        converter = MimiTokenModelConverter()
+        issueTokenResultConverter = MimiIssueTokenModelConverter()
     )
 
 
@@ -34,7 +34,7 @@ class MimiTokenService internal constructor(
         applicationId: String,
         applicationSecret: String,
         scope: MimiTokenScope
-    ): Result<MimiTokenResult> = issueApplicationAccessToken(
+    ): Result<MimiIssueTokenResult> = issueApplicationAccessToken(
         applicationId = applicationId,
         applicationSecret = applicationSecret,
         scopes = setOf(scope)
@@ -49,7 +49,7 @@ class MimiTokenService internal constructor(
         applicationId: String,
         applicationSecret: String,
         scopes: Set<MimiTokenScope>
-    ): Result<MimiTokenResult> = issueAccessToken(
+    ): Result<MimiIssueTokenResult> = issueAccessToken(
         clientId = applicationId,
         clientSecret = applicationSecret,
         grantType = MimiTokenGrantType.APPLICATION_CREDENTIALS,
@@ -66,7 +66,7 @@ class MimiTokenService internal constructor(
         clientId: String,
         applicationSecret: String,
         scope: MimiTokenScope
-    ): Result<MimiTokenResult> = issueClientAccessTokenFromExternalAuthServer(
+    ): Result<MimiIssueTokenResult> = issueClientAccessTokenFromExternalAuthServer(
         applicationId = applicationId,
         clientId = clientId,
         applicationSecret = applicationSecret,
@@ -83,7 +83,7 @@ class MimiTokenService internal constructor(
         clientId: String,
         applicationSecret: String,
         scopes: Set<MimiTokenScope>
-    ): Result<MimiTokenResult> = issueAccessToken(
+    ): Result<MimiIssueTokenResult> = issueAccessToken(
         clientId = "${applicationId}:${clientId}",
         clientSecret = applicationSecret,
         grantType = MimiTokenGrantType.APPLICATION_CLIENT_CREDENTIALS,
@@ -100,7 +100,7 @@ class MimiTokenService internal constructor(
         clientId: String,
         clientSecret: String,
         scope: MimiTokenScope
-    ): Result<MimiTokenResult> = issueClientAccessToken(
+    ): Result<MimiIssueTokenResult> = issueClientAccessToken(
         applicationId = applicationId,
         clientId = clientId,
         clientSecret = clientSecret,
@@ -117,7 +117,7 @@ class MimiTokenService internal constructor(
         clientId: String,
         clientSecret: String,
         scopes: Set<MimiTokenScope>
-    ): Result<MimiTokenResult> = issueAccessToken(
+    ): Result<MimiIssueTokenResult> = issueAccessToken(
         clientId = "${applicationId}:${clientId}",
         clientSecret = clientSecret,
         grantType = MimiTokenGrantType.CLIENT_CREDENTIALS,
@@ -129,7 +129,7 @@ class MimiTokenService internal constructor(
         clientSecret: String,
         grantType: MimiTokenGrantType,
         scopes: Set<MimiTokenScope>
-    ): Result<MimiTokenResult> = engine.request(
+    ): Result<MimiIssueTokenResult> = engine.request(
         path = issueAccessTokenPath,
         requestBody = MimiNetworkEngine.RequestBody.FormData(
             fields = mapOf(
@@ -139,7 +139,7 @@ class MimiTokenService internal constructor(
                 "scope" to scopes.getContainingScopes().joinToString(";") { it.value }
             )
         ),
-        converter = converter,
+        converter = issueTokenResultConverter,
         accessToken = null
     )
 }

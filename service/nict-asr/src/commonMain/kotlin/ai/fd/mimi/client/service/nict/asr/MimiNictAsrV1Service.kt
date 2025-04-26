@@ -14,7 +14,7 @@ class MimiNictAsrV1Service internal constructor(
     @VisibleForTesting internal val path: String,
     @VisibleForTesting internal val engine: MimiNetworkEngine,
     @VisibleForTesting internal val accessToken: String,
-    private val converter: MimiModelConverter.JsonString<MimiNictAsrV1Result>
+    private val converter: MimiModelConverter.EncodableJsonString<MimiNictAsrV1Result>
 ) {
     constructor(
         engineFactory: MimiNetworkEngine.Factory,

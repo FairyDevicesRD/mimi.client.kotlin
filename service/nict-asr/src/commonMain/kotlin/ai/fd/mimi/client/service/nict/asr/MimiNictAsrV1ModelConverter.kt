@@ -7,7 +7,7 @@ import kotlinx.serialization.SerializationException
 import kotlinx.serialization.json.Json
 
 internal class MimiNictAsrV1ModelConverter(json: Json = Json.Default) :
-    MimiModelConverter.JsonString<MimiNictAsrV1Result>(json) {
+    MimiModelConverter.EncodableJsonString<MimiNictAsrV1Result>(json) {
 
     @Throws(MimiJsonException::class)
     override fun decode(jsonText: String): MimiNictAsrV1Result = try {

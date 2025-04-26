@@ -13,7 +13,7 @@ class MimiAsrService internal constructor(
     @VisibleForTesting internal val path: String,
     @VisibleForTesting internal val engine: MimiNetworkEngine,
     @VisibleForTesting internal val accessToken: String,
-    private val converter: MimiModelConverter.JsonString<MimiAsrResult>
+    private val converter: MimiModelConverter.EncodableJsonString<MimiAsrResult>
 ) {
     constructor(
         engineFactory: MimiNetworkEngine.Factory,

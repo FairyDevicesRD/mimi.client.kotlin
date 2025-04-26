@@ -21,7 +21,7 @@ class MimiTokenServiceTest {
     private lateinit var engine: MimiNetworkEngine
 
     @MockK
-    private lateinit var converter: MimiModelConverter.JsonString<MimiTokenResult>
+    private lateinit var issueTokenConverter: MimiModelConverter.JsonString<MimiIssueTokenResult>
 
     @Test
     fun testConstructor() {
@@ -46,7 +46,7 @@ class MimiTokenServiceTest {
 
     @Test
     fun testIssueApplicationAccessToken_Single() = runTest {
-        val result = mockk<MimiTokenResult>()
+        val result = mockk<MimiIssueTokenResult>()
         coEvery {
             engine.request(
                 path = "path",
@@ -60,12 +60,12 @@ class MimiTokenServiceTest {
                         )
                     )
                 ),
-                converter = converter,
+                converter = issueTokenConverter,
                 accessToken = null
             )
         } returns Result.success(result)
 
-        val service = MimiTokenService("path", engine, converter)
+        val service = MimiTokenService("path", engine, issueTokenConverter)
         val actual = service.issueApplicationAccessToken(
             applicationId = "applicationId",
             applicationSecret = "applicationSecret",
@@ -78,7 +78,7 @@ class MimiTokenServiceTest {
 
     @Test
     fun testIssueApplicationAccessToken_Multiple() = runTest {
-        val result = mockk<MimiTokenResult>()
+        val result = mockk<MimiIssueTokenResult>()
         coEvery {
             engine.request(
                 path = "path",
@@ -92,12 +92,12 @@ class MimiTokenServiceTest {
                         )
                     )
                 ),
-                converter = converter,
+                converter = issueTokenConverter,
                 accessToken = null
             )
         } returns Result.success(result)
 
-        val service = MimiTokenService("path", engine, converter)
+        val service = MimiTokenService("path", engine, issueTokenConverter)
         val actual = service.issueApplicationAccessToken(
             applicationId = "applicationId",
             applicationSecret = "applicationSecret",
@@ -110,7 +110,7 @@ class MimiTokenServiceTest {
 
     @Test
     fun testIssueClientAccessTokenFromExternalAuthServer_Single() = runTest {
-        val result = mockk<MimiTokenResult>()
+        val result = mockk<MimiIssueTokenResult>()
         coEvery {
             engine.request(
                 path = "path",
@@ -124,12 +124,12 @@ class MimiTokenServiceTest {
                         )
                     )
                 ),
-                converter = converter,
+                converter = issueTokenConverter,
                 accessToken = null
             )
         } returns Result.success(result)
 
-        val service = MimiTokenService("path", engine, converter)
+        val service = MimiTokenService("path", engine, issueTokenConverter)
         val actual = service.issueClientAccessTokenFromExternalAuthServer(
             applicationId = "applicationId",
             clientId = "clientId",
@@ -143,7 +143,7 @@ class MimiTokenServiceTest {
 
     @Test
     fun testIssueClientAccessTokenFromExternalAuthServer_Multiple() = runTest {
-        val result = mockk<MimiTokenResult>()
+        val result = mockk<MimiIssueTokenResult>()
         coEvery {
             engine.request(
                 path = "path",
@@ -157,12 +157,12 @@ class MimiTokenServiceTest {
                         )
                     )
                 ),
-                converter = converter,
+                converter = issueTokenConverter,
                 accessToken = null
             )
         } returns Result.success(result)
 
-        val service = MimiTokenService("path", engine, converter)
+        val service = MimiTokenService("path", engine, issueTokenConverter)
         val actual = service.issueClientAccessTokenFromExternalAuthServer(
             applicationId = "applicationId",
             clientId = "clientId",
@@ -176,7 +176,7 @@ class MimiTokenServiceTest {
 
     @Test
     fun testIssueClientAccessToken_Single() = runTest {
-        val result = mockk<MimiTokenResult>()
+        val result = mockk<MimiIssueTokenResult>()
         coEvery {
             engine.request(
                 path = "path",
@@ -190,12 +190,12 @@ class MimiTokenServiceTest {
                         )
                     )
                 ),
-                converter = converter,
+                converter = issueTokenConverter,
                 accessToken = null
             )
         } returns Result.success(result)
 
-        val service = MimiTokenService("path", engine, converter)
+        val service = MimiTokenService("path", engine, issueTokenConverter)
         val actual = service.issueClientAccessToken(
             applicationId = "applicationId",
             clientId = "clientId",
@@ -209,7 +209,7 @@ class MimiTokenServiceTest {
 
     @Test
     fun testIssueClientAccessToken_Multiple() = runTest {
-        val result = mockk<MimiTokenResult>()
+        val result = mockk<MimiIssueTokenResult>()
         coEvery {
             engine.request(
                 path = "path",
@@ -223,12 +223,12 @@ class MimiTokenServiceTest {
                         )
                     )
                 ),
-                converter = converter,
+                converter = issueTokenConverter,
                 accessToken = null
             )
         } returns Result.success(result)
 
-        val service = MimiTokenService("path", engine, converter)
+        val service = MimiTokenService("path", engine, issueTokenConverter)
         val actual = service.issueClientAccessToken(
             applicationId = "applicationId",
             clientId = "clientId",

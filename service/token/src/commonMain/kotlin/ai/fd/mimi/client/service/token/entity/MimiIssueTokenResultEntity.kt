@@ -4,7 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class MimiTokenResultEntity(
+internal data class MimiIssueTokenResultEntity(
     @SerialName("accessToken")
     val accessToken: String,
     @SerialName("expires_in")
