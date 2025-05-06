@@ -175,3 +175,11 @@ internal fun MimiTokenScope.getContainingScopes(): Set<MimiTokenSingleScope> = w
     is MimiTokenSingleScope -> setOf(this)
     is MimiTokenGroupScope -> childScopes.getContainingScopes()
 }
+
+operator fun MimiTokenScope.plus(other: MimiTokenScope): Set<MimiTokenScope> {
+    return if (this is MimiTokenGroupScope) {
+        childScopes + other
+    } else {
+        setOf(this, other)
+    }
+}

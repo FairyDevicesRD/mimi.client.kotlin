@@ -387,4 +387,36 @@ class MimiTokenScopesTest {
             setOf(MimiTokenScopes.Asr.Api, MimiTokenScopes.Asr.Api.Http).getContainingScopes()
         )
     }
+
+    @Test
+    fun testPlus() {
+        // Case 1: Single + Any
+        assertEquals(
+            setOf(
+                MimiTokenScopes.Asr.Api.Http,
+                MimiTokenScopes.Asr.Api.WebSocket,
+            ),
+            (MimiTokenScopes.Asr.Api.Http + MimiTokenScopes.Asr.Api.WebSocket).getContainingScopes()
+        )
+
+        // Case 2: Group + Any
+        assertEquals(
+            setOf(
+                MimiTokenScopes.Asr.Api.Http,
+                MimiTokenScopes.Asr.Api.WebSocket,
+                MimiTokenScopes.Lid.Api.Http,
+                MimiTokenScopes.Lid.Api.WebSocket,
+            ),
+            (MimiTokenScopes.Asr + MimiTokenScopes.Lid).getContainingScopes()
+        )
+
+        // Case 3: Duplicated Scopes
+        assertEquals(
+            setOf(
+                MimiTokenScopes.Asr.Api.Http,
+                MimiTokenScopes.Asr.Api.WebSocket
+            ),
+            (MimiTokenScopes.Asr + MimiTokenScopes.Asr).getContainingScopes()
+        )
+    }
 }
