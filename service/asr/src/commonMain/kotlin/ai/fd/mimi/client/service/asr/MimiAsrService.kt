@@ -10,17 +10,20 @@ import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.io.bytestring.ByteString
 
 class MimiAsrService internal constructor(
-    private val engine: MimiNetworkEngine,
-    private val accessToken: String,
-    private val converter: MimiModelConverter.JsonString<MimiAsrResult>
+    @VisibleForTesting internal val path: String,
+    @VisibleForTesting internal val engine: MimiNetworkEngine,
+    @VisibleForTesting internal val accessToken: String,
+    private val converter: MimiModelConverter.EncodableJsonString<MimiAsrResult>
 ) {
     constructor(
         engineFactory: MimiNetworkEngine.Factory,
         accessToken: String,
         useSsl: Boolean = true,
         host: String = "service.mimi.fd.ai",
-        port: Int = if (useSsl) 443 else 80
+        port: Int = if (useSsl) 443 else 80,
+        path: String = "/",
     ) : this(
+        path = path,
         engine = engineFactory.create(useSsl = useSsl, host = host, port = port),
         accessToken = accessToken,
         converter = MimiAsrModelConverter()
@@ -30,6 +33,7 @@ class MimiAsrService internal constructor(
         audioData: ByteArray,
         options: MimiAsrOptions = MimiAsrOptions.DEFAULT
     ): Result<MimiAsrResult> = engine.request(
+        path = path,
         accessToken = accessToken,
         requestBody = MimiNetworkEngine.RequestBody.Binary(
             data = ByteString(audioData),
@@ -47,6 +51,7 @@ class MimiAsrService internal constructor(
         options: MimiAsrOptions = MimiAsrOptions.DEFAULT
     ): MimiAsrWebSocketSession<MimiAsrResult> {
         val session = engine.openWebSocketSession(
+            path = path,
             accessToken = accessToken,
             headers = mapOf(
                 HEADER_X_MIMI_PROCESS_KEY to HEADER_X_MIMI_PROCESS_VALUE,

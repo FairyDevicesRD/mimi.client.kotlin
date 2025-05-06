@@ -9,6 +9,8 @@ tasks.test {
     useJUnitPlatform()
 }
 
+kotlin {  }
+
 dependencies {
     api(project(":engine:core"))
     implementation(libs.kotlinx.coroutines.core)

@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.onCompletion
 
 class MimiKtorWebSocketSession<T>(
     private val ktorWebSocketSession: DefaultClientWebSocketSession,
-    converter: MimiModelConverter.JsonString<T>
+    converter: MimiModelConverter.EncodableJsonString<T>
 ) : MimiWebSocketSessionInternal<T>(converter) {
 
     // note: `MutableStateFlow` is used for convenient thread safe value holder. Replace with any atomic value holder

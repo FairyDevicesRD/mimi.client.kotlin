@@ -51,12 +51,11 @@ class MimiOkHttpNetworkEngineTest {
             okHttpClient = OkHttpClient(),
             useSsl = false,
             host = mockWebServer.hostName,
-            port = mockWebServer.port,
-            path = "path"
+            port = mockWebServer.port
         )
 
         val actual = target.requestAsStringInternal(
-            accessToken = "accessToken",
+            path = "path",
             requestBody = MimiNetworkEngine.RequestBody.Binary(ByteString(1, 2, 3), "application/octet-stream"),
             headers = mapOf("additional" to "header")
         )
@@ -66,7 +65,6 @@ class MimiOkHttpNetworkEngineTest {
         assertEquals("response", actual.getOrThrow())
         assertEquals("POST", actualRequest.method)
         assertEquals("/path", actualRequest.path)
-        assertEquals("Bearer accessToken", actualRequest.getHeader("Authorization"))
         assertEquals("application/octet-stream", actualRequest.getHeader("Content-Type"))
         assertEquals("header", actualRequest.getHeader("additional"))
         assertContentEquals(byteArrayOf(1, 2, 3), actualRequest.body.readByteArray())
@@ -84,12 +82,11 @@ class MimiOkHttpNetworkEngineTest {
             okHttpClient = OkHttpClient(),
             useSsl = false,
             host = mockWebServer.hostName,
-            port = mockWebServer.port,
-            path = ""
+            port = mockWebServer.port
         )
 
         val actual = target.requestAsStringInternal(
-            accessToken = "accessToken",
+            path = "",
             requestBody = MimiNetworkEngine.RequestBody.FormData(mapOf("key" to "value")),
             headers = mapOf("additional" to "header")
         )
@@ -99,7 +96,6 @@ class MimiOkHttpNetworkEngineTest {
         assertEquals("response", actual.getOrThrow())
         assertEquals("POST", actualRequest.method)
         assertEquals("/", actualRequest.path)
-        assertEquals("Bearer accessToken", actualRequest.getHeader("Authorization"))
         assertEquals("application/x-www-form-urlencoded", actualRequest.getHeader("Content-Type"))
         assertEquals("header", actualRequest.getHeader("additional"))
         assertContentEquals("key=value".toByteArray(Charsets.UTF_8), actualRequest.body.readByteArray())
@@ -117,12 +113,11 @@ class MimiOkHttpNetworkEngineTest {
             okHttpClient = OkHttpClient(),
             useSsl = false,
             host = mockWebServer.hostName,
-            port = mockWebServer.port,
-            path = ""
+            port = mockWebServer.port
         )
 
         val actual = target.requestAsBinaryInternal(
-            accessToken = "accessToken",
+            path = "",
             requestBody = MimiNetworkEngine.RequestBody.Binary(ByteString(1, 2, 3), "application/octet-stream"),
             headers = mapOf("additional" to "header")
         )
@@ -132,7 +127,6 @@ class MimiOkHttpNetworkEngineTest {
         assertEquals(ByteString(4, 5, 6), actual.getOrThrow())
         assertEquals("POST", actualRequest.method)
         assertEquals("/", actualRequest.path)
-        assertEquals("Bearer accessToken", actualRequest.getHeader("Authorization"))
         assertEquals("application/octet-stream", actualRequest.getHeader("Content-Type"))
         assertEquals("header", actualRequest.getHeader("additional"))
         assertEquals(OkioByteString.of(1, 2, 3), actualRequest.body.readByteString())
@@ -149,12 +143,11 @@ class MimiOkHttpNetworkEngineTest {
             okHttpClient = OkHttpClient(),
             useSsl = false,
             host = mockWebServer.hostName,
-            port = mockWebServer.port,
-            path = ""
+            port = mockWebServer.port
         )
 
         val actual = target.requestAsBinaryInternal(
-            accessToken = "accessToken",
+            path = "",
             requestBody = MimiNetworkEngine.RequestBody.Binary(ByteString(1, 2, 3), "application/octet-stream"),
             headers = mapOf("additional" to "header")
         )
@@ -166,7 +159,6 @@ class MimiOkHttpNetworkEngineTest {
         assertEquals("Request failed with status: 400. Body: error", exception.message)
         assertEquals("POST", actualRequest.method)
         assertEquals("/", actualRequest.path)
-        assertEquals("Bearer accessToken", actualRequest.getHeader("Authorization"))
         assertEquals("application/octet-stream", actualRequest.getHeader("Content-Type"))
         assertEquals("header", actualRequest.getHeader("additional"))
         assertEquals(OkioByteString.of(1, 2, 3), actualRequest.body.readByteString())
@@ -180,17 +172,16 @@ class MimiOkHttpNetworkEngineTest {
                 okHttpClient = okHttpClient,
                 useSsl = true,
                 host = "example.com",
-                port = 1234,
-                path = "path"
+                port = 1234
             )
         )
-        val converter = mockk<MimiModelConverter.JsonString<Any>>()
+        val converter = mockk<MimiModelConverter.EncodableJsonString<Any>>()
         val session = mockk<MimiOkHttpWebSocketSession<Any>>(relaxUnitFun = true)
         val requestSlot = slot<Request>()
         every { target.createWebSocketSession(capture(requestSlot), eq(okHttpClient), eq(converter)) } returns session
 
-        val actual = target.openWebSocketSession(
-            accessToken = "accessToken",
+        val actual = target.openWebSocketSessionInternal(
+            path = "path",
             contentType = "application/json",
             headers = mapOf("additional" to "header"),
             converter = converter
@@ -199,7 +190,6 @@ class MimiOkHttpNetworkEngineTest {
         assertEquals(session, actual)
         with(requestSlot.captured) {
             assertEquals("https://example.com:1234/path", url.toString())
-            assertEquals("Bearer accessToken", header("Authorization"))
             assertEquals("application/json", header("Content-Type"))
             assertEquals("header", header("additional"))
         }

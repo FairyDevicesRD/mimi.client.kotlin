@@ -32,7 +32,7 @@ class MimiKtorWebSocketSessionTest {
     private lateinit var ktorWebSocketSession: DefaultClientWebSocketSession
 
     @MockK
-    private lateinit var converter: MimiModelConverter.JsonString<Any>
+    private lateinit var converter: MimiModelConverter.EncodableJsonString<Any>
 
     private val incomingChannel: Channel<Frame> = Channel()
 

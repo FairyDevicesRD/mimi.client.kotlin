@@ -28,39 +28,37 @@ internal class MimiOkHttpNetworkEngine(
     private val okHttpClient: OkHttpClient,
     useSsl: Boolean,
     host: String,
-    port: Int,
-    path: String
+    port: Int
 ) : MimiNetworkEngine() {
 
-    private val httpUrl: HttpUrl = HttpUrl.Builder()
+    private val baseUrl: HttpUrl = HttpUrl.Builder()
         .scheme(if (useSsl) "https" else "http")
         .host(host)
         .port(port)
-        .addPathSegment(path)
         .build()
 
     override suspend fun requestAsStringInternal(
-        accessToken: String,
+        path: String,
         requestBody: RequestBody,
         headers: Map<String, String>
-    ): Result<String> = requestInternal(accessToken, requestBody, headers) { it.body?.string() }
+    ): Result<String> = requestInternal(path, requestBody, headers) { it.body?.string() }
 
     override suspend fun requestAsBinaryInternal(
-        accessToken: String,
+        path: String,
         requestBody: RequestBody,
         headers: Map<String, String>
     ): Result<ByteString> =
-        requestInternal(accessToken, requestBody, headers) { ByteString(it.body?.bytes() ?: byteArrayOf()) }
+        requestInternal(path, requestBody, headers) { ByteString(it.body?.bytes() ?: byteArrayOf()) }
 
     private suspend fun <T> requestInternal(
-        accessToken: String,
+        path: String,
         requestBody: RequestBody,
         headers: Map<String, String>,
         extractResponseBodyAction: suspend (Response) -> T?
     ): Result<T> {
+        val url = baseUrl.newBuilder().addPathSegment(path).build()
         val request = Request.Builder()
-            .url(httpUrl)
-            .addHeader("Authorization", "Bearer $accessToken")
+            .url(url)
             .addHeaders(headers)
             .post(requestBody.toOkHttpRequestBody())
             .build()
@@ -77,15 +75,15 @@ internal class MimiOkHttpNetworkEngine(
     }
 
     @Throws(MimiIOException::class, CancellationException::class)
-    override suspend fun <R> openWebSocketSession(
-        accessToken: String,
+    override suspend fun <R> openWebSocketSessionInternal(
+        path: String,
         contentType: String,
         headers: Map<String, String>,
-        converter: MimiModelConverter.JsonString<R>
+        converter: MimiModelConverter.EncodableJsonString<R>
     ): MimiWebSocketSessionInternal<R> {
+        val url = baseUrl.newBuilder().addPathSegment(path).build()
         val request = Request.Builder()
-            .url(httpUrl) // Will be upgraded to ws scheme after connection established.
-            .addHeader("Authorization", "Bearer $accessToken")
+            .url(url) // Will be upgraded to ws scheme after connection established.
             .addHeader("Content-Type", contentType)
             .addHeaders(headers)
             .build()
@@ -99,7 +97,7 @@ internal class MimiOkHttpNetworkEngine(
     internal fun <T> createWebSocketSession(
         request: Request,
         okHttpClient: OkHttpClient,
-        converter: MimiModelConverter.JsonString<T>
+        converter: MimiModelConverter.EncodableJsonString<T>
     ): MimiOkHttpWebSocketSession<T> = MimiOkHttpWebSocketSession(request, okHttpClient, converter)
 
     private suspend fun Call.executeAsync(): Response =
@@ -150,7 +148,7 @@ internal class MimiOkHttpNetworkEngine(
         }
 
     internal class Factory(private val okHttpClient: OkHttpClient) : MimiNetworkEngine.Factory {
-        override fun create(useSsl: Boolean, host: String, port: Int, path: String): MimiNetworkEngine =
-            MimiOkHttpNetworkEngine(okHttpClient, useSsl, host, port, path)
+        override fun create(useSsl: Boolean, host: String, port: Int): MimiNetworkEngine =
+            MimiOkHttpNetworkEngine(okHttpClient, useSsl, host, port)
     }
 }

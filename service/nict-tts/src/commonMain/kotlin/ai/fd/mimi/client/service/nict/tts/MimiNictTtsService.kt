@@ -3,6 +3,7 @@ package ai.fd.mimi.client.service.nict.tts
 import ai.fd.mimi.client.annotation.ExperimentalMimiApi
 import ai.fd.mimi.client.engine.MimiModelConverter
 import ai.fd.mimi.client.engine.MimiNetworkEngine
+import androidx.annotation.VisibleForTesting
 import ai.fd.mimi.client.service.nict.tts.MimiNictTtsServiceConst as Const
 
 /**
@@ -10,8 +11,9 @@ import ai.fd.mimi.client.service.nict.tts.MimiNictTtsServiceConst as Const
  */
 @OptIn(ExperimentalMimiApi::class)
 class MimiNictTtsService internal constructor(
-    private val engine: MimiNetworkEngine,
-    private val accessToken: String,
+    @VisibleForTesting internal val path: String,
+    @VisibleForTesting internal val engine: MimiNetworkEngine,
+    @VisibleForTesting internal val accessToken: String,
     private val converter: MimiModelConverter<MimiNictTtsResult>
 ) {
     constructor(
@@ -22,7 +24,8 @@ class MimiNictTtsService internal constructor(
         path: String = "speech_synthesis",
         port: Int = if (useSsl) 443 else 80
     ) : this(
-        engine = engineFactory.create(useSsl = useSsl, host = host, port = port, path = path),
+        path = path,
+        engine = engineFactory.create(useSsl = useSsl, host = host, port = port),
         accessToken = accessToken,
         converter = MimiNictTtsModelConverter()
     )
@@ -36,6 +39,7 @@ class MimiNictTtsService internal constructor(
     ): Result<MimiNictTtsResult> {
         require(options.rate in 0.5f..2.0f) { "`rate` should be in 0.5~2.0." }
         return engine.request(
+            path = path,
             accessToken = accessToken,
             requestBody = MimiNetworkEngine.RequestBody.FormData(
                 fields = mapOf(

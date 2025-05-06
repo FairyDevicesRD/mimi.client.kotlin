@@ -34,7 +34,7 @@ class MimiOkHttpWebSocketSessionTest {
     private lateinit var okHttpClient: OkHttpClient
 
     @MockK
-    private lateinit var converter: MimiModelConverter.JsonString<Any>
+    private lateinit var converter: MimiModelConverter.EncodableJsonString<Any>
 
     private lateinit var target: MimiOkHttpWebSocketSession<Any>
 

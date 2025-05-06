@@ -9,7 +9,6 @@ import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
-import io.mockk.verify
 import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
 import kotlin.test.assertFalse
@@ -37,57 +36,78 @@ class MimiNictTtsServiceTest {
 
     @Test
     fun testPublicConstructor_ssl() {
-        every { engineFactory.create(any(), any(), any(), any()) } returns engine
+        every { engineFactory.create(useSsl = true, host = "host", port = 443) } returns engine
 
-        MimiNictTtsService(
+        val service = MimiNictTtsService(
             engineFactory = engineFactory,
             accessToken = "accessToken",
             useSsl = true,
             host = "host",
-            path = "path",
         )
 
-        verify { engineFactory.create(useSsl = true, host = "host", port = 443, path = "path") }
+        assertEquals("speech_synthesis", service.path)
+        assertEquals(engine, service.engine)
+        assertEquals("accessToken", service.accessToken)
     }
 
     @Test
     fun testPublicConstructor_noSsl() {
-        every { engineFactory.create(any(), any(), any(), any()) } returns engine
+        every { engineFactory.create(useSsl = false, host = "host", port = 80) } returns engine
 
-        MimiNictTtsService(
+        val service = MimiNictTtsService(
             engineFactory = engineFactory,
             accessToken = "accessToken",
             useSsl = false,
             host = "host",
-            path = "path",
         )
 
-        verify { engineFactory.create(useSsl = false, host = "host", port = 80, path = "path") }
+        assertEquals("speech_synthesis", service.path)
+        assertEquals(engine, service.engine)
+        assertEquals("accessToken", service.accessToken)
     }
 
     @Test
     fun testPublicConstructor_customPort() {
-        every { engineFactory.create(any(), any(), any(), any()) } returns engine
+        every { engineFactory.create(useSsl = true, host = "host", port = 1000) } returns engine
 
-        MimiNictTtsService(
+        val service = MimiNictTtsService(
+            engineFactory = engineFactory,
+            accessToken = "accessToken",
+            useSsl = true,
+            host = "host",
+            port = 1000
+        )
+
+        assertEquals("speech_synthesis", service.path)
+        assertEquals(engine, service.engine)
+        assertEquals("accessToken", service.accessToken)
+    }
+
+    @Test
+    fun testPublicConstructor_customPath() {
+        every { engineFactory.create(useSsl = true, host = "host", port = 443) } returns engine
+
+        val service = MimiNictTtsService(
             engineFactory = engineFactory,
             accessToken = "accessToken",
             useSsl = true,
             host = "host",
             path = "path",
-            port = 1000
         )
 
-        verify { engineFactory.create(useSsl = true, host = "host", port = 1000, path = "path") }
+        assertEquals("path", service.path)
+        assertEquals(engine, service.engine)
+        assertEquals("accessToken", service.accessToken)
     }
 
     @Test
     fun testRequestTts() = runTest {
         coEvery {
-            engine.request<MimiNictTtsResult>(any(), any(), any(), any())
+            engine.request<MimiNictTtsResult>(eq("path"), any(), any(), any(), any())
         } returns Result.success(MimiNictTtsResult(byteArrayOf(1, 2, 3)))
 
         val service = MimiNictTtsService(
+            path = "path",
             engine = engine,
             accessToken = "accessToken",
             converter = modelConverter
@@ -115,10 +135,11 @@ class MimiNictTtsServiceTest {
         )
         coVerify {
             engine.request(
-                "accessToken",
-                match { it is MimiNetworkEngine.RequestBody.FormData && it.fields == expectedFormData },
-                mapOf(),
-                modelConverter
+                path = "path",
+                accessToken = "accessToken",
+                requestBody = match { it is MimiNetworkEngine.RequestBody.FormData && it.fields == expectedFormData },
+                headers = mapOf(),
+                converter = modelConverter
             )
         }
     }
@@ -126,6 +147,7 @@ class MimiNictTtsServiceTest {
     @Test
     fun testRequestTts_invalidRate() = runTest {
         val service = MimiNictTtsService(
+            path = "path",
             engine = engine,
             accessToken = "accessToken",
             converter = modelConverter
@@ -143,10 +165,11 @@ class MimiNictTtsServiceTest {
     fun testRequestTts_engineError() = runTest {
         val exception = mockk<Exception>()
         coEvery {
-            engine.request<MimiNictTtsResult>(any(), any(), any(), any())
+            engine.request<MimiNictTtsResult>(eq("path"), any(), any(), any(), any())
         } returns Result.failure(exception)
 
         val service = MimiNictTtsService(
+            path = "path",
             engine = engine,
             accessToken = "accessToken",
             converter = modelConverter

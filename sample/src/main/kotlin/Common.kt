@@ -4,13 +4,14 @@ import ai.fd.mimi.client.service.asr.core.MimiAsrWebSocketSession
 import ai.fd.mimi.client.service.nict.asr.MimiNictAsrV1Service
 import ai.fd.mimi.client.service.nict.asr.MimiNictAsrV2Service
 import ai.fd.mimi.client.service.nict.tts.MimiNictTtsService
+import ai.fd.mimi.client.service.token.MimiTokenScope
+import ai.fd.mimi.client.service.token.MimiTokenService
 import io.ktor.util.toLowerCasePreservingASCIIRules
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Properties
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
-import okio.ByteString.Companion.toByteString
 import okio.use
 
 private fun loadLocalProperties(): Properties = Properties()
@@ -31,6 +32,44 @@ private fun getLocalPropertyFile(): File {
     }
     throw IllegalArgumentException("local.properties not found")
 }
+
+suspend fun issueClientAccessToken(engineFactory: MimiNetworkEngine.Factory, scopes: Set<MimiTokenScope>) {
+    val applicationId = System.getenv("MIMI_APPLICATION_ID") ?: loadLocalProperties().getProperty("MIMI_APPLICATION_ID")
+    val clientId = System.getenv("MIMI_CLIENT_ID") ?: loadLocalProperties().getProperty("MIMI_CLIENT_ID")
+    val clientSecret = System.getenv("MIMI_CLIENT_SECRET") ?: loadLocalProperties().getProperty("MIMI_CLIENT_SECRET")
+    val tokenService = MimiTokenService(engineFactory = engineFactory)
+    val result = tokenService.issueClientAccessToken(
+        applicationId = applicationId,
+        clientId = clientId,
+        clientSecret = clientSecret,
+        scopes = scopes
+    )
+
+    if (result.isFailure) {
+        println("Failed to issue token.")
+        result.exceptionOrNull()?.printStackTrace()
+        return
+    }
+    val token = result.getOrThrow().accessToken
+    println("Token issued: $token")
+
+    val validateResult = tokenService.validateAccessToken(token)
+    println("Validate result: $validateResult")
+
+    if (validateResult.isFailure) {
+        println("Failed to validate token.")
+        validateResult.exceptionOrNull()?.printStackTrace()
+        return
+    }
+
+    tokenService.revokeClientAccessToken(
+        applicationId = applicationId,
+        clientId = clientId,
+        clientSecret = clientSecret,
+        token = token
+    )
+}
+
 
 private fun loadToken(): String {
     val token = System.getenv("MIMI_TOKEN") ?: loadLocalProperties().getProperty("MIMI_TOKEN")
