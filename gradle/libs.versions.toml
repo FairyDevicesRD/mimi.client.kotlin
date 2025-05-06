@@ -37,6 +37,21 @@ turbine = "1.2.0"
 # https://logback.qos.ch/download.html
 logback = "1.5.18"
 
+# https://developer.android.com/build/releases/gradle-plugin
+agp = "8.9.2"
+
+# https://developer.android.com/jetpack/androidx/releases/core
+androidx-core-ktx = "1.16.0"
+
+# https://developer.android.com/jetpack/androidx/releases/appcompat
+androidx-appcompat = "1.7.0"
+
+# https://developer.android.com/jetpack/androidx/releases/activity
+androidx-activity = "1.10.1"
+
+# https://developer.android.com/jetpack/androidx/releases/constraintlayout
+androidx-constraintlayout = "2.2.1"
+
 [libraries]
 kotlin-gradle = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
@@ -58,11 +73,17 @@ junit-platform-launcher = { group = "org.junit.platform", name = "junit-platform
 mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
 turbine = { group = "app.cash.turbine", name = "turbine", version.ref = "turbine" }
 logback-classic = { group = "ch.qos.logback", name = "logback-classic", version.ref = "logback" }
+androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidx-core-ktx" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidx-appcompat" }
+androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "androidx-activity" }
+androidx-constraintlayout = { module = "androidx.constraintlayout:constraintlayout", version.ref = "androidx-constraintlayout" }
 
 [plugins]
 mimi-builder = { id = "ai.fd.mimi.client.builder" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-allopen = { id = "org.jetbrains.kotlin.plugin.allopen", version.ref = "kotlin" }
 kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 kotlinx-kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kotlinx-kover" }
+androidApplication = { id = "com.android.application", version.ref = "agp" }

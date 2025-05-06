@@ -11,6 +11,22 @@ include("service:nict-asr")
 include("service:nict-tts")
 include("utils")
 include("sample")
+include("sample-thinklet")
+
+pluginManagement {
+    repositories {
+        google {
+            @Suppress("UnstableApiUsage")
+            mavenContent {
+                includeGroupAndSubgroups("androidx")
+                includeGroupAndSubgroups("com.android")
+                includeGroupAndSubgroups("com.google")
+            }
+        }
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
 
 dependencyResolutionManagement {
     @Suppress("UnstableApiUsage")
