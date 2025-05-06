@@ -133,6 +133,37 @@ class MimiOkHttpNetworkEngineTest {
     }
 
     @Test
+    fun testRequest_MultiSegmentPath() = runTest {
+        mockWebServer.enqueue(
+            MockResponse()
+                .setResponseCode(200)
+                .setBody(Buffer().write(byteArrayOf(4, 5, 6)))
+                .addHeader("Content-Type", "application/octet-stream")
+        )
+        val target = MimiOkHttpNetworkEngine(
+            okHttpClient = OkHttpClient(),
+            useSsl = false,
+            host = mockWebServer.hostName,
+            port = mockWebServer.port
+        )
+
+        val actual = target.requestAsBinaryInternal(
+            path = "path/with/multiple/segments",
+            requestBody = MimiNetworkEngine.RequestBody.Binary(ByteString(1, 2, 3), "application/octet-stream"),
+            headers = mapOf("additional" to "header")
+        )
+        val actualRequest = mockWebServer.takeRequest()
+
+        assertTrue(actual.isSuccess)
+        assertEquals(ByteString(4, 5, 6), actual.getOrThrow())
+        assertEquals("POST", actualRequest.method)
+        assertEquals("/path/with/multiple/segments", actualRequest.path)
+        assertEquals("application/octet-stream", actualRequest.getHeader("Content-Type"))
+        assertEquals("header", actualRequest.getHeader("additional"))
+        assertEquals(OkioByteString.of(1, 2, 3), actualRequest.body.readByteString())
+    }
+
+    @Test
     fun testRequest_Error() = runTest {
         mockWebServer.enqueue(
             MockResponse()

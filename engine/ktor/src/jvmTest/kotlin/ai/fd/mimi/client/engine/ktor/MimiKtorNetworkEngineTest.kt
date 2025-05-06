@@ -133,6 +133,37 @@ class MimiKtorNetworkEngineTest {
     }
 
     @Test
+    fun testRequest_MultiSegmentPath() = runTest {
+        val mockEngine = MockEngine { request ->
+            assertEquals("https://example.com:1234/path/with/multiple/segments", request.url.toString())
+            assertEquals("application/octet-stream", request.body.contentType.toString())
+            assertEquals("header", request.headers["additional"])
+            assertContentEquals(byteArrayOf(1, 2, 3), request.body.toByteArray())
+            assertEquals(HttpMethod.Post, request.method)
+            respond(
+                content = ByteReadChannel(byteArrayOf(4, 5, 6)),
+                status = HttpStatusCode.OK,
+                headers = headersOf(HttpHeaders.ContentType, "application/octet-stream")
+            )
+        }
+        val target = MimiKtorNetworkEngine(
+            httpClient = HttpClient(mockEngine),
+            useSsl = true,
+            host = "example.com",
+            port = 1234
+        )
+
+        val actual = target.requestAsBinaryInternal(
+            path = "path/with/multiple/segments",
+            requestBody = MimiNetworkEngine.RequestBody.Binary(ByteString(1, 2, 3), "application/octet-stream"),
+            headers = mapOf("additional" to "header")
+        )
+
+        assertTrue(actual.isSuccess)
+        assertEquals(ByteString(4, 5, 6), actual.getOrThrow())
+    }
+
+    @Test
     fun testRequest_Error() = runTest {
         val mockEngine = MockEngine { request ->
             assertEquals("https://example.com:1234/path", request.url.toString())
