@@ -75,7 +75,7 @@ object MimiTokenScopes {
     }
 
     val Tts: MimiTokenApiGroupScope<MimiTokenHttpApiScope> = httpApiScopeOf(
-        http = scopeOf("https://apis.mimi.fd.ai/auth/tts/http-api-service")
+        http = scopeOf("https://apis.mimi.fd.ai/auth/nict-tts/http-api-service")
     )
 
     val Tra: MimiTokenApiGroupScope<MimiTokenHttpApiScope> = httpApiScopeOf(

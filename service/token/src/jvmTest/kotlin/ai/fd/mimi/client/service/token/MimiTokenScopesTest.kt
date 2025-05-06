@@ -283,7 +283,7 @@ class MimiTokenScopesTest {
     @Test
     fun testTts() {
         assertEquals(
-            "https://apis.mimi.fd.ai/auth/tts/http-api-service",
+            "https://apis.mimi.fd.ai/auth/nict-tts/http-api-service",
             (MimiTokenScopes.Tts.Api.Http as MimiTokenSingleScope).value
         )
         assertEquals(
