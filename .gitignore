@@ -5,6 +5,7 @@ build/
 !**/src/test/**/build/
 .kotlin/
 /local.properties
+/github.properties
 
 ### STS ###
 .apt_generated

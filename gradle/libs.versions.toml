@@ -52,6 +52,9 @@ androidx-activity = "1.10.1"
 # https://developer.android.com/jetpack/androidx/releases/constraintlayout
 androidx-constraintlayout = "2.2.1"
 
+# https://github.com/FairyDevicesRD/thinklet.app.sdk/releases
+thinklet-sdk-audio = "0.1.6"
+
 [libraries]
 kotlin-gradle = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
@@ -77,6 +80,7 @@ androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = 
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidx-appcompat" }
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "androidx-activity" }
 androidx-constraintlayout = { module = "androidx.constraintlayout:constraintlayout", version.ref = "androidx-constraintlayout" }
+thinklet-sdk-audio = { group = "ai.fd.thinklet", name = "sdk-audio", version.ref = "thinklet-sdk-audio" }
 
 [plugins]
 mimi-builder = { id = "ai.fd.mimi.client.builder" }
