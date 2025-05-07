@@ -33,7 +33,7 @@ class MimiAsrServiceTest {
         }
 
         val service = MimiAsrService(engineFactory, "accessToken")
-        assertEquals("/", service.path)
+        assertEquals("", service.path)
         assertEquals(engine, service.engine)
         assertEquals("accessToken", service.accessToken)
     }
@@ -46,7 +46,7 @@ class MimiAsrServiceTest {
         }
 
         val service = MimiAsrService(engineFactory, "accessToken", false)
-        assertEquals("/", service.path)
+        assertEquals("", service.path)
         assertEquals(engine, service.engine)
         assertEquals("accessToken", service.accessToken)
     }
@@ -59,7 +59,7 @@ class MimiAsrServiceTest {
         }
 
         val service = MimiAsrService(engineFactory, "accessToken", true, "example.com")
-        assertEquals("/", service.path)
+        assertEquals("", service.path)
         assertEquals(engine, service.engine)
         assertEquals("accessToken", service.accessToken)
     }
@@ -72,7 +72,7 @@ class MimiAsrServiceTest {
         }
 
         val service = MimiAsrService(engineFactory, "accessToken", false, "example.com", 1234)
-        assertEquals("/", service.path)
+        assertEquals("", service.path)
         assertEquals(engine, service.engine)
         assertEquals("accessToken", service.accessToken)
     }

@@ -22,7 +22,7 @@ class MimiNictAsrV1Service internal constructor(
         useSsl: Boolean = true,
         host: String = "service.mimi.fd.ai",
         port: Int = if (useSsl) 443 else 80,
-        path: String = "/"
+        path: String = ""
     ) : this(
         path = path,
         engine = engineFactory.create(useSsl = useSsl, host = host, port = port),
