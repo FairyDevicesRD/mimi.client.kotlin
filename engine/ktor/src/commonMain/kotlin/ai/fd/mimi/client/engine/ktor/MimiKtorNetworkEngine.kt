@@ -66,7 +66,7 @@ class MimiKtorNetworkEngine(
         requestBody: RequestBody,
         headers: Map<String, String>,
         extractResponseBodyAction: suspend (HttpResponse) -> T
-    ): Result<T> {
+    ): Result<T> = runCatching {
         val url = buildUrl {
             takeFrom(httpTargetBaseUrl)
             path(path)

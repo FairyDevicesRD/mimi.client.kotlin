@@ -55,7 +55,7 @@ internal class MimiOkHttpNetworkEngine(
         requestBody: RequestBody,
         headers: Map<String, String>,
         extractResponseBodyAction: suspend (Response) -> T?
-    ): Result<T> {
+    ): Result<T> = runCatching {
         val url = baseUrl.newBuilder().addPathSegments(path).build()
         val request = Request.Builder()
             .url(url)
