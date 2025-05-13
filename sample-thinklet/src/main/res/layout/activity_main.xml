@@ -30,7 +30,7 @@
             android:layout_height="wrap_content"
             android:text="ASR(Record):"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/label_token" />
+            app:layout_constraintTop_toBottomOf="@id/token" />
 
     <TextView
             android:id="@+id/record_asr"
@@ -38,7 +38,7 @@
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/label_record_asr"
-            app:layout_constraintTop_toBottomOf="@id/label_token" />
+            app:layout_constraintTop_toBottomOf="@id/token" />
 
     <TextView
             android:id="@+id/label_realtime_asr"
@@ -46,7 +46,7 @@
             android:layout_height="wrap_content"
             android:text="ASR(Realtime):"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/label_record_asr" />
+            app:layout_constraintTop_toBottomOf="@id/record_asr" />
 
     <TextView
             android:id="@+id/realtime_asr"
@@ -54,6 +54,6 @@
             android:layout_height="wrap_content"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/label_realtime_asr"
-            app:layout_constraintTop_toBottomOf="@id/label_record_asr" />
+            app:layout_constraintTop_toBottomOf="@id/record_asr" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
