@@ -25,6 +25,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
 import kotlin.time.Duration.Companion.minutes
 import kotlin.time.toJavaDuration
+import kotlinx.coroutines.flow.merge
 import kotlinx.coroutines.launch
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -58,6 +59,8 @@ class MainActivity : AppCompatActivity() {
     private var recordedAsrSample: RecordedAsrSample? = null
     private var realtimeAsrSample: RealtimeAsrSample? = null
     private var ttsSample: TtsSample? = null
+
+    private var latestAsrResultText: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -96,17 +99,24 @@ class MainActivity : AppCompatActivity() {
     private fun initializeSamples(token: String) {
         val asrService = MimiAsrService(engineFactory, token)
         val ttsService = MimiNictTtsService(engineFactory, token)
-        recordedAsrSample = RecordedAsrSample(this, lifecycleScope, asrService)
-        realtimeAsrSample = RealtimeAsrSample(this, lifecycleScope, asrService)
+        val recordedAsrSample = RecordedAsrSample(this, lifecycleScope, asrService)
+        val realtimeAsrSample = RealtimeAsrSample(this, lifecycleScope, asrService)
+        this.recordedAsrSample = recordedAsrSample
+        this.realtimeAsrSample = realtimeAsrSample
         ttsSample = TtsSample(lifecycleScope, ttsService)
         lifecycleScope.launch {
-            recordedAsrSample?.latestResult?.collect { result ->
+            recordedAsrSample.latestResult.collect { result ->
                 binding.recordAsr.text = result
             }
         }
         lifecycleScope.launch {
-            realtimeAsrSample?.latestResult?.collect { result ->
+            realtimeAsrSample.latestResult.collect { result ->
                 binding.realtimeAsr.text = result
+            }
+        }
+        lifecycleScope.launch {
+            merge(recordedAsrSample.latestResult, realtimeAsrSample.latestResult).collect {
+                latestAsrResultText = it
             }
         }
     }
@@ -153,9 +163,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun launchTts() {
-        val ttsText = recordedAsrSample?.latestResult?.value
-            ?: realtimeAsrSample?.latestResult?.value
-            ?: DEFAULT_TTS_TEXT
+        val ttsText = latestAsrResultText ?: DEFAULT_TTS_TEXT
         ttsSample?.runTts(ttsText)
     }
 
