@@ -13,6 +13,9 @@ jobs:
         permissions:
             contents: read
             pull-requests: write
+        env:
+            USERNAME: ${{ secrets.GH_USER }}
+            TOKEN: ${{ secrets.GH_TOKEN }}
 
         steps:
             -   name: Fetch Sources
@@ -26,6 +29,9 @@ jobs:
 
             -   name: Setup Gradle
                 uses: gradle/actions/setup-gradle@v4
+
+            -   name: Create required file
+                run: touch github.properties
 
             -   name: Run unit test and collect coverage
                 run: ./gradlew jvmTest :koverLog

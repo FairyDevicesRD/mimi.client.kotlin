@@ -39,8 +39,8 @@ dependencyResolutionManagement {
             credentials {
                 val properties = java.util.Properties()
                 properties.load(file("github.properties").inputStream())
-                username = properties.getProperty("username") ?: ""
-                password = properties.getProperty("token") ?: ""
+                username = properties.getProperty("username") ?: System.getenv("USERNAME")
+                password = properties.getProperty("token") ?: System.getenv("USERNAME")
             }
         }
     }
