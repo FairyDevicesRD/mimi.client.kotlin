@@ -55,23 +55,29 @@ internal class MimiOkHttpNetworkEngine(
         requestBody: RequestBody,
         headers: Map<String, String>,
         extractResponseBodyAction: suspend (Response) -> T?
-    ): Result<T> = runCatching {
-        val url = baseUrl.newBuilder().addPathSegments(path).build()
-        val request = Request.Builder()
-            .url(url)
-            .addHeaders(headers)
-            .post(requestBody.toOkHttpRequestBody())
-            .build()
+    ): Result<T> {
+        try {
+            val url = baseUrl.newBuilder().addPathSegments(path).build()
+            val request = Request.Builder()
+                .url(url)
+                .addHeaders(headers)
+                .post(requestBody.toOkHttpRequestBody())
+                .build()
 
-        val response = okHttpClient.newCall(request).executeAsync()
-        if (!response.isSuccessful) {
-            return Result.failure(
-                MimiIOException("Request failed with status: ${response.code}. Body: ${response.body?.string()}")
-            )
+            val response = okHttpClient.newCall(request).executeAsync()
+            if (!response.isSuccessful) {
+                return Result.failure(
+                    MimiIOException("Request failed with status: ${response.code}. Body: ${response.body?.string()}")
+                )
+            }
+            val data =
+                extractResponseBodyAction(response) ?: return Result.failure(MimiIOException("Response body is null"))
+            return Result.success(data)
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Throwable) {
+            return Result.failure(e)
         }
-        val data =
-            extractResponseBodyAction(response) ?: return Result.failure(MimiIOException("Response body is null"))
-        return Result.success(data)
     }
 
     @Throws(MimiIOException::class, CancellationException::class)
