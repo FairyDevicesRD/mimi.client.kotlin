@@ -8,6 +8,8 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
 import io.mockk.spyk
+import java.net.UnknownHostException
+import java.util.concurrent.CancellationException
 import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
 import kotlin.test.assertIs
@@ -22,6 +24,7 @@ import okio.Buffer
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import okio.ByteString as OkioByteString
 
 class MimiOkHttpNetworkEngineTest {
@@ -68,6 +71,50 @@ class MimiOkHttpNetworkEngineTest {
         assertEquals("application/octet-stream", actualRequest.getHeader("Content-Type"))
         assertEquals("header", actualRequest.getHeader("additional"))
         assertContentEquals(byteArrayOf(1, 2, 3), actualRequest.body.readByteArray())
+    }
+
+    @Test
+    fun `testRequestAsStringInternal throw handleError`() = runTest {
+        val fakeOkHttpClient = mockk<OkHttpClient>()
+        every { fakeOkHttpClient.newCall(any<Request>()) } throws UnknownHostException("Unknown host")
+
+        val target = MimiOkHttpNetworkEngine(
+            okHttpClient = fakeOkHttpClient,
+            useSsl = false,
+            host = "example.com",
+            port = 1234
+        )
+        val actual = target.requestAsStringInternal(
+            path = "",
+            requestBody = MimiNetworkEngine.RequestBody.Binary(ByteString(1, 2, 3), "application/octet-stream"),
+            headers = mapOf("additional" to "header")
+        )
+
+        assertTrue(actual.isFailure)
+        val exception = actual.exceptionOrNull()
+        assertIs<UnknownHostException>(exception)
+        assertEquals(exception.message, "Unknown host")
+    }
+
+    @Test
+    fun `testRequestAsStringInternal throw CancellationException`() = runTest {
+        val fakeOkHttpClient = mockk<OkHttpClient>()
+        every { fakeOkHttpClient.newCall(any<Request>()) } throws CancellationException("suspend cancelled")
+
+        val target = MimiOkHttpNetworkEngine(
+            okHttpClient = fakeOkHttpClient,
+            useSsl = false,
+            host = "example.com",
+            port = 1234
+        )
+
+        assertThrows<CancellationException> {
+            target.requestAsStringInternal(
+                path = "",
+                requestBody = MimiNetworkEngine.RequestBody.Binary(ByteString(1, 2, 3), "application/octet-stream"),
+                headers = mapOf("additional" to "header")
+            )
+        }
     }
 
     @Test
@@ -130,6 +177,50 @@ class MimiOkHttpNetworkEngineTest {
         assertEquals("application/octet-stream", actualRequest.getHeader("Content-Type"))
         assertEquals("header", actualRequest.getHeader("additional"))
         assertEquals(OkioByteString.of(1, 2, 3), actualRequest.body.readByteString())
+    }
+
+    @Test
+    fun `testRequestAsBinaryInternal throw handleError`() = runTest {
+        val fakeOkHttpClient = mockk<OkHttpClient>()
+        every { fakeOkHttpClient.newCall(any<Request>()) } throws UnknownHostException("Unknown host")
+
+        val target = MimiOkHttpNetworkEngine(
+            okHttpClient = fakeOkHttpClient,
+            useSsl = false,
+            host = "example.com",
+            port = 1234
+        )
+        val actual = target.requestAsBinaryInternal(
+            path = "",
+            requestBody = MimiNetworkEngine.RequestBody.Binary(ByteString(1, 2, 3), "application/octet-stream"),
+            headers = mapOf("additional" to "header")
+        )
+
+        assertTrue(actual.isFailure)
+        val exception = actual.exceptionOrNull()
+        assertIs<UnknownHostException>(exception)
+        assertEquals(exception.message, "Unknown host")
+    }
+
+    @Test
+    fun `testRequestAsBinaryInternal throw CancellationException`() = runTest {
+        val fakeOkHttpClient = mockk<OkHttpClient>()
+        every { fakeOkHttpClient.newCall(any<Request>()) } throws CancellationException("suspend cancelled")
+
+        val target = MimiOkHttpNetworkEngine(
+            okHttpClient = fakeOkHttpClient,
+            useSsl = false,
+            host = "example.com",
+            port = 1234
+        )
+
+        assertThrows<CancellationException> {
+            target.requestAsBinaryInternal(
+                path = "",
+                requestBody = MimiNetworkEngine.RequestBody.Binary(ByteString(1, 2, 3), "application/octet-stream"),
+                headers = mapOf("additional" to "header")
+            )
+        }
     }
 
     @Test

@@ -23,6 +23,8 @@ import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
 import io.mockk.mockkStatic
 import io.mockk.spyk
+import java.net.UnknownHostException
+import kotlin.coroutines.cancellation.CancellationException
 import kotlin.test.assertContentEquals
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
@@ -34,6 +36,7 @@ import okhttp3.WebSocketListener
 import okhttp3.mockwebserver.MockResponse
 import okhttp3.mockwebserver.MockWebServer
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.extension.ExtendWith
 
 @ExtendWith(MockKExtension::class)
@@ -102,6 +105,51 @@ class MimiKtorNetworkEngineTest {
     }
 
     @Test
+    fun `testRequestAsStringInternal throw handleError`() = runTest {
+        val mockEngine = MockEngine {
+            throw UnknownHostException("device is offline")
+        }
+        val target = MimiKtorNetworkEngine(
+            httpClient = HttpClient(mockEngine),
+            useSsl = true,
+            host = "example.com",
+            port = 1234
+        )
+
+        val actual = target.requestAsStringInternal(
+            path = "path",
+            requestBody = MimiNetworkEngine.RequestBody.Binary(ByteString(1, 2, 3), "application/octet-stream"),
+            headers = mapOf("additional" to "header")
+        )
+
+        assertTrue(actual.isFailure)
+        val error = actual.exceptionOrNull() ?: throw AssertionError("Exception is null")
+        assertIs<UnknownHostException>(error)
+        assertEquals(error.message, "device is offline")
+    }
+
+    @Test
+    fun `testRequestAsStringInternal throw CancellationException`() = runTest {
+        val mockEngine = MockEngine {
+            throw CancellationException("suspend cancelled")
+        }
+        val target = MimiKtorNetworkEngine(
+            httpClient = HttpClient(mockEngine),
+            useSsl = true,
+            host = "example.com",
+            port = 1234
+        )
+
+        assertThrows<CancellationException> {
+            target.requestAsStringInternal(
+                path = "path",
+                requestBody = MimiNetworkEngine.RequestBody.Binary(ByteString(1, 2, 3), "application/octet-stream"),
+                headers = mapOf("additional" to "header")
+            )
+        }
+    }
+
+    @Test
     fun testRequestAsBinaryInternal() = runTest {
         val mockEngine = MockEngine { request ->
             assertEquals("https://example.com:1234/path", request.url.toString())
@@ -130,6 +178,51 @@ class MimiKtorNetworkEngineTest {
 
         assertTrue(actual.isSuccess)
         assertEquals(ByteString(4, 5, 6), actual.getOrThrow())
+    }
+
+    @Test
+    fun `testRequestAsBinaryInternal throw handleError`() = runTest {
+        val mockEngine = MockEngine {
+            throw UnknownHostException("device is offline")
+        }
+        val target = MimiKtorNetworkEngine(
+            httpClient = HttpClient(mockEngine),
+            useSsl = true,
+            host = "example.com",
+            port = 1234
+        )
+
+        val actual = target.requestAsBinaryInternal(
+            path = "path",
+            requestBody = MimiNetworkEngine.RequestBody.Binary(ByteString(1, 2, 3), "application/octet-stream"),
+            headers = mapOf("additional" to "header")
+        )
+
+        assertTrue(actual.isFailure)
+        val error = actual.exceptionOrNull() ?: throw AssertionError("Exception is null")
+        assertIs<UnknownHostException>(error)
+        assertEquals(error.message, "device is offline")
+    }
+
+    @Test
+    fun `testRequestAsBinaryInternal throw CancellationException`() = runTest {
+        val mockEngine = MockEngine {
+            throw CancellationException("suspend cancelled")
+        }
+        val target = MimiKtorNetworkEngine(
+            httpClient = HttpClient(mockEngine),
+            useSsl = true,
+            host = "example.com",
+            port = 1234
+        )
+
+        assertThrows<CancellationException> {
+            target.requestAsBinaryInternal(
+                path = "path",
+                requestBody = MimiNetworkEngine.RequestBody.Binary(ByteString(1, 2, 3), "application/octet-stream"),
+                headers = mapOf("additional" to "header")
+            )
+        }
     }
 
     @Test
