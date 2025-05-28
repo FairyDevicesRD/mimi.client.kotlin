@@ -55,6 +55,9 @@ androidx-constraintlayout = "2.2.1"
 # https://github.com/FairyDevicesRD/thinklet.app.sdk/releases
 thinklet-sdk-audio = "0.1.6"
 
+# https://github.com/Kotlin/dokka/releases
+dokka = "2.0.0"
+
 [libraries]
 kotlin-gradle = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
@@ -91,3 +94,4 @@ kotlin-allopen = { id = "org.jetbrains.kotlin.plugin.allopen", version.ref = "ko
 kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 kotlinx-kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kotlinx-kover" }
 androidApplication = { id = "com.android.application", version.ref = "agp" }
+dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }

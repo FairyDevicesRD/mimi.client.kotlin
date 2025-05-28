@@ -7,6 +7,11 @@ plugins {
     alias(libs.plugins.mimi.builder) apply false
     alias(libs.plugins.androidApplication) apply false
     alias(libs.plugins.kotlinx.kover)
+    alias(libs.plugins.dokka)
+}
+
+subprojects {
+    apply(plugin = "org.jetbrains.dokka")
 }
 
 dependencies {
