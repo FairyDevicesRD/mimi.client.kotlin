@@ -75,7 +75,7 @@ object MimiTokenScopes {
     }
 
     val Tts: MimiTokenApiGroupScope<MimiTokenHttpApiScope> = httpApiScopeOf(
-        http = scopeOf("https://apis.mimi.fd.ai/auth/tts/http-api-service")
+        http = scopeOf("https://apis.mimi.fd.ai/auth/nict-tts/http-api-service")
     )
 
     val Tra: MimiTokenApiGroupScope<MimiTokenHttpApiScope> = httpApiScopeOf(
@@ -174,4 +174,12 @@ internal fun Set<MimiTokenScope>.getContainingScopes(): Set<MimiTokenSingleScope
 internal fun MimiTokenScope.getContainingScopes(): Set<MimiTokenSingleScope> = when (this) {
     is MimiTokenSingleScope -> setOf(this)
     is MimiTokenGroupScope -> childScopes.getContainingScopes()
+}
+
+operator fun MimiTokenScope.plus(other: MimiTokenScope): Set<MimiTokenScope> {
+    return if (this is MimiTokenGroupScope) {
+        childScopes + other
+    } else {
+        setOf(this, other)
+    }
 }

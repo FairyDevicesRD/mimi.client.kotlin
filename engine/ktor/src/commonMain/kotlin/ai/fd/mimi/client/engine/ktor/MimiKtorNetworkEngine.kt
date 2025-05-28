@@ -67,22 +67,28 @@ class MimiKtorNetworkEngine(
         headers: Map<String, String>,
         extractResponseBodyAction: suspend (HttpResponse) -> T
     ): Result<T> {
-        val url = buildUrl {
-            takeFrom(httpTargetBaseUrl)
-            path(path)
-        }
-        val response = httpClient.post(url) {
-            headers {
-                headers.forEach { (key, value) -> append(key, value) }
+        try {
+            val url = buildUrl {
+                takeFrom(httpTargetBaseUrl)
+                path(path)
             }
-            setBodyAndContentType(requestBody)
+            val response = httpClient.post(url) {
+                headers {
+                    headers.forEach { (key, value) -> append(key, value) }
+                }
+                setBodyAndContentType(requestBody)
+            }
+            if (!response.status.isSuccess()) {
+                return Result.failure(
+                    MimiIOException("Request failed with status: ${response.status}. Body: ${response.bodyAsText()}")
+                )
+            }
+            return Result.success(extractResponseBodyAction(response))
+        } catch (e: CancellationException) {
+            throw e
+        } catch (e: Throwable) {
+            return Result.failure(e)
         }
-        if (!response.status.isSuccess()) {
-            return Result.failure(
-                MimiIOException("Request failed with status: ${response.status}. Body: ${response.bodyAsText()}")
-            )
-        }
-        return Result.success(extractResponseBodyAction(response))
     }
 
     @Throws(MimiIOException::class, CancellationException::class)

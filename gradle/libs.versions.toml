@@ -2,40 +2,61 @@
 projectVersion = "0.0.1"
 
 # https://github.com/jetbrains/kotlin/releases
-kotlin = "2.1.0"
+kotlin = "2.1.20"
 
 # https://github.com/Kotlin/kotlinx.coroutines/releases
-kotlinx-coroutines = "1.9.0"
+kotlinx-coroutines = "1.10.2"
 
 # https://github.com/Kotlin/kotlinx.serialization/releases
-kotlinx-serialization = "1.7.3"
+kotlinx-serialization = "1.8.1"
 
 # https://github.com/Kotlin/kotlinx.kover/releases
 kotlinx-kover = "0.9.1"
 
 # https://github.com/Kotlin/kotlinx.io/releases
-kotlinx-io = "0.6.0"
+kotlinx-io = "0.7.0"
 
 # https://developer.android.com/jetpack/androidx/releases/annotation
 androidx-annotation = "1.9.1"
 
 # https://github.com/ktorio/ktor/releases
-ktor = "3.0.2"
+ktor = "3.1.2"
 
 # https://square.github.io/okhttp/changelogs/changelog/
 okhttp = "4.12.0"
 
 # https://github.com/junit-team/junit5/releases
-junit = "5.11.3"
+junit = "5.12.2"
 
 # https://github.com/mockk/mockk/releases
-mockk = "1.13.13"
+mockk = "1.14.0"
 
 # https://github.com/cashapp/turbine/releases
 turbine = "1.2.0"
 
 # https://logback.qos.ch/download.html
-logback = "1.5.16"
+logback = "1.5.18"
+
+# https://developer.android.com/build/releases/gradle-plugin
+agp = "8.9.2"
+
+# https://developer.android.com/jetpack/androidx/releases/core
+androidx-core-ktx = "1.16.0"
+
+# https://developer.android.com/jetpack/androidx/releases/appcompat
+androidx-appcompat = "1.7.0"
+
+# https://developer.android.com/jetpack/androidx/releases/activity
+androidx-activity = "1.10.1"
+
+# https://developer.android.com/jetpack/androidx/releases/constraintlayout
+androidx-constraintlayout = "2.2.1"
+
+# https://github.com/FairyDevicesRD/thinklet.app.sdk/releases
+thinklet-sdk-audio = "0.1.6"
+
+# https://github.com/Kotlin/dokka/releases
+dokka = "2.0.0"
 
 [libraries]
 kotlin-gradle = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
@@ -58,11 +79,19 @@ junit-platform-launcher = { group = "org.junit.platform", name = "junit-platform
 mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
 turbine = { group = "app.cash.turbine", name = "turbine", version.ref = "turbine" }
 logback-classic = { group = "ch.qos.logback", name = "logback-classic", version.ref = "logback" }
+androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidx-core-ktx" }
+androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "androidx-appcompat" }
+androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "androidx-activity" }
+androidx-constraintlayout = { module = "androidx.constraintlayout:constraintlayout", version.ref = "androidx-constraintlayout" }
+thinklet-sdk-audio = { group = "ai.fd.thinklet", name = "sdk-audio", version.ref = "thinklet-sdk-audio" }
 
 [plugins]
 mimi-builder = { id = "ai.fd.mimi.client.builder" }
 kotlin-multiplatform = { id = "org.jetbrains.kotlin.multiplatform", version.ref = "kotlin" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-allopen = { id = "org.jetbrains.kotlin.plugin.allopen", version.ref = "kotlin" }
 kotlinx-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin" }
 kotlinx-kover = { id = "org.jetbrains.kotlinx.kover", version.ref = "kotlinx-kover" }
+androidApplication = { id = "com.android.application", version.ref = "agp" }
+dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
