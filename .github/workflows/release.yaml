@@ -1,0 +1,29 @@
+name: Release
+
+on:
+    push:
+        tags:
+            - "*"
+jobs:
+    build:
+        name: Release
+        runs-on: ubuntu-latest
+        env:
+            USERNAME: ${{ secrets.GH_USER }}
+            TOKEN: ${{ secrets.GH_TOKEN }}
+            URL: ${{ secrets.URL }}
+        steps:
+            -   name: Check out
+                uses: actions/checkout@v4
+            -   name: Set up JDK
+                uses: actions/setup-java@v4.7.1
+                with:
+                    distribution: "adopt"
+                    java-version: "21"
+            -   name: Create empty required files
+                run: |
+                    touch ./local.properties
+                    touch ./github.properties
+            -   name: Build & Publish
+                run: |
+                    ./gradlew publish
