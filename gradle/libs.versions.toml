@@ -2,7 +2,7 @@
 projectVersion = "0.0.1"
 
 # https://github.com/jetbrains/kotlin/releases
-kotlin = "2.1.20"
+kotlin = "2.1.21"
 
 # https://github.com/Kotlin/kotlinx.coroutines/releases
 kotlinx-coroutines = "1.10.2"
@@ -20,7 +20,7 @@ kotlinx-io = "0.7.0"
 androidx-annotation = "1.9.1"
 
 # https://github.com/ktorio/ktor/releases
-ktor = "3.1.2"
+ktor = "3.1.3"
 
 # https://square.github.io/okhttp/changelogs/changelog/
 okhttp = "4.12.0"
@@ -29,7 +29,7 @@ okhttp = "4.12.0"
 junit = "5.12.2"
 
 # https://github.com/mockk/mockk/releases
-mockk = "1.14.0"
+mockk = "1.14.2"
 
 # https://github.com/cashapp/turbine/releases
 turbine = "1.2.0"
@@ -38,7 +38,7 @@ turbine = "1.2.0"
 logback = "1.5.18"
 
 # https://developer.android.com/build/releases/gradle-plugin
-agp = "8.9.2"
+agp = "8.10.0"
 
 # https://developer.android.com/jetpack/androidx/releases/core
 androidx-core-ktx = "1.16.0"
