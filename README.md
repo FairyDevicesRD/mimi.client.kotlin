@@ -4,7 +4,8 @@ mimi(R) API Client for Kotlin
 
 ## 概要
 
-mimi(R) API Client for Kotlin は Kotlin または Java を使用しているアプリケーションから [mimi(R) API](https://mimi.readme.io/) を簡単に利用するためのライブラリです。
+mimi(R) API Client for Kotlin は Kotlin または Java を使用しているアプリケーションから [mimi(R) API](https://mimi.readme.io/) を簡単に利用するためのライブラリです。  
+本ライブラリの詳細な仕様は、[Dokka](./dokka/index.md) を参照ください。
 
 ## 対応環境
 
