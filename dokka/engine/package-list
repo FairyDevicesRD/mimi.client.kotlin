@@ -1,0 +1,76 @@
+$dokka.format:gfm-v1
+$dokka.linkExtension:md
+$dokka.location:ai.fd.mimi.client.engine.ktor////PointingToDeclaration/ktor/ktor/ai.fd.mimi.client.engine.ktor/index.md
+$dokka.location:ai.fd.mimi.client.engine.ktor//Ktor/ai.fd.mimi.client.engine.MimiNetworkEngine.Companion#io.ktor.client.HttpClient/PointingToDeclaration/ktor/ktor/ai.fd.mimi.client.engine.ktor/-ktor.md
+$dokka.location:ai.fd.mimi.client.engine.ktor/MimiKtorNetworkEngine///PointingToDeclaration/ktor/ktor/ai.fd.mimi.client.engine.ktor/-mimi-ktor-network-engine/index.md
+$dokka.location:ai.fd.mimi.client.engine.ktor/MimiKtorNetworkEngine/MimiKtorNetworkEngine/#io.ktor.client.HttpClient#kotlin.Boolean#kotlin.String#kotlin.Int/PointingToDeclaration/ktor/ktor/ai.fd.mimi.client.engine.ktor/-mimi-ktor-network-engine/-mimi-ktor-network-engine.md
+$dokka.location:ai.fd.mimi.client.engine.ktor/MimiKtorNetworkEngine/openWebSocketSessionInternal/#kotlin.String#kotlin.String#kotlin.collections.Map[kotlin.String,kotlin.String]#ai.fd.mimi.client.engine.MimiModelConverter.EncodableJsonString[TypeParam(bounds=[kotlin.Any?])]/PointingToDeclaration/ktor/ktor/ai.fd.mimi.client.engine.ktor/-mimi-ktor-network-engine/open-web-socket-session-internal.md
+$dokka.location:ai.fd.mimi.client.engine.ktor/MimiKtorNetworkEngine/requestAsBinaryInternal/#kotlin.String#ai.fd.mimi.client.engine.MimiNetworkEngine.RequestBody#kotlin.collections.Map[kotlin.String,kotlin.String]/PointingToDeclaration/ktor/ktor/ai.fd.mimi.client.engine.ktor/-mimi-ktor-network-engine/request-as-binary-internal.md
+$dokka.location:ai.fd.mimi.client.engine.ktor/MimiKtorNetworkEngine/requestAsStringInternal/#kotlin.String#ai.fd.mimi.client.engine.MimiNetworkEngine.RequestBody#kotlin.collections.Map[kotlin.String,kotlin.String]/PointingToDeclaration/ktor/ktor/ai.fd.mimi.client.engine.ktor/-mimi-ktor-network-engine/request-as-string-internal.md
+$dokka.location:ai.fd.mimi.client.engine.ktor/MimiKtorWebSocketSession///PointingToDeclaration/ktor/ktor/ai.fd.mimi.client.engine.ktor/-mimi-ktor-web-socket-session/index.md
+$dokka.location:ai.fd.mimi.client.engine.ktor/MimiKtorWebSocketSession/MimiKtorWebSocketSession/#io.ktor.client.plugins.websocket.DefaultClientWebSocketSession#ai.fd.mimi.client.engine.MimiModelConverter.EncodableJsonString[TypeParam(bounds=[kotlin.Any?])]/PointingToDeclaration/ktor/ktor/ai.fd.mimi.client.engine.ktor/-mimi-ktor-web-socket-session/-mimi-ktor-web-socket-session.md
+$dokka.location:ai.fd.mimi.client.engine.ktor/MimiKtorWebSocketSession/cancel/#/PointingToDeclaration/ktor/ktor/ai.fd.mimi.client.engine.ktor/-mimi-ktor-web-socket-session/cancel.md
+$dokka.location:ai.fd.mimi.client.engine.ktor/MimiKtorWebSocketSession/isActive/#/PointingToDeclaration/ktor/ktor/ai.fd.mimi.client.engine.ktor/-mimi-ktor-web-socket-session/is-active.md
+$dokka.location:ai.fd.mimi.client.engine.ktor/MimiKtorWebSocketSession/rxFlow/#/PointingToDeclaration/ktor/ktor/ai.fd.mimi.client.engine.ktor/-mimi-ktor-web-socket-session/rx-flow.md
+$dokka.location:ai.fd.mimi.client.engine.ktor/MimiKtorWebSocketSession/sendBinary/#kotlin.ByteArray/PointingToDeclaration/ktor/ktor/ai.fd.mimi.client.engine.ktor/-mimi-ktor-web-socket-session/send-binary.md
+$dokka.location:ai.fd.mimi.client.engine.ktor/MimiKtorWebSocketSession/sendText/#kotlin.String/PointingToDeclaration/ktor/ktor/ai.fd.mimi.client.engine.ktor/-mimi-ktor-web-socket-session/send-text.md
+$dokka.location:ai.fd.mimi.client.engine.okhttp////PointingToDeclaration/okhttp/okhttp/ai.fd.mimi.client.engine.okhttp/index.md
+$dokka.location:ai.fd.mimi.client.engine.okhttp//OkHttp/ai.fd.mimi.client.engine.MimiNetworkEngine.Companion#okhttp3.OkHttpClient/PointingToDeclaration/okhttp/okhttp/ai.fd.mimi.client.engine.okhttp/-ok-http.md
+$dokka.location:ai.fd.mimi.client.engine////PointingToDeclaration/core/core/ai.fd.mimi.client.engine/index.md
+$dokka.location:ai.fd.mimi.client.engine/MimiModelConverter.Binary///PointingToDeclaration/core/core/ai.fd.mimi.client.engine/-mimi-model-converter/-binary/index.md
+$dokka.location:ai.fd.mimi.client.engine/MimiModelConverter.Binary/Binary/#/PointingToDeclaration/core/core/ai.fd.mimi.client.engine/-mimi-model-converter/-binary/-binary.md
+$dokka.location:ai.fd.mimi.client.engine/MimiModelConverter.Binary/decode/#kotlinx.io.bytestring.ByteString/PointingToDeclaration/core/core/ai.fd.mimi.client.engine/-mimi-model-converter/-binary/decode.md
+$dokka.location:ai.fd.mimi.client.engine/MimiModelConverter.EncodableJsonString///PointingToDeclaration/core/core/ai.fd.mimi.client.engine/-mimi-model-converter/-encodable-json-string/index.md
+$dokka.location:ai.fd.mimi.client.engine/MimiModelConverter.EncodableJsonString/EncodableJsonString/#kotlinx.serialization.json.Json/PointingToDeclaration/core/core/ai.fd.mimi.client.engine/-mimi-model-converter/-encodable-json-string/-encodable-json-string.md
+$dokka.location:ai.fd.mimi.client.engine/MimiModelConverter.EncodableJsonString/encode/#TypeParam(bounds=[kotlin.Any?])#kotlinx.serialization.KSerializer[TypeParam(bounds=[kotlin.Any?])]/PointingToDeclaration/core/core/ai.fd.mimi.client.engine/-mimi-model-converter/-encodable-json-string/encode.md
+$dokka.location:ai.fd.mimi.client.engine/MimiModelConverter.JsonString.Companion///PointingToDeclaration/core/core/ai.fd.mimi.client.engine/-mimi-model-converter/-json-string/-companion/index.md
+$dokka.location:ai.fd.mimi.client.engine/MimiModelConverter.JsonString.Companion/IgnoreResult/#/PointingToDeclaration/core/core/ai.fd.mimi.client.engine/-mimi-model-converter/-json-string/-companion/-ignore-result.md
+$dokka.location:ai.fd.mimi.client.engine/MimiModelConverter.JsonString///PointingToDeclaration/core/core/ai.fd.mimi.client.engine/-mimi-model-converter/-json-string/index.md
+$dokka.location:ai.fd.mimi.client.engine/MimiModelConverter.JsonString/JsonString/#/PointingToDeclaration/core/core/ai.fd.mimi.client.engine/-mimi-model-converter/-json-string/-json-string.md
+$dokka.location:ai.fd.mimi.client.engine/MimiModelConverter.JsonString/decode/#kotlin.String/PointingToDeclaration/core/core/ai.fd.mimi.client.engine/-mimi-model-converter/-json-string/decode.md
+$dokka.location:ai.fd.mimi.client.engine/MimiModelConverter///PointingToDeclaration/core/core/ai.fd.mimi.client.engine/-mimi-model-converter/index.md
+$dokka.location:ai.fd.mimi.client.engine/MimiNetworkEngine.Companion///PointingToDeclaration/core/core/ai.fd.mimi.client.engine/-mimi-network-engine/-companion/index.md
+$dokka.location:ai.fd.mimi.client.engine/MimiNetworkEngine.Factory///PointingToDeclaration/core/core/ai.fd.mimi.client.engine/-mimi-network-engine/-factory/index.md
+$dokka.location:ai.fd.mimi.client.engine/MimiNetworkEngine.Factory/create/#kotlin.Boolean#kotlin.String#kotlin.Int/PointingToDeclaration/core/core/ai.fd.mimi.client.engine/-mimi-network-engine/-factory/create.md
+$dokka.location:ai.fd.mimi.client.engine/MimiNetworkEngine.RequestBody.Binary///PointingToDeclaration/core/core/ai.fd.mimi.client.engine/-mimi-network-engine/-request-body/-binary/index.md
+$dokka.location:ai.fd.mimi.client.engine/MimiNetworkEngine.RequestBody.Binary/Binary/#kotlinx.io.bytestring.ByteString#kotlin.String/PointingToDeclaration/core/core/ai.fd.mimi.client.engine/-mimi-network-engine/-request-body/-binary/-binary.md
+$dokka.location:ai.fd.mimi.client.engine/MimiNetworkEngine.RequestBody.Binary/contentType/#/PointingToDeclaration/core/core/ai.fd.mimi.client.engine/-mimi-network-engine/-request-body/-binary/content-type.md
+$dokka.location:ai.fd.mimi.client.engine/MimiNetworkEngine.RequestBody.Binary/data/#/PointingToDeclaration/core/core/ai.fd.mimi.client.engine/-mimi-network-engine/-request-body/-binary/data.md
+$dokka.location:ai.fd.mimi.client.engine/MimiNetworkEngine.RequestBody.FormData///PointingToDeclaration/core/core/ai.fd.mimi.client.engine/-mimi-network-engine/-request-body/-form-data/index.md
+$dokka.location:ai.fd.mimi.client.engine/MimiNetworkEngine.RequestBody.FormData/FormData/#kotlin.collections.Map[kotlin.String,kotlin.String]/PointingToDeclaration/core/core/ai.fd.mimi.client.engine/-mimi-network-engine/-request-body/-form-data/-form-data.md
+$dokka.location:ai.fd.mimi.client.engine/MimiNetworkEngine.RequestBody.FormData/fields/#/PointingToDeclaration/core/core/ai.fd.mimi.client.engine/-mimi-network-engine/-request-body/-form-data/fields.md
+$dokka.location:ai.fd.mimi.client.engine/MimiNetworkEngine.RequestBody///PointingToDeclaration/core/core/ai.fd.mimi.client.engine/-mimi-network-engine/-request-body/index.md
+$dokka.location:ai.fd.mimi.client.engine/MimiNetworkEngine///PointingToDeclaration/core/core/ai.fd.mimi.client.engine/-mimi-network-engine/index.md
+$dokka.location:ai.fd.mimi.client.engine/MimiNetworkEngine/MimiNetworkEngine/#/PointingToDeclaration/core/core/ai.fd.mimi.client.engine/-mimi-network-engine/-mimi-network-engine.md
+$dokka.location:ai.fd.mimi.client.engine/MimiNetworkEngine/openWebSocketSession/#kotlin.String#kotlin.String?#kotlin.String#kotlin.collections.Map[kotlin.String,kotlin.String]#ai.fd.mimi.client.engine.MimiModelConverter.EncodableJsonString[TypeParam(bounds=[kotlin.Any?])]/PointingToDeclaration/core/core/ai.fd.mimi.client.engine/-mimi-network-engine/open-web-socket-session.md
+$dokka.location:ai.fd.mimi.client.engine/MimiNetworkEngine/openWebSocketSessionInternal/#kotlin.String#kotlin.String#kotlin.collections.Map[kotlin.String,kotlin.String]#ai.fd.mimi.client.engine.MimiModelConverter.EncodableJsonString[TypeParam(bounds=[kotlin.Any?])]/PointingToDeclaration/core/core/ai.fd.mimi.client.engine/-mimi-network-engine/open-web-socket-session-internal.md
+$dokka.location:ai.fd.mimi.client.engine/MimiNetworkEngine/request/#kotlin.String#kotlin.String?#ai.fd.mimi.client.engine.MimiNetworkEngine.RequestBody#kotlin.collections.Map[kotlin.String,kotlin.String]#ai.fd.mimi.client.engine.MimiModelConverter[TypeParam(bounds=[kotlin.Any?])]/PointingToDeclaration/core/core/ai.fd.mimi.client.engine/-mimi-network-engine/request.md
+$dokka.location:ai.fd.mimi.client.engine/MimiNetworkEngine/requestAsBinaryInternal/#kotlin.String#ai.fd.mimi.client.engine.MimiNetworkEngine.RequestBody#kotlin.collections.Map[kotlin.String,kotlin.String]/PointingToDeclaration/core/core/ai.fd.mimi.client.engine/-mimi-network-engine/request-as-binary-internal.md
+$dokka.location:ai.fd.mimi.client.engine/MimiNetworkEngine/requestAsStringInternal/#kotlin.String#ai.fd.mimi.client.engine.MimiNetworkEngine.RequestBody#kotlin.collections.Map[kotlin.String,kotlin.String]/PointingToDeclaration/core/core/ai.fd.mimi.client.engine/-mimi-network-engine/request-as-string-internal.md
+$dokka.location:ai.fd.mimi.client.engine/MimiWebSocketSession///PointingToDeclaration/core/core/ai.fd.mimi.client.engine/-mimi-web-socket-session/index.md
+$dokka.location:ai.fd.mimi.client.engine/MimiWebSocketSession/cancel/#/PointingToDeclaration/core/core/ai.fd.mimi.client.engine/-mimi-web-socket-session/cancel.md
+$dokka.location:ai.fd.mimi.client.engine/MimiWebSocketSession/isActive/#/PointingToDeclaration/core/core/ai.fd.mimi.client.engine/-mimi-web-socket-session/is-active.md
+$dokka.location:ai.fd.mimi.client.engine/MimiWebSocketSession/rxFlow/#/PointingToDeclaration/core/core/ai.fd.mimi.client.engine/-mimi-web-socket-session/rx-flow.md
+$dokka.location:ai.fd.mimi.client.engine/MimiWebSocketSession/sendBinary/#kotlin.ByteArray/PointingToDeclaration/core/core/ai.fd.mimi.client.engine/-mimi-web-socket-session/send-binary.md
+$dokka.location:ai.fd.mimi.client.engine/MimiWebSocketSession/sendBinaryBlocking/#kotlin.ByteArray/PointingToDeclaration/core/core/ai.fd.mimi.client.engine/-mimi-web-socket-session/send-binary-blocking.md
+$dokka.location:ai.fd.mimi.client.engine/MimiWebSocketSessionInternal///PointingToDeclaration/core/core/ai.fd.mimi.client.engine/-mimi-web-socket-session-internal/index.md
+$dokka.location:ai.fd.mimi.client.engine/MimiWebSocketSessionInternal/MimiWebSocketSessionInternal/#ai.fd.mimi.client.engine.MimiModelConverter.EncodableJsonString[TypeParam(bounds=[kotlin.Any?])]/PointingToDeclaration/core/core/ai.fd.mimi.client.engine/-mimi-web-socket-session-internal/-mimi-web-socket-session-internal.md
+$dokka.location:ai.fd.mimi.client.engine/MimiWebSocketSessionInternal/sendJsonText/#TypeParam(bounds=[kotlin.Any?])#kotlinx.serialization.KSerializer[TypeParam(bounds=[kotlin.Any?])]/PointingToDeclaration/core/core/ai.fd.mimi.client.engine/-mimi-web-socket-session-internal/send-json-text.md
+$dokka.location:ai.fd.mimi.client.engine/MimiWebSocketSessionInternal/sendText/#kotlin.String/PointingToDeclaration/core/core/ai.fd.mimi.client.engine/-mimi-web-socket-session-internal/send-text.md
+$dokka.location:ai.fd.mimi.client////PointingToDeclaration/core/core/ai.fd.mimi.client/index.md
+$dokka.location:ai.fd.mimi.client/MimiIOException///PointingToDeclaration/core/core/ai.fd.mimi.client/-mimi-i-o-exception/index.md
+$dokka.location:ai.fd.mimi.client/MimiIOException/MimiIOException/#kotlin.String#kotlin.Throwable/PointingToDeclaration/core/core/ai.fd.mimi.client/-mimi-i-o-exception/-mimi-i-o-exception.md
+$dokka.location:ai.fd.mimi.client/MimiIOException/MimiIOException/#kotlin.String/PointingToDeclaration/core/core/ai.fd.mimi.client/-mimi-i-o-exception/-mimi-i-o-exception.md
+$dokka.location:ai.fd.mimi.client/MimiJsonException///PointingToDeclaration/core/core/ai.fd.mimi.client/-mimi-json-exception/index.md
+$dokka.location:ai.fd.mimi.client/MimiJsonException/MimiJsonException/#kotlin.String#kotlin.Throwable/PointingToDeclaration/core/core/ai.fd.mimi.client/-mimi-json-exception/-mimi-json-exception.md
+$dokka.location:ai.fd.mimi.client/MimiJsonException/MimiJsonException/#kotlin.String/PointingToDeclaration/core/core/ai.fd.mimi.client/-mimi-json-exception/-mimi-json-exception.md
+$dokka.location:ai.fd.mimi.client/MimiSerializationException///PointingToDeclaration/core/core/ai.fd.mimi.client/-mimi-serialization-exception/index.md
+$dokka.location:ai.fd.mimi.client/MimiSerializationException/MimiSerializationException/#kotlin.String#kotlin.Throwable/PointingToDeclaration/core/core/ai.fd.mimi.client/-mimi-serialization-exception/-mimi-serialization-exception.md
+$dokka.location:ai.fd.mimi.client/MimiSerializationException/MimiSerializationException/#kotlin.String/PointingToDeclaration/core/core/ai.fd.mimi.client/-mimi-serialization-exception/-mimi-serialization-exception.md
+module:core
+ai.fd.mimi.client
+ai.fd.mimi.client.engine
+module:ktor
+ai.fd.mimi.client.engine.ktor
+module:okhttp
+ai.fd.mimi.client.engine.okhttp
