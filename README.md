@@ -18,7 +18,10 @@ mimi(R) API Client for Kotlin は Kotlin または Java を使用しているア
 実装の詳細については、 [THINKLET向けサンプル](./sample-thinklet/README.md) もしくは [CLIアプリケーション向けサンプル](./sample/README.md) を確認してください。
 
 ### 1. アクセストークンの取得
-- GitHub Packages経由でライブラリを取得できるように、 [こちら](https://docs.github.com/ja/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token) を参考に個人用アクセストークンを発行してください。
+- GitHub Packages経由でライブラリを取得できるように、 [こちら](https://docs.github.com/ja/packages/working-with-a-github-packages-registry/working-with-the-gradle-registry#using-a-published-package) を参考に個人用アクセストークンを発行してください。
+
+> [!NOTE]
+> personal access token (classic) には、`read:packages` スコープの設定が必須です。
 
 ### 2. アクセストークンを設定
 - アクセストークンはクレデンシャルとなるため，バージョン管理されないようにしてください。
