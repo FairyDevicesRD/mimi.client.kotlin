@@ -124,5 +124,4 @@ mimi(R) API Client for Kotlin では、各 mimi サービスにアクセスす�
 詳細は [THINKLET向けサンプル](./sample-thinklet/README.md) もしくは [CLIアプリケーション向けサンプル](./sample/README.md) 、もしくは [mimi(R) API Client for Kotlin の API ドキュメント](https://example.com) を参照してください。
 
 ## ライセンス
-
-TBD
+このプロジェクトはMITライセンスの下で公開されています。詳細は[LICENSE](./LICENSE)ファイルを参照してください。
