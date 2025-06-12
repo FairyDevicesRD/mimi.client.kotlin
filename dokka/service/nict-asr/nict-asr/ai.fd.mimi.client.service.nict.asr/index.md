@@ -1,0 +1,16 @@
+//[nict-asr](../../index.md)/[ai.fd.mimi.client.service.nict.asr](index.md)
+
+# Package-level declarations
+
+## Types
+
+| Name | Summary |
+|---|---|
+| [MimiNictAsrInputLanguage](-mimi-nict-asr-input-language/index.md) | [common]<br>enum [MimiNictAsrInputLanguage](-mimi-nict-asr-input-language/index.md) : [Enum](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-enum/index.html)&lt;[MimiNictAsrInputLanguage](-mimi-nict-asr-input-language/index.md)&gt; |
+| [MimiNictAsrServiceConst](-mimi-nict-asr-service-const/index.md) | [common]<br>object [MimiNictAsrServiceConst](-mimi-nict-asr-service-const/index.md) |
+| [MimiNictAsrV1Options](-mimi-nict-asr-v1-options/index.md) | [common]<br>data class [MimiNictAsrV1Options](-mimi-nict-asr-v1-options/index.md) |
+| [MimiNictAsrV1Result](-mimi-nict-asr-v1-result/index.md) | [common]<br>data class [MimiNictAsrV1Result](-mimi-nict-asr-v1-result/index.md)(val type: [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html), val sessionId: [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html), val status: [MimiAsrResultStatus](../../../asr-core/asr-core/ai.fd.mimi.client.service.asr.core/-mimi-asr-result-status/index.md), val response: [List](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-list/index.html)&lt;[String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html)&gt;) |
+| [MimiNictAsrV1Service](-mimi-nict-asr-v1-service/index.md) | [common]<br>class [MimiNictAsrV1Service](-mimi-nict-asr-v1-service/index.md) |
+| [MimiNictAsrV2Options](-mimi-nict-asr-v2-options/index.md) | [common]<br>data class [MimiNictAsrV2Options](-mimi-nict-asr-v2-options/index.md)(val audioFormat: [MimiAsrAudioFormat](../../../asr-core/asr-core/ai.fd.mimi.client.service.asr.core/-mimi-asr-audio-format/index.md), val audioBitrate: [Int](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html), val audioSamplingRate: [Int](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html), val inputLanguage: [MimiNictAsrInputLanguage](-mimi-nict-asr-input-language/index.md), val progressive: [Boolean](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html), val temporary: [Boolean](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-boolean/index.html), val temporaryInterval: [Int](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-int/index.html)) |
+| [MimiNictAsrV2Result](-mimi-nict-asr-v2-result/index.md) | [common]<br>data class [MimiNictAsrV2Result](-mimi-nict-asr-v2-result/index.md)(val type: [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html), val sessionId: [String](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin/-string/index.html), val status: [MimiAsrResultStatus](../../../asr-core/asr-core/ai.fd.mimi.client.service.asr.core/-mimi-asr-result-status/index.md), val response: [List](https://kotlinlang.org/api/core/kotlin-stdlib/kotlin.collections/-list/index.html)&lt;[MimiNictAsrV2Result.Response](-mimi-nict-asr-v2-result/-response/index.md)&gt;) |
+| [MimiNictAsrV2Service](-mimi-nict-asr-v2-service/index.md) | [common]<br>class [MimiNictAsrV2Service](-mimi-nict-asr-v2-service/index.md) |

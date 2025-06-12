@@ -1,0 +1,5 @@
+$dokka.format:gfm-v1
+$dokka.linkExtension:md
+$dokka.location:ai.fd.mimi.client.annotation////PointingToDeclaration/utils/ai.fd.mimi.client.annotation/index.md
+$dokka.location:ai.fd.mimi.client.annotation/ExperimentalMimiApi///PointingToDeclaration/utils/ai.fd.mimi.client.annotation/-experimental-mimi-api/index.md
+ai.fd.mimi.client.annotation
