@@ -4,7 +4,8 @@ mimi(R) API Client for Kotlin
 
 ## 概要
 
-mimi(R) API Client for Kotlin は Kotlin または Java を使用しているアプリケーションから [mimi(R) API](https://mimi.readme.io/) を簡単に利用するためのライブラリです。
+mimi(R) API Client for Kotlin は Kotlin または Java を使用しているアプリケーションから [mimi(R) API](https://mimi.readme.io/) を簡単に利用するためのライブラリです。  
+本ライブラリの詳細な仕様は、[Dokka](./dokka/index.md) を参照ください。
 
 ## 対応環境
 
@@ -14,7 +15,7 @@ mimi(R) API Client for Kotlin は Kotlin または Java を使用しているア
 
 ## 導入手順
 
-実装の詳細については、 [THINKLET向けサンプル](./sample-thinklet) もしくは [CLIアプリケーション向けサンプル](./sample) を確認してください。
+実装の詳細については、 [THINKLET向けサンプル](./sample-thinklet/README.md) もしくは [CLIアプリケーション向けサンプル](./sample/README.md) を確認してください。
 
 ### 1. アクセストークンの取得
 - GitHub Packages経由でライブラリを取得できるように、 [こちら](https://docs.github.com/ja/authentication/keeping-your-account-and-data-secure/creating-a-personal-access-token) を参考に個人用アクセストークンを発行してください。
@@ -117,7 +118,7 @@ val engineFactory = MimiNetworkEngine.OkHttp(okhttpClient)
 mimi(R) API Client for Kotlin では、各 mimi サービスにアクセスするためのサービスクラスが提供されています。
 サービスクラスの利用には、先ほど作成した `MimiNetworkEngine.Factory` や、サービスに応じて追加の引数を渡してインスタンスを生成します。
 
-詳細は [THINKLET向けサンプル](./sample-thinklet) もしくは [CLIアプリケーション向けサンプル](./sample) 、もしくは [mimi(R) API Client for Kotlin の API ドキュメント](https://example.com) を参照してください。
+詳細は [THINKLET向けサンプル](./sample-thinklet/README.md) もしくは [CLIアプリケーション向けサンプル](./sample/README.md) 、もしくは [mimi(R) API Client for Kotlin の API ドキュメント](https://example.com) を参照してください。
 
 ## ライセンス
 
