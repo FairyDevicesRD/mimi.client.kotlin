@@ -29,4 +29,5 @@ jobs:
                     touch ./github.properties
             -   name: Build & Publish
                 run: |
-                    ./gradlew publish
+                    chmod +x publish.sh
+                    ./publish.sh
