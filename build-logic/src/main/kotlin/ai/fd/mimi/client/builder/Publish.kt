@@ -46,7 +46,7 @@ internal fun Project.configurePublish() {
                     val properties = Properties()
                     properties.load(project.rootProject.file("github.properties").inputStream())
                     name = "GithubPackages"
-                    val u = properties.getProperty("url") ?: System.getenv("URL")
+                    val u = properties.getProperty("url") ?: uri("https://maven.pkg.github.com/${System.getenv("REPOSITORY")}")
                     url = uri(u ?: "undefine")
                     credentials {
                         username = properties.getProperty("username") ?: System.getenv("USERNAME")
