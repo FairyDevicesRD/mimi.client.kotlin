@@ -8,10 +8,13 @@ jobs:
     build:
         name: Release
         runs-on: ubuntu-latest
+        permissions:
+            contents: read
+            packages: write
         env:
-            USERNAME: ${{ secrets.GH_USER }}
-            TOKEN: ${{ secrets.GH_TOKEN }}
-            URL: ${{ secrets.URL }}
+            USERNAME: ${{ github.actor }}
+            TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            REPOSITORY: ${{ github.repository }}
         steps:
             -   name: Check out
                 uses: actions/checkout@v4
@@ -26,4 +29,5 @@ jobs:
                     touch ./github.properties
             -   name: Build & Publish
                 run: |
-                    ./gradlew publish
+                    chmod +x publish.sh
+                    ./publish.sh
