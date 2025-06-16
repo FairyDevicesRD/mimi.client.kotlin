@@ -5,7 +5,7 @@ import org.gradle.api.Project
 internal fun Project.configureKmp() {
     kotlin {
         jvm()
-        linuxX64()
+        // linuxX64()
         macosArm64()
 
         configureKotlinCommon()

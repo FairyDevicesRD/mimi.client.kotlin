@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlinx.serialization)
     alias(libs.plugins.kotlinx.kover)
     alias(libs.plugins.mimi.builder)
+    `maven-publish`
 }
 
 kotlin {

@@ -1,6 +1,7 @@
 import ai.fd.mimi.client.builder.configureCommon
 import ai.fd.mimi.client.builder.configureKmp
 import ai.fd.mimi.client.builder.configureKotlinJvm
+import ai.fd.mimi.client.builder.configurePublish
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
@@ -13,6 +14,9 @@ class MimiClientBuilderPlugin : Plugin<Project> {
             }
             pluginManager.withPlugin("org.jetbrains.kotlin.jvm") {
                 configureKotlinJvm()
+            }
+            pluginManager.withPlugin("org.gradle.maven-publish") {
+                configurePublish()
             }
         }
     }
