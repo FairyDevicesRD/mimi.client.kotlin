@@ -86,6 +86,22 @@ dependencyResolutionManagement {
 > - ネットワークエンジンはどちらか片方のみの追加で問題ありません。ご使用になる環境にあわせて選択してください。
 > - Ktorベースのエンジンを選択した場合、環境ごとに追加のセットアップが必要になる場合があります。詳細は[チュートリアル](#a-ktorベースのエンジン)を参照してください。
 
+<details><summary>libs.versions.toml</summary><div>
+
+```diff
+[versions]
++mimi = "0.0.1"
++
+ [libraries]
++mimi-kotlin-engine-ktor = { group = "ai.fd.mimi.client", name = "engine-ktor", version.ref = "mimi" }
++mimi-kotlin-engine-okhttp = { group = "ai.fd.mimi.client", name = "engine-okhttp", version.ref = "mimi" }
++mimi-kotlin-service-token = { group = "ai.fd.mimi.client", name = "service-token", version.ref = "mimi" }
++mimi-kotlin-service-asr = { group = "ai.fd.mimi.client", name = "service-asr", version.ref = "mimi" }
++mimi-kotlin-service-nict-asr = { group = "ai.fd.mimi.client", name = "service-nict-asr", version.ref = "mimi" }
++mimi-kotlin-service-nict-tts = { group = "ai.fd.mimi.client", name = "service-nict-tts", version.ref = "mimi" }
+```
+</div></details>
+
 ## チュートリアル
 
 このセクションでは、mimi(R) API Client for Kotlin を使用して、mimi(R) APIを利用するための基本的な設定方法を説明します。
