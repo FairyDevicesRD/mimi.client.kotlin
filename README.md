@@ -13,6 +13,9 @@ mimi(R) API Client for Kotlin は Kotlin または Java を使用しているア
 - Linux on x86-64 (Kotlin/Native)
 - macOS on Apple Silicon (Kotlin/Native)
 
+> [!IMPORTANT]
+> 現在、GitHub PackagesにPublishしているものは、`JVM` に限られます。
+
 ## 導入手順
 
 実装の詳細については、 [THINKLET向けサンプル](./sample-thinklet/README.md) もしくは [CLIアプリケーション向けサンプル](./sample/README.md) を確認してください。
