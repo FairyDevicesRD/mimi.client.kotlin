@@ -3,10 +3,15 @@
 - プロジェクトのルートの `local.properties` に下記項目を追加します。
 
 ```properties
+# CLIサンプルのTTSとASRの実行に利用します。
 MIMI_TOKEN=********
+
+# CLIサンプルのTOKEN出力の実行に利用します。
 MIMI_APPLICATION_ID=<your_mimi_application_id>
 MIMI_CLIENT_ID=<your_mimi_client_id>
 MIMI_CLIENT_SECRET=<your_mimi_client_secret>
+
+# CLIサンプルのASRのタイプを指定します。nict-v1, nict-v2, asr (デフォルト) を選べます。
 ASR_TYPE=nict-v2
 ```
 
@@ -37,4 +42,7 @@ curl -sS -X POST https://auth.mimi.fd.ai/v2/token \
 ./gradlew :sample:run -Ptarget=TtsKtor
 # TTS (OkHttp) -> generate sample\yyyy-MM-DD-hh-mm-ss.wav
 ./gradlew :sample:run -Ptarget=TtsOkHttp
+
+# Print already revoked token. (Ktor)
+./gradlew :sample:run -Ptarget=TokenKtor
 ```
