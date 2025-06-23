@@ -20,19 +20,19 @@ kotlinx-io = "0.7.0"
 androidx-annotation = "1.9.1"
 
 # https://github.com/ktorio/ktor/releases
-ktor = "3.1.3"
+ktor = "3.2.0"
 
 # https://square.github.io/okhttp/changelogs/changelog/
 okhttp = "4.12.0"
 
 # https://github.com/junit-team/junit5/releases
-junit = "5.13.0"
+junit = "5.13.1"
 
 # https://github.com/mockk/mockk/releases
-mockk = "1.14.2"
+mockk = "1.14.4"
 
 # https://github.com/cashapp/turbine/releases
-turbine = "1.2.0"
+turbine = "1.2.1"
 
 # https://logback.qos.ch/download.html
 logback = "1.5.18"
@@ -44,7 +44,7 @@ agp = "8.10.1"
 androidx-core-ktx = "1.16.0"
 
 # https://developer.android.com/jetpack/androidx/releases/appcompat
-androidx-appcompat = "1.7.0"
+androidx-appcompat = "1.7.1"
 
 # https://developer.android.com/jetpack/androidx/releases/activity
 androidx-activity = "1.10.1"
