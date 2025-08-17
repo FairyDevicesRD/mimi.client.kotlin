@@ -7,6 +7,9 @@ internal fun Project.configureKmp() {
         jvm()
         // linuxX64()
         macosArm64()
+        iosArm64()
+        iosSimulatorArm64()
+        iosX64()
 
         configureKotlinCommon()
     }
