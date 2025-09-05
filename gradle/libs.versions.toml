@@ -2,34 +2,34 @@
 projectVersion = "0.0.1"
 
 # https://github.com/jetbrains/kotlin/releases
-kotlin = "2.1.21"
+kotlin = "2.2.10"
 
 # https://github.com/Kotlin/kotlinx.coroutines/releases
 kotlinx-coroutines = "1.10.2"
 
 # https://github.com/Kotlin/kotlinx.serialization/releases
-kotlinx-serialization = "1.8.1"
+kotlinx-serialization = "1.9.0"
 
 # https://github.com/Kotlin/kotlinx.kover/releases
 kotlinx-kover = "0.9.1"
 
 # https://github.com/Kotlin/kotlinx.io/releases
-kotlinx-io = "0.7.0"
+kotlinx-io = "0.8.0"
 
 # https://developer.android.com/jetpack/androidx/releases/annotation
 androidx-annotation = "1.9.1"
 
 # https://github.com/ktorio/ktor/releases
-ktor = "3.2.0"
+ktor = "3.2.3"
 
 # https://square.github.io/okhttp/changelogs/changelog/
-okhttp = "4.12.0"
+okhttp = "5.1.0"
 
 # https://github.com/junit-team/junit5/releases
-junit = "5.13.1"
+junit = "5.13.4"
 
 # https://github.com/mockk/mockk/releases
-mockk = "1.14.4"
+mockk = "1.14.5"
 
 # https://github.com/cashapp/turbine/releases
 turbine = "1.2.1"
@@ -38,10 +38,10 @@ turbine = "1.2.1"
 logback = "1.5.18"
 
 # https://developer.android.com/build/releases/gradle-plugin
-agp = "8.10.1"
+agp = "8.12.2"
 
 # https://developer.android.com/jetpack/androidx/releases/core
-androidx-core-ktx = "1.16.0"
+androidx-core-ktx = "1.17.0"
 
 # https://developer.android.com/jetpack/androidx/releases/appcompat
 androidx-appcompat = "1.7.1"
