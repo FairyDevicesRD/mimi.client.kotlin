@@ -1,5 +1,5 @@
 [versions]
-projectVersion = "0.0.1"
+projectVersion = "0.0.2"
 
 # https://github.com/jetbrains/kotlin/releases
 kotlin = "2.2.10"
