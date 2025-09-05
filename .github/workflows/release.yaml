@@ -17,9 +17,9 @@ jobs:
             REPOSITORY: ${{ github.repository }}
         steps:
             -   name: Check out
-                uses: actions/checkout@v4
+                uses: actions/checkout@v5
             -   name: Set up JDK
-                uses: actions/setup-java@v4.7.1
+                uses: actions/setup-java@v5.0.0
                 with:
                     distribution: "adopt"
                     java-version: "21"
