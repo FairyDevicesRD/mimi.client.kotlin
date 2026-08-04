@@ -81,11 +81,15 @@ internal class MimiOkHttpWebSocketSession<R>(
     }
 
     override suspend fun sendBinary(binaryData: ByteArray) {
-        webSocketDeferred.await().send(binaryData.toByteString())
+        if (!webSocketDeferred.await().send(binaryData.toByteString())) {
+            throw MimiIOException("Failed to send binary data over WebSocket")
+        }
     }
 
     override suspend fun sendText(text: String) {
-        webSocketDeferred.await().send(text)
+        if (!webSocketDeferred.await().send(text)) {
+            throw MimiIOException("Failed to send text data over WebSocket")
+        }
     }
 
     override fun cancel() {
