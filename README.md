@@ -55,7 +55,7 @@ val engineFactory = MimiNetworkEngine.OkHttp(okhttpClient)
 mimi(R) API Client for Kotlin では、各 mimi サービスにアクセスするためのサービスクラスが提供されています。
 サービスクラスの利用には、先ほど作成した `MimiNetworkEngine.Factory` や、サービスに応じて追加の引数を渡してインスタンスを生成します。
 
-詳細は [THINKLET向けサンプル](./sample-thinklet/README.md) もしくは [CLIアプリケーション向けサンプル](./sample/README.md) 、もしくは [mimi(R) API Client for Kotlin の API ドキュメント](https://example.com) を参照してください。
+詳細は [THINKLET向けサンプル](./sample-thinklet/README.md) もしくは [CLIアプリケーション向けサンプル](./sample/README.md) 、もしくは [mimi(R) API Client for Kotlin の API ドキュメント](./dokka/index.md) を参照してください。
 
 ## ライセンス
 このプロジェクトはMITライセンスの下で公開されています。詳細は[LICENSE](./LICENSE)ファイルを参照してください。
