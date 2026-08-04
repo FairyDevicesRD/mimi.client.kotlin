@@ -74,7 +74,12 @@ internal class MimiOkHttpWebSocketSession<R>(
             webSocket.cancel()
         }
         webSocketDeferred.complete(webSocket)
-        val exceptionDuringOpen = onConnectedDeferred.await()
+        val exceptionDuringOpen = try {
+            onConnectedDeferred.await()
+        } catch (e: CancellationException) {
+            rxChannel.close()
+            throw e
+        }
         if (exceptionDuringOpen != null) {
             throw exceptionDuringOpen
         }

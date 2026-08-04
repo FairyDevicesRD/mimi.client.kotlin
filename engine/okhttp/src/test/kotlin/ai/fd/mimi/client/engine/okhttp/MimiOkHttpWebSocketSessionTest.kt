@@ -14,6 +14,9 @@ import kotlin.test.assertFailsWith
 import kotlin.test.assertFalse
 import kotlin.test.assertIs
 import kotlin.test.assertTrue
+import kotlinx.coroutines.CoroutineStart
+import kotlinx.coroutines.cancelAndJoin
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.runTest
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -112,6 +115,20 @@ class MimiOkHttpWebSocketSessionTest {
             assertEquals("WebSocket session is closed unexceptionally", exception.message)
             assertFalse(target.isActive)
         }
+    }
+
+    @Test
+    fun testConnectionCancellation_onOpening() = runTest {
+        val webSocket = mockk<WebSocket>(relaxUnitFun = true)
+        every { okHttpClient.newWebSocket(request, any()) } returns webSocket
+
+        val connection = launch(start = CoroutineStart.UNDISPATCHED) {
+            target.connect()
+        }
+        connection.cancelAndJoin()
+
+        coVerify { webSocket.cancel() }
+        assertFalse(target.isActive)
     }
 
     @Test
