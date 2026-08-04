@@ -36,5 +36,8 @@ class MimiKtorWebSocketSession<T>(
         ktorWebSocketSession.send(Frame.Text(true, text.encodeToByteArray()))
     }
 
-    override fun cancel() = ktorWebSocketSession.cancel()
+    override fun cancel() {
+        isActiveMutableStateFlow.value = false
+        ktorWebSocketSession.cancel()
+    }
 }

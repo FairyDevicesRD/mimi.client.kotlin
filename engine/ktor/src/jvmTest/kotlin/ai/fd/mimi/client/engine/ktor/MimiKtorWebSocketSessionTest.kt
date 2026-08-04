@@ -100,5 +100,6 @@ class MimiKtorWebSocketSessionTest {
         target.cancel()
 
         coVerify { ktorWebSocketSession.cancel() }
+        assertFalse(target.isActive)
     }
 }
