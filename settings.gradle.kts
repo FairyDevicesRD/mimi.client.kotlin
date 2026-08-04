@@ -38,9 +38,9 @@ dependencyResolutionManagement {
             setUrl("https://maven.pkg.github.com/FairyDevicesRD/thinklet.app.sdk")
             credentials {
                 val properties = java.util.Properties()
-                properties.load(file("github.properties").inputStream())
+                file("github.properties").takeIf { it.isFile }?.inputStream()?.use(properties::load)
                 username = properties.getProperty("username") ?: System.getenv("USERNAME")
-                password = properties.getProperty("token") ?: System.getenv("USERNAME")
+                password = properties.getProperty("token") ?: System.getenv("TOKEN")
             }
         }
     }

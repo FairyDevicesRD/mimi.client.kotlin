@@ -44,7 +44,10 @@ internal fun Project.configurePublish() {
             repositories {
                 maven {
                     val properties = Properties()
-                    properties.load(project.rootProject.file("github.properties").inputStream())
+                    project.rootProject.file("github.properties")
+                        .takeIf { it.isFile }
+                        ?.inputStream()
+                        ?.use(properties::load)
                     name = "GithubPackages"
                     val u = properties.getProperty("url") ?: uri("https://maven.pkg.github.com/${System.getenv("REPOSITORY")}")
                     url = uri(u ?: "undefine")
