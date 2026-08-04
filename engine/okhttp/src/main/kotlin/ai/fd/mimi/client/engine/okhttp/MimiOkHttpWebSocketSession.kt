@@ -8,7 +8,6 @@ import kotlin.coroutines.cancellation.CancellationException
 import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.channels.trySendBlocking
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.consumeAsFlow
 import okhttp3.OkHttpClient
@@ -28,7 +27,7 @@ internal class MimiOkHttpWebSocketSession<R>(
     override val isActive: Boolean
         get() = !rxChannel.isClosedForSend
 
-    private val rxChannel: Channel<R> = Channel()
+    private val rxChannel: Channel<R> = Channel(Channel.BUFFERED)
     override val rxFlow: Flow<R> = rxChannel.consumeAsFlow()
 
     private val onConnectedDeferred: CompletableDeferred<MimiIOException?> = CompletableDeferred()
@@ -48,7 +47,9 @@ internal class MimiOkHttpWebSocketSession<R>(
                     rxChannel.close(e)
                     return
                 }
-                rxChannel.trySendBlocking(response)
+                if (rxChannel.trySend(response).isFailure) {
+                    rxChannel.close(MimiIOException("WebSocket response buffer is full"))
+                }
             }
 
             override fun onClosing(webSocket: WebSocket, code: Int, reason: String) {
