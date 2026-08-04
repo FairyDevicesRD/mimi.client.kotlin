@@ -122,11 +122,30 @@ class MimiOkHttpWebSocketSessionTest {
             webSocketListenerSlot.captured.onOpen(webSocket, mockk())
             webSocket
         }
+        every { webSocket.send(OkioByteString.of(1, 2, 3)) } returns true
         target.connect()
 
         target.sendBinary(byteArrayOf(1, 2, 3))
 
         coVerify { webSocket.send(OkioByteString.of(1, 2, 3)) }
+    }
+
+    @Test
+    fun testSendBinaryFailure() = runTest {
+        val webSocketListenerSlot = slot<WebSocketListener>()
+        val webSocket = mockk<WebSocket>(relaxed = true)
+        every { okHttpClient.newWebSocket(eq(request), capture(webSocketListenerSlot)) } answers {
+            webSocketListenerSlot.captured.onOpen(webSocket, mockk())
+            webSocket
+        }
+        every { webSocket.send(any<OkioByteString>()) } returns false
+        target.connect()
+
+        val exception = assertFailsWith<MimiIOException> {
+            target.sendBinary(byteArrayOf(1, 2, 3))
+        }
+
+        assertEquals("Failed to send binary data over WebSocket", exception.message)
     }
 
     @Test
@@ -137,11 +156,30 @@ class MimiOkHttpWebSocketSessionTest {
             webSocketListenerSlot.captured.onOpen(webSocket, mockk())
             webSocket
         }
+        every { webSocket.send("text") } returns true
         target.connect()
 
         target.sendText("text")
 
         coVerify { webSocket.send("text") }
+    }
+
+    @Test
+    fun testSendTextFailure() = runTest {
+        val webSocketListenerSlot = slot<WebSocketListener>()
+        val webSocket = mockk<WebSocket>(relaxed = true)
+        every { okHttpClient.newWebSocket(eq(request), capture(webSocketListenerSlot)) } answers {
+            webSocketListenerSlot.captured.onOpen(webSocket, mockk())
+            webSocket
+        }
+        every { webSocket.send("text") } returns false
+        target.connect()
+
+        val exception = assertFailsWith<MimiIOException> {
+            target.sendText("text")
+        }
+
+        assertEquals("Failed to send text data over WebSocket", exception.message)
     }
 
     @Test
