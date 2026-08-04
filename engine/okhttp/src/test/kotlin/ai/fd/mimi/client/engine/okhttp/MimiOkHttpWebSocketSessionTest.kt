@@ -9,6 +9,8 @@ import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
 import io.mockk.slot
+import java.util.concurrent.CompletableFuture
+import java.util.concurrent.TimeUnit
 import kotlin.test.assertEquals
 import kotlin.test.assertFailsWith
 import kotlin.test.assertFalse
@@ -71,6 +73,33 @@ class MimiOkHttpWebSocketSessionTest {
             webSocketListenerSlot.captured.onClosing(webSocket, -1, "reason")
             awaitComplete()
             assertFalse(target.isActive)
+        }
+    }
+
+    @Test
+    fun testRxFlow_messageBeforeCollection() = runTest {
+        val decodedData = mockk<Any>()
+        every { converter.decode("jsonText") } returns decodedData
+        val webSocketListenerSlot = slot<WebSocketListener>()
+        val webSocket = mockk<WebSocket>(relaxUnitFun = true)
+        every { okHttpClient.newWebSocket(eq(request), capture(webSocketListenerSlot)) } answers {
+            webSocketListenerSlot.captured.onOpen(webSocket, mockk())
+            webSocket
+        }
+        target.connect()
+
+        val listenerCall = CompletableFuture.runAsync {
+            webSocketListenerSlot.captured.onMessage(webSocket, "jsonText")
+        }
+        try {
+            listenerCall.get(5, TimeUnit.SECONDS)
+            target.rxFlow.test {
+                assertEquals(decodedData, awaitItem())
+                cancelAndIgnoreRemainingEvents()
+            }
+        } finally {
+            target.cancel()
+            listenerCall.join()
         }
     }
 
